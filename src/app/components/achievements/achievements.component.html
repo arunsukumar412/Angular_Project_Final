@@ -1,0 +1,98 @@
+<!-- Partners Section -->
+<section class="py-16 px-4 bg-gray-100">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Partners</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
+      <div class="flex justify-center">
+        <div class="p-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          <img src="/assets/icons/Google.png" alt="Google" 
+               class="h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
+               (click)="openPartnerModal('Google', 'Our partnership with Google focuses on AI research and cloud solutions.')">
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <div class="p-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          <img src="/assets/icons/Chatgpt.png" alt="OpenAI" 
+               class="h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
+               (click)="openPartnerModal('OpenAI', 'Collaborating with OpenAI on cutting-edge AI research and applications.')">
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <div class="p-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          <img src="/assets/icons/Amazon.png" alt="Amazon" 
+               class="h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
+               (click)="openPartnerModal('Amazon', 'Working with Amazon Web Services to deliver scalable AI solutions.')">
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <div class="p-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          <img src="/assets/icons/apple.png" alt="Apple" 
+               class="h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
+               (click)="openPartnerModal('Apple', 'Innovating with Apple to bring AI to mobile platforms.')">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Achievements Section -->
+<section id="achievements" class="py-20 px-6 bg-white">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">OUR ACHIEVEMENTS</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl"
+           (click)="openAchievementModal('50+ AI Projects', 'We have successfully delivered 50+ AI projects across various industries.')">
+        <div class="text-4xl font-bold mb-2">{{ achievementCount1 }}+</div>
+        <div class="text-xl font-semibold">AI Projects</div>
+        <p class="mt-2 text-blue-200">Completed successfully</p>
+      </div>
+      <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl"
+           (click)="openAchievementModal('25+ Patents', 'Our team has been granted 25+ patents in AI technology.')">
+        <div class="text-4xl font-bold mb-2">{{ achievementCount2 }}+</div>
+        <div class="text-xl font-semibold">Patents</div>
+        <p class="mt-2 text-blue-200">In AI technology</p>
+      </div>
+      <div class="bg-gradient-to-br from-gray-700 to-gray-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl"
+           (click)="openAchievementModal('100+ Clients', 'We have served 100+ clients worldwide with our AI solutions.')">
+        <div class="text-4xl font-bold mb-2">{{ achievementCount3 }}+</div>
+        <div class="text-xl font-semibold">Clients</div>
+        <p class="mt-2 text-gray-300">Served worldwide</p>
+      </div>
+      <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl"
+           (click)="openAchievementModal('10+ Awards', 'Our work has been recognized with 10+ prestigious awards.')">
+        <div class="text-4xl font-bold mb-2">{{ achievementCount4 }}+</div>
+        <div class="text-xl font-semibold">Awards</div>
+        <p class="mt-2 text-blue-200">For innovation</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Popup Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300"
+     [class.opacity-100]="showModal" [class.opacity-0]="!showModal">
+  <div class="bg-white rounded-lg max-w-md w-full mx-4 relative transform transition-all duration-300"
+       [class.scale-100]="showModal" [class.scale-95]="!showModal">
+    <button (click)="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-1 transition-colors duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <div class="p-8">
+      <div class="flex justify-center mb-6">
+        <div class="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">{{ modalTitle }}</h3>
+      <div class="text-gray-600 text-center">{{ modalContent }}</div>
+      <div class="mt-6 flex justify-center">
+        <button (click)="closeModal()" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

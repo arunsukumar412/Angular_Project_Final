@@ -1,0 +1,71 @@
+<!-- components/header/header.component.html -->
+<header class="bg-[#00154D] text-white p-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
+  <div class="flex items-center">
+    <a href="/" class="flex items-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#00154D] rounded">
+      <img src="assets/icons/logo.png" alt="Genworx Logo"
+           class="h-auto max-h-[6em] inline-block align-middle mr-3 hover:scale-105 transition-transform duration-300"
+           width="120" height="60">
+      <span class="font-bold text-xl hover:text-blue-200 transition-colors duration-300">JOBS</span>
+    </a>
+  </div>
+
+  <nav class="hidden md:flex space-x-4 items-center">
+    <a routerLink="/"
+       class="nav-link bg-white text-[#00154D] font-semibold rounded-full px-4 py-2 hover:bg-gray-200 hover:scale-105 transition-all duration-300 transform hover:shadow-lg cursor-pointer">
+      Home
+    </a>
+    <a href="#about"
+       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
+      About us
+      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+    </a>
+    <a href="#jobs"
+       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
+      Jobs
+      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+    </a>
+    <a href="#achievements"
+       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
+      Achievements
+      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+    </a>
+    <a routerLink="/login"
+       class="cursor-pointer bg-red-500 text-white font-medium rounded-full px-8 py-2 hover:bg-red-600 hover:scale-105 transition-all duration-300 transform hover:shadow-lg animate-pulse hover:animate-none relative overflow-hidden">
+      <span class="relative z-10">Login</span>
+      <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
+    </a>
+  </nav>
+
+  <!-- Mobile menu button -->
+  <button class="md:hidden focus:outline-none p-2 rounded-full hover:bg-blue-800 transition-colors duration-300"
+          aria-label="Menu" (click)="toggleMobileMenu()">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+</header>
+
+<!-- Mobile menu -->
+<div class="md:hidden fixed inset-0 bg-[#00154D] bg-opacity-95 z-40 transition-all duration-300"
+     [class]="mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'" *ngIf="mobileMenuOpen">
+  <div class="flex justify-end p-4">
+    <button class="p-2 rounded-full hover:bg-blue-800 transition-colors duration-300"
+            aria-label="Close menu" (click)="toggleMobileMenu()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+  <nav class="flex flex-col items-center space-y-6 p-8">
+    <a href="#" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Home</a>
+    <a href="#about" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">About us</a>
+    <a href="#jobs" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Jobs</a>
+    <a href="#achievements" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Achievements</a>
+    <a routerLink="/login"
+       class="bg-red-500 text-white font-medium rounded-full px-8 py-3 text-xl hover:bg-red-600 transition-colors duration-300 cursor-pointer" 
+       (click)="toggleMobileMenu()">Login</a>
+  </nav>
+</div>
