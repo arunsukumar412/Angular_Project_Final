@@ -1,4 +1,4 @@
-+<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,8 +10,9 @@
             background-color: #f3f4f6;
         }
         .left-side {
-            background-color: #0f172a; /* Dark background */
+            background-color: #00154D; /* Dark background */
             color: #e2e8f0; /* Light text */
+            position: relative; /* Added for back arrow positioning */
         }
         .feature-item {
             position: relative;
@@ -123,16 +124,45 @@
                 padding: 2rem;
             }
         }
+        /* Back arrow styles - moved to left side */
+        .back-arrow {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            cursor: pointer;
+            color: #e2e8f0; /* Light color for dark background */
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        .back-arrow svg {
+            margin-right: 0.5rem;
+            stroke: #e2e8f0; /* Light color for dark background */
+        }
+        .left-side-content {
+            padding-top: 4rem; /* Added to make space for back arrow */
+        }
     </style>
 </head>
 <body>
     <div class="grid-container">
         <div class="left-side p-10 lg:p-20 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center mb-8">
-                <img src="assets/icons/logo.png" alt="GenWorx Logo" class="w-50 h-50 mr-10 object-contain">
-                <span class="logo-text">Jobs</span>
-            </div>
+            <!-- Back arrow added here on left side -->
+            <a href="#" class="back-arrow" onclick="window.history.back()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
+            </a>
+            <div class="left-side-content">
+                <div class="flex items-center mb-8">
+                    <img src="assets/icons/logo.png" alt="GenWorx Logo" class="w-50 h-50 mr-10 object-contain">
+                    <span class="logo-text">Jobs</span>
+                </div>
                 <ul class="space-y-4">
                     <li class="feature-item">
                         <span>Get started quickly</span>
@@ -158,19 +188,12 @@
                 <h2 class="welcome-back">Welcome back</h2>
                 <div class="social-login">
                     <a href="#" class="social-btn">
-                        <svg class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M22.46 12c0-1.93-.17-3.72-.48-5.3H12v8.93h6.07c-.27 1.54-1.17 2.66-2.53 3.43v2.12h4.1c2.4-2.2 3.77-5.44 3.77-9.18z" fill="#4285F4"/>
-                            <path d="M12 22.46c2.48 0 4.51-.8 6.07-2.18l-4.1-2.12c-1.16.76-2.63 1.2-4.0 1.2-3.07 0-5.68-2.05-6.62-4.82H1.18v2.98c1.3 2.6 4.0 4.5 7.0 4.5z" fill="#34A853"/>
-                            <path d="M5.58 15.44c-.28-.8-.44-1.65-.44-2.54s.16-1.74.44-2.54V7.46H1.18c-.57 1.19-.9 2.47-.9 3.84s.33 2.65.9 3.84l4.4-2.98z" fill="#FBBC05"/>
-                            <path d="M12 5.54c1.33 0 2.54.46 3.48 1.34l2.54-2.54C16.51 2.3 14.48 1.18 12 1.18c-3.0 0-5.6 2.0-6.6 4.8H5.58v2.98c.88 1.7 2.27 2.9 4.0 2.9 1.7 0 3.2-.6 4.3-1.6z" fill="#EA4335"/>
-                        </svg>
-                        Log in with Google
-                    </a>
+    <img src ="assets\icons\Google.jpg" alt="Google logo" class="w-5 h-5 inline-block mr-2" />
+    Log in with Google
+</a>
                     <a href="#" class="social-btn">
-                        <svg class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3 17.54V13.5h3.96l.58-4.04H15V7.86c0-1.1.34-1.85 1.74-1.85h2.3v-4.04h-3.4c-3.3 0-5.5 2.7-5.5 5.7v3.96h-2.3v4.04h2.3v6.04c.8-.14 1.6-.2 2.4-.2.8 0 1.6.06 2.4.2z"/>
-                        </svg>
-                        Log in with Apple
+                         <img src ="assets\icons\download.png" alt="Google logo" class="w-5 h-5 inline-block mr-2" />
+    Log in with Apple
                     </a>
                 </div>
                 <div class="or-divider">or</div>
