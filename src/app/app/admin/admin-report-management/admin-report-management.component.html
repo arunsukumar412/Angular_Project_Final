@@ -1,0 +1,118 @@
+<div class="w-full bg-white">
+  <div class="flex h-screen overflow-hidden">
+    <app-sidebar class="bg-blue-800 text-white"></app-sidebar>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="bg-white shadow-md">
+        <div class="flex items-center justify-between px-10 py-10">
+          <div class="flex items-center">
+            <button id="mobile-menu-button" class="text-blue-600 hover:text-blue-800 focus:outline-none md:hidden" (click)="toggleSidebar()">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <div class="relative mx-4">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-blue-400"></i>
+              </div>
+              <input type="text" class="block w-full pl-10 pr-3 py-2 border border-blue-200 rounded-md bg-white placeholder-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Search reports..." [(ngModel)]="searchQuery" (input)="filterReports()">
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none" (click)="toggleUserDropdown()">
+                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin profile">
+                <span class="hidden md:inline-block text-sm font-medium text-blue-600">{{ currentUser }}</span>
+              </button>
+              <div id="user-menu-dropdown" class="absolute origin-top-right right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50 border border-blue-200" [class.hidden]="!showUserDropdown">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Your Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Settings</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50" (click)="logout()">Sign out</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-50">
+        <div class="container mx-auto px-4 py-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+              <h1 class="text-2xl font-bold text-blue-800">Admin Report Management</h1>
+              <p class="text-blue-600">View reports as of {{ currentDate | date:'medium' }}.</p>
+            </div>
+          </div>
+
+          <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between">
+            <div class="flex space-x-4 mb-4 md:mb-0">
+              <input type="date" [(ngModel)]="filterDate" (change)="filterReports()" class="border border-blue-200 rounded-md p-2 text-blue-600">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="reportType" class="block text-sm font-medium">Select Report Type:</label>
+            <select [(ngModel)]="selectedReport" (change)="onReportChange()" id="reportType" class="mt-1 block w-full p-2 border rounded">
+              <option *ngFor="let type of reportTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-medium">Report Data</h3>
+            <table class="min-w-full bg-white border">
+              <thead>
+                <tr>
+                  <th *ngFor="let key of getTableHeaders()" class="border p-2">{{ key }}</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-medium">Export Options</h3>
+            <div class="flex space-x-2">
+              <button *ngFor="let format of exportFormats" (click)="exportReport(format)" class="px-4 py-2 bg-blue-500 text-white rounded">{{ format }}</button>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-medium">Available Functionalities</h3>
+            <ul class="list-disc pl-5">
+              <li *ngFor="let func of functionalities">{{ func }}</li>
+            </ul>
+          </div>
+
+          <div class="mt-6 bg-white rounded-lg shadow p-6 border border-blue-200">
+            <h2 class="text-lg font-semibold text-blue-800">Activity Log</h2>
+            <div class="mt-4 max-h-40 overflow-y-auto">
+              <div *ngFor="let log of activityLog" class="p-2 border-b border-blue-200 text-sm text-blue-600">
+                {{ log.message }} - {{ log.timestamp | date:'short' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+  <!-- Footer -->
+    <footer class="bg-white border-t border-blue-200 py-4 px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="text-sm text-blue-600 mb-4 md:mb-0">
+          © 2023 GenWorx Jobs Platform. All rights reserved.
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Privacy Policy</a>
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Terms of Service</a>
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Contact Us</a>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-blue-600">Version 2.4.1</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <i class="fas fa-circle mr-1" style="font-size: 6px;"></i>
+              Live
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+    </div>
+  </div>
+</div>

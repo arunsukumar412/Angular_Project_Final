@@ -1,0 +1,210 @@
+<div id="sidebar"
+     class="fixed inset-y-0 left-0 z-50 w-80 bg-cover bg-center bg-no-repeat text-white py-7 px-4 
+            transform transition-all duration-700 ease-in-out 
+            md:relative md:translate-x-0 -translate-x-full
+            bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4QOR9U75jGHwnYHOxCGKaXWdA1LNTq3pSvA&s')]
+            shadow-[0_0_40px_10px_rgba(160,190,255,0.25),inset_0_0_10px_rgba(160,190,255,0.05)]
+            hover:shadow-[0_0_70px_25px_rgba(160,190,255,0.35),inset_0_0_20px_rgba(160,190,255,0.1)]
+            border border-white/20 rounded-r-xl backdrop-blur-2xl ring-1 ring-white/10
+            scrollbar-thin scrollbar-thumb-[#91B9E0]/70 scrollbar-track-white/20"
+     aria-label="Main Sidebar Navigation">
+
+    <!-- Admin Profile -->
+    <div class="px-4 mb-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="relative w-14 h-14">
+                    <!-- Notification Badge -->
+                    <div class="absolute -top-2 -left-2 bg-blue-900 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm z-10" aria-label="Notifications">
+                        99
+                    </div>
+                    
+                    <!-- Circular Profile Image -->
+                    <img 
+                        class="h-14 w-14 rounded-full border-2 border-white/80 hover:scale-110 transition-transform duration-300" 
+                        src="assets/icons/Gen.png" 
+                        alt="Super Admin profile image"
+                        aria-describedby="admin-info">
+                    
+                    <!-- Status Dot with Ping -->
+                    <span class="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white" aria-label="Online status"></span>
+                    <span class="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white animate-ping"></span>
+                </div>
+
+                <!-- Text & Role Info -->
+                <div id="admin-info" class="ml-3">
+                    <div class="flex items-center space-x-2">
+                        <p class="text-lg font-bold text-white">Super Admin</p>
+                        <span class="px-2 py-0.5 text-xs bg-white text-black rounded-full flex items-center">
+                            PRO <i class="fas fa-star ml-1 text-amber-300 text-[0.5rem]"></i>
+                        </span>
+                    </div>
+                    <div class="flex items-center group">
+                        <p class="text-sm text-white/90 group-hover:text-white truncate max-w-[140px]" title="admin@example.com">
+                           
+                        </p>
+                        <button class="ml-1 opacity-0 group-hover:opacity-70 hover:opacity-100 transition-opacity" title="Copy email" aria-label="Copy admin email">
+                            <i class="fas fa-copy text-xs text-white"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Button -->
+            <button 
+                (click)="toggleSidebar()" 
+                class="text-white hover:text-gray-200 transform hover:scale-125 transition-transform duration-300"
+                aria-label="Toggle sidebar"
+                aria-controls="sidebar">
+                <i class="fas fa-chevron-left text-lg animate-bounce-x"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="overflow-y-auto h-[calc(100vh-280px)] custom-scroll pb-4" role="navigation" aria-label="Main navigation">
+        <div class="space-y-2 px-2">
+            <!-- Dashboard -->
+            <a (click)="navigateTo('Dashboard')" 
+               class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+               role="menuitem">
+                <div class="relative">
+                    <i class="fas fa-tachometer-alt w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+                    <span class="absolute -top-1 -right-1 h-2 w-2 bg-green-500 rounded-full animate-blink"></span>
+                </div>
+                <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Dashboard</span>
+                <div class="ml-auto flex space-x-1">
+                    <div class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <div class="h-2 w-2 bg-blue-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                    <div class="h-2 w-2 bg-amber-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                </div>
+            </a>
+
+            <!-- User Management -->
+            <a (click)="navigateTo('user-management')" 
+               class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+               role="menuitem">
+                <div class="relative">
+                    <i class="fas fa-users w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+                    <span class="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full animate-blink"></span>
+                </div>
+                <span class="group-hover:translate-x-1 transition-transform text-base font-medium">User Management</span>
+                <div class="ml-auto flex items-center space-x-1">
+                    <span class="px-2 py-1 text-xs font-bold bg-white text-black rounded-full animate-pulse">24</span>
+                    <span class="text-xs text-white font-bold">+3</span>
+                </div>
+            </a>
+
+            <!-- Job Posts -->
+            <a (click)="navigateTo('job-postings')" 
+               class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+               role="menuitem">
+                <i class="fas fa-briefcase w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+                <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Job Posts</span>
+                <div class="ml-auto relative w-5 h-5">
+                    <svg class="w-full h-full" viewBox="0 0 36 36" aria-label="Progress: 75%">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              fill="none" stroke="#e6e6e6" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              fill="none" stroke="white" stroke-width="3" stroke-dasharray="75, 100"/>
+                        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="8" fill="white">75%</text>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Reports -->
+            <a (click)="navigateTo('admin-report-management')" 
+               class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+               role="menuitem">
+                <i class="fas fa-chart-bar w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+                <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Reports</span>
+                <div class="ml-auto w-12 h-6 flex items-end">
+                    <span class="flex-1 bg-white/20 mx-px rounded-t-sm" style="height: 20%"></span>
+                    <span class="flex-1 bg-white/40 mx-px rounded-t-sm" style="height: 40%"></span>
+                    <span class="flex-1 bg-white/60 mx-px rounded-t-sm" style="height: 80%"></span>
+                    <span class="flex-1 bg-white/70 mx-px rounded-t-sm" style="height: 60%"></span>
+                    <span class="flex-1 bg-white mx-px rounded-t-sm" style="height: 90%"></span>
+                </div>
+            </a>
+
+            <!-- Content Management -->
+            <a (click)="navigateTo('content-management')" 
+               class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+               role="menuitem">
+                <i class="fas fa-newspaper w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+                <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Content Mgmt</span>
+                <div class="ml-auto flex items-center space-x-1">
+                    <span class="px-1.5 py-0.5 text-[0.5rem] font-bold bg-white text-black rounded-full">v2.1</span>
+                    <span class="px-1 py-0.5 text-[0.5rem] font-bold bg-green-500 text-white rounded-full">NEW</span>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Bottom Section -->
+    <div class="border-t border-white/30 mt-4 pt-4 px-2 space-y-2">
+        <a (click)="navigateTo('help-center')" 
+           class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-blue-100/20 transition-all duration-300 group"
+           role="menuitem">
+            <i class="fas fa-question-circle w-6 text-xl text-center group-hover:text-white transition-colors"></i>
+            <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Help Center</span>
+            <i class="fas fa-external-link-alt text-xs opacity-50 ml-auto group-hover:opacity-100 transition-opacity"></i>
+        </a>
+
+        <a (click)="logout()" 
+           class="flex items-center space-x-3 py-3 px-3 rounded-xl text-white hover:bg-red-100/10 hover:text-red-400 transition-all duration-300 group"
+           role="menuitem">
+            <i class="fas fa-sign-out-alt w-6 text-xl text-center group-hover:text-red-400 transition-colors"></i>
+            <span class="group-hover:translate-x-1 transition-transform text-base font-medium">Logout</span>
+            <i class="fas fa-arrow-right text-xs opacity-50 ml-auto group-hover:opacity-100 transition-opacity"></i>
+        </a>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-white/90 flex items-center justify-center space-x-2 mt-4">
+            <span>v2.5.0</span>
+            <span class="h-1 w-1 bg-white rounded-full"></span>
+            <span>© 2025</span>
+            <span class="h-1 w-1 bg-white rounded-full"></span>
+            <span class="text-green-400 flex items-center">
+                <span class="h-2 w-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>
+                Online
+            </span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: rgba(145, 185, 224, 0.7);
+        border-radius: 10px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(145, 185, 224, 0.9);
+    }
+    .animate-blink {
+        animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    .animate-bounce-x {
+        animation: bounce-x 2s infinite;
+    }
+    @keyframes bounce-x {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(-5px); }
+    }
+    @media (max-width: 768px) {
+        #sidebar {
+            width: 280px;
+        }
+    }
+</style>

@@ -3,7 +3,7 @@ import { HomePageComponent } from "../app/home-page/home-page/home-page.componen
 import { AboutUsComponent } from "../components/about-us/about-us.component";
 import { AchievementsComponent } from "../components/achievements/achievements.component";
 import { JobsComponent } from "../components/jobs/jobs.component";
-import { LoginComponent } from "../auth/login/login.component";
+import { LoginComponent } from "../app/auth/login/login.component";
 import { FooterComponent } from "../components/footer/footer.component";
 
 @Component({

@@ -61,3 +61,29 @@
     visibility: visible;
     opacity: 1;
   }
+  .auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.forgot-password {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.underline {
+  text-decoration: underline;
+}

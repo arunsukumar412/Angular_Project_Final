@@ -1,704 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genworx - Sign Up</title>
-    <style>
-        /* Tailwind CSS - Compressed version of essential classes used in this page */
-        .bg-white{background-color:#fff}.bg-gray-100{background-color:#f3f4f6}.bg-blue-600{background-color:#2563eb}.bg-blue-700{background-color:#1d4ed8}.bg-gray-300{background-color:#d1d5db}.bg-gray-400{background-color:#9ca3af}.bg-green-500{background-color:#10b981}.bg-green-600{background-color:#059669}.shadow-md{box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)}.h-full{height:100%}.h-screen{height:100vh}.w-full{width:100%}.w-1\/2{width:50%}.flex{display:flex}.flex-col{flex-direction:column}.flex-row{flex-direction:row}.flex-grow{flex-grow:1}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.items-start{align-items:flex-start}.items-center{align-items:center}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.pb-2{padding-bottom:0.5rem}.mb-2{margin-bottom:0.5rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mt-12{margin-top:3rem}.text-center{text-align:center}.text-sm{font-size:0.875rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.text-4xl{font-size:2.25rem}.font-semibold{font-weight:600}.italic{font-style:italic}.rounded-md{border-radius:0.375rem}.border{border-width:1px}.border-b-2{border-bottom-width:2px}.border-gray-300{border-color:#d1d5db}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-color:#3b82f6}.focus\:ring-opacity-50:focus{--tw-ring-opacity:0.5}.focus\:ring-gray-500:focus{--tw-ring-color:#6b7280}.focus\:ring-green-500:focus{--tw-ring-color:#10b981}.text-gray-700{color:#374151}.text-gray-900{color:#111827}.text-gray-600{color:#4b5563}.text-gray-400{color:#9ca3af}.text-gray-300{color:#d1d5db}.text-white{color:#fff}.text-blue-500{color:#3b82f6}.text-red-500{color:#ef4444}.hover\:bg-blue-700:hover{background-color:#1d4ed8}.hover\:bg-gray-400:hover{background-color:#9ca3af}.hover\:bg-green-600:hover{background-color:#059669}.hover\:underline:hover{text-decoration:underline}.list-disc{list-style-type:disc}.list-inside{list-style-position:inside}.hidden{display:none}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.relative{position:relative}.absolute{position:absolute}.block{display:block}.w-auto{width:auto}.h-auto{height:auto}.max-h-50{max-height:50px}.left-0{left:0}.top-0{top:0}.h-100{height:100px}
-
-        /* Custom styles */
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #f3f4f6;
-        }
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-
-        .active {
-            font-weight: 600;
-            color: #2563eb;
-        }
-        .completed {
-            font-weight: 600;
-            color: #16a34a;
-        }
-        .step-content {
-            display: none;
-        }
-        .step-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .main-wrapper {
-            height: 100vh;
-            width: 100vw;
-        }
-
-        .content-wrapper {
-            height: 100%;
-            width: 100%;
-        }
-
-        .form-container {
-            height: 100%;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        
-        .floating-logo {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        /* Different animation delays for each logo */
-        .floating-logo:nth-child(1) {
-            animation-delay: 0s;
-        }
-        
-        .floating-logo:nth-child(2) {
-            animation-delay: 0.5s;
-        }
-        
-        .floating-logo:nth-child(3) {
-            animation-delay: 1s;
-        }
-
-        /* Carousel styles */
-        .carousel-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            height: 100px;
-        }
-
-        .carousel-track {
-            display: flex;
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            align-items: center;
-            animation: scroll 20s linear infinite;
-        }
-
-        .carousel-item {
-            flex-shrink: 0;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .carousel-item img {
-            max-height: 50px;
-            width: auto;
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .carousel-item img:hover {
-            opacity: 1;
-        }
-
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        /* Password strength indicator */
-        .password-strength {
-            height: 4px;
-            margin-top: 4px;
-            background-color: #e5e7eb;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-
-        /* Input focus effects */
-        .input-focus-effect {
-            position: relative;
-        }
-
-        .input-focus-effect:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #2563eb;
-            transition: width 0.3s ease;
-        }
-
-        .input-focus-effect.focused:after {
-            width: 100%;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Genworx - Register</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6;
+    }
+    .left-side {
+      background-color: #00154D;
+      color: #e2e8f0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem;
+    }
+    .feature-item {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .feature-item::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: #4ade80;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .welcome-back {
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+      box-sizing: border-box;
+      color: #374151;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    }
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: -0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .btn-primary {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.375rem;
+      text-align: center;
+      font-size: 1rem;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    .btn-primary:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+    }
+    .social-login {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .social-btn {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      text-align: center;
+      color: #374151;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .social-btn:hover {
+      border-color: #9ca3af;
+    }
+    .or-divider {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #6b7280;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #d1d5db;
+      margin: 0 0.5rem;
+    }
+    .signup-link {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+    .signup-link a {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      background-color: white;
+    }
+    @media (max-width: 768px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .back-arrow {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      cursor: pointer;
+      color: #e2e8f0;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      z-index: 10;
+    }
+    .back-arrow svg {
+      margin-right: 0.5rem;
+      stroke: #e2e8f0;
+    }
+    .left-side-content {
+      padding-top: 4rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .required {
+      color: #ef4444;
+      margin-left: 4px;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+      color: #64748b;
+    }
+    .password-strength-meter {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      background-color: #e2e8f0;
+      margin-bottom: 0.25rem;
+      overflow: hidden;
+    }
+    .strength-bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+    .strength-text {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    .suggestions-list {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+      padding-left: 1rem;
+    }
+    .suggestions-list li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-    <div class="main-wrapper">
-        <div class="content-wrapper">
-            <div class="bg-white shadow-md h-full w-full flex flex-col md:flex-row">
-                <div class="md:w-1/2 p-8 flex flex-col justify-between items-start" style="background: linear-gradient(to bottom, #00154D,#00154D); height: 100%;">
-                  <div>
-                    <h2 class="text-4xl font-semibold mb-6 text-white">Your Best Work Starts Here</h2>
-                    <p class="text-lg mb-8 text-gray-300">
-                      Connect with top companies and explore exciting career opportunities. Let us help you find the perfect fit.
-                    </p>
-                    <ul class="list-disc list-inside text-lg text-gray-300">
-                      <li>Create your profile</li>
-                      <li>Search jobs</li>
-                      <li>Apply easily</li>
-                      <li>Get noticed by recruiters</li>
-                    </ul>
-
-                    <div class="mt-12">
-                        <h3 class="text-3xl font-semibold mb-8 text-white text-center">Our Prestigious Clients</h3>
-                        <div class="carousel-container">
-                            <div class="carousel-track">
-                                <div class="carousel-item">
-                                    <img src="assets\icons\microsoft.jpg" alt="OpenAI" class="image">
-                                <div class="carousel-item">
-                                    <img src="assets\icons\microsoftazure-1.jpg" alt="Dell" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\icons\apple-logo-png-12908.png" alt="Disney" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\icons\google-logo-png-29549.png" alt="Nvidia" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\icons\logo-png-27811.png" alt="Pepsi" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\icons\pngimg.com - ibm_PNG19654.png" alt="Reddit" class="image">
-                                </div>
-                                </div>
-                                <!-- Duplicate items for seamless looping -->
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="OpenAI" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Anthropic" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Dell" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Disney" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Nvidia" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Pepsi" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Reddit" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Rivian" class="image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/icons/logo.png" alt="Snowflake" class="image">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-full text-center mt-4">
-                            <p class="text-lg text-gray-400 italic">And many more leading organizations...</p>
-                        </div>
-                    </div>
-                  </div>
-                    <div>
-                        <p class="text-gray-400 text-sm">© 2025 Genworx. All rights reserved.</p>
-                    </div>
-                </div>
-
-                <div class="md:w-1/2 p-8 overflow-y-auto form-container">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Sign Up</h2>
-                    <div class="mb-8">
-                        <div class="flex justify-between">
-                            <div class="flex-grow text-center pb-2 border-b-2 font-semibold step active" data-step="1">1. Personal</div>
-                            <div class="flex-grow text-center pb-2 border-b-2 font-semibold step" data-step="2">2. Profile</div>
-                            <div class="flex-grow text-center pb-2 border-b-2 font-semibold step" data-step="3">3. Complete</div>
-                        </div>
-                    </div>
-                    <form id="signup-form" class="space-y-6">
-                        <div id="step-1-content" class="step-content active">
-                            <div class="input-focus-effect">
-                                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-                                <input type="text" id="name" placeholder="Enter your full name" required 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="name-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter your full name.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="email-signup" class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                                <input type="email" id="email-signup" placeholder="Enter your email address" required 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="email-signup-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter a valid email address.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="password-signup" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                                <input type="password" id="password-signup" placeholder="Create a password" required 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div class="password-strength">
-                                    <div id="password-strength-bar" class="password-strength-bar"></div>
-                                </div>
-                                <div id="password-signup-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Password must be at least 8 characters long.</div>
-                                <div id="password-hints" class="text-xs text-gray-500 mt-2 hidden">
-                                    <p>Password should contain:</p>
-                                    <ul class="list-disc list-inside">
-                                        <li id="length-req">At least 8 characters</li>
-                                        <li id="uppercase-req">One uppercase letter</li>
-                                        <li id="number-req">One number</li>
-                                        <li id="special-req">One special character</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 next-step" data-next="2">
-                                Next
-                            </button>
-                        </div>
-
-                        <div id="step-2-content" class="step-content">
-                            <div class="input-focus-effect">
-                                <label for="dob" class="block text-sm font-semibold text-gray-700 mb-2">Date of Birth</label>
-                                <input type="date" id="dob" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="dob-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter your date of birth.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-                                <input type="tel" id="phone" placeholder="+123 456 7890" 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="phone-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter a valid phone number.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="profession" class="block text-sm font-semibold text-gray-700 mb-2">Profession</label>
-                                <input type="text" id="profession" placeholder="e.g., Software Engineer" 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="profession-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter your profession.</div>
-                            </div>
-                            <div class="flex justify-between">
-                                <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-6 rounded-md w-1/2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 prev-step" data-prev="1">
-                                    Previous
-                                </button>
-                                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 next-step" data-next="3">
-                                    Next
-                                </button>
-                            </div>
-                        </div>
-
-                        <div id="step-3-content" class="step-content">
-                            <div class="input-focus-effect">
-                                <label for="location" class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                                <input type="text" id="location" placeholder="e.g., New York, NY" 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="location-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter your location.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="education" class="block text-sm font-semibold text-gray-700 mb-2">Education</label>
-                                <input type="text" id="education" placeholder="e.g., Bachelor's Degree" 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="education-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter your education.</div>
-                            </div>
-                            <div class="input-focus-effect">
-                                <label for="portfolio" class="block text-sm font-semibold text-gray-700 mb-2">Portfolio URL (Optional)</label>
-                                <input type="url" id="portfolio" placeholder="https://yourportfolio.com" 
-                                       class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div id="portfolio-error" class="text-red-500 text-xs italic mt-2" style="display: none;">Please enter a valid URL.</div>
-                            </div>
-                            <div class="flex justify-between">
-                                <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-6 rounded-md w-1/2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 prev-step" data-prev="2">
-                                    Previous
-                                </button>
-                                <button type="submit" id="submit-btn" class="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md w-1/2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center">
-                                    <span id="submit-text">Complete Registration</span>
-                                    <span id="submit-spinner" class="spinner hidden ml-2"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="text-center mt-6 text-gray-600 text-sm">
-                        Already have an account? <a href="/login" class="text-blue-500 text-sm hover:underline">Log in here</a>
-                    </div>
-                </div>
-            </div>
+<body>
+  <div class="grid-container">
+    <div class="left-side">
+      <a href="#" class="back-arrow" onclick="window.history.back()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+      </a>
+      <div class="left-side-content">
+        <div class="flex items-center mb-8">
+          <img src="assets/icons/logo.png" alt="GenWorx Logo" class="w-50 h-50 mr-10 object-contain">
+          <span class="logo-text">Jobs</span>
         </div>
+        <ul>
+          <li class="feature-item">
+            <span>Get started quickly</span>
+            <p class="text-gray-300">Integrate with developer-friendly APIs or choose low-code.</p>
+          </li>
+          <li class="feature-item">
+            <span>Support any business model</span>
+            <p class="text-gray-300">Host code privately with full control.</p>
+          </li>
+          <li class="feature-item">
+            <span>Join millions of businesses</span>
+            <p class="text-gray-300">Trusted by startups and enterprises alike.</p>
+          </li>
+        </ul>
+      </div>
+      <p class="text-gray-400 text-sm">© 2025 Genworx. All rights reserved.</p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all elements
-            const form = document.getElementById('signup-form');
-            const nextButtons = document.querySelectorAll('.next-step');
-            const prevButtons = document.querySelectorAll('.prev-step');
-            const steps = document.querySelectorAll('.step');
-            const stepContents = document.querySelectorAll('.step-content');
-            const passwordInput = document.getElementById('password-signup');
-            const passwordStrengthBar = document.getElementById('password-strength-bar');
-            const passwordHints = document.getElementById('password-hints');
-            const submitBtn = document.getElementById('submit-btn');
-            const submitText = document.getElementById('submit-text');
-            const submitSpinner = document.getElementById('submit-spinner');
+    <div class="right-side">
+      <div class="max-w-md mx-auto">
+        <h2 class="welcome-back">Create an Account</h2>
+
+        <div class="social-login">
+          <a href="#" class="social-btn">
+            <img src="assets/icons/Google.jpg" alt="Google" class="w-5 h-5 mr-2" />
+            Register with Google
+          </a>
+          <a href="#" class="social-btn">
+            <img src="assets/icons/download.png" alt="Apple" class="w-5 h-5 mr-2" />
+            Register with Apple
+          </a>
+        </div>
+
+        <div class="or-divider">or</div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div>
+            <label>Name <span class="required">*</span></label>
+            <input type="text" formControlName="name" class="form-input" placeholder="Enter your full name" />
+            <div class="error-message" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
+              <div *ngIf="registerForm.get('name')?.errors?.['required']">Name is required.</div>
+              <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</div>
+              <div *ngIf="registerForm.get('name')?.errors?.['pattern']">Name can only contain letters and spaces.</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Email <span class="required">*</span></label>
+            <input type="email" formControlName="email" class="form-input" placeholder="Enter your email address" />
+            <div class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+              <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</div>
+              <div *ngIf="registerForm.get('email')?.errors?.['email'] || registerForm.get('email')?.errors?.['pattern']">
+                Please enter a valid email address.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label>Password <span class="required">*</span></label>
+            <div class="password-container">
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-input" 
+                     placeholder="Create a strong password" (input)="onPasswordInput()" />
+              <span class="toggle-password" (click)="togglePasswordVisibility()">
+                {{ showPassword ? 'Hide' : 'Show' }}
+              </span>
+            </div>
             
-            let currentStep = 1;
-            const totalSteps = steps.length;
+            <div class="password-strength-meter" *ngIf="registerForm.get('password')?.value">
+              <div class="strength-bar">
+                <div class="strength-bar-fill" [style.width.%]="passwordStrengthScore" 
+                     [class.bg-red-500]="passwordStrengthScore < 20"
+                     [class.bg-orange-500]="passwordStrengthScore >= 20 && passwordStrengthScore < 40"
+                     [class.bg-yellow-500]="passwordStrengthScore >= 40 && passwordStrengthScore < 60"
+                     [class.bg-blue-500]="passwordStrengthScore >= 60 && passwordStrengthScore < 80"
+                     [class.bg-green-500]="passwordStrengthScore >= 80"></div>
+              </div>
+              <div class="strength-text">
+                Password strength: {{ getPasswordStrengthFeedback() }}
+              </div>
+            </div>
+            
+            <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+              <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+              <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</div>
+              <div *ngIf="registerForm.get('password')?.errors?.['complexity']">
+                Password must include uppercase, lowercase, number, and special character.
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors?.['commonPassword']">
+                This password is too common. Please choose a stronger one.
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors?.['containsPersonalInfo']">
+                Password should not contain your name or email.
+              </div>
+            </div>
+            
+            <ul class="suggestions-list" *ngIf="passwordSuggestions.length > 0">
+              <li *ngFor="let suggestion of passwordSuggestions">{{ suggestion }}</li>
+            </ul>
+          </div>
 
-            // Initialize form
-            function initForm() {
-                // Show first step content
-                document.getElementById('step-1-content').classList.add('active');
-                
-                // Hide all other step contents
-                for (let i = 1; i < stepContents.length; i++) {
-                    stepContents[i].classList.remove('active');
-                }
-                
-                // Update step indicators
-                updateStepIndicators();
+          <div>
+            <label>Confirm Password <span class="required">*</span></label>
+            <div class="password-container">
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-input" 
+                     placeholder="Re-enter your password" />
+              <span class="toggle-password" (click)="togglePasswordVisibility()">
+                {{ showPassword ? 'Hide' : 'Show' }}
+              </span>
+            </div>
+            <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password.</div>
+              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['mustMatch']">Passwords do not match.</div>
+            </div>
+          </div>
 
-                // Add input focus effects
-                const inputs = document.querySelectorAll('.input-focus-effect input');
-                inputs.forEach(input => {
-                    input.addEventListener('focus', function() {
-                        this.parentElement.classList.add('focused');
-                    });
-                    input.addEventListener('blur', function() {
-                        this.parentElement.classList.remove('focused');
-                    });
-                });
+          <button type="submit" class="btn-primary" [disabled]="registerForm.invalid">Create Account</button>
 
-                // Password strength indicator
-                passwordInput.addEventListener('input', updatePasswordStrength);
-                passwordInput.addEventListener('focus', function() {
-                    passwordHints.classList.remove('hidden');
-                });
-                passwordInput.addEventListener('blur', function() {
-                    if (this.value === '') {
-                        passwordHints.classList.add('hidden');
-                    }
-                });
-            }
+          <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        </form>
 
-            // Update password strength indicator
-            function updatePasswordStrength() {
-                const password = passwordInput.value;
-                let strength = 0;
-                
-                // Check for length
-                if (password.length >= 8) {
-                    strength += 25;
-                    document.getElementById('length-req').style.textDecoration = 'line-through';
-                    document.getElementById('length-req').style.color = '#16a34a';
-                } else {
-                    document.getElementById('length-req').style.textDecoration = 'none';
-                    document.getElementById('length-req').style.color = '';
-                }
-                
-                // Check for uppercase letters
-                if (/[A-Z]/.test(password)) {
-                    strength += 25;
-                    document.getElementById('uppercase-req').style.textDecoration = 'line-through';
-                    document.getElementById('uppercase-req').style.color = '#16a34a';
-                } else {
-                    document.getElementById('uppercase-req').style.textDecoration = 'none';
-                    document.getElementById('uppercase-req').style.color = '';
-                }
-                
-                // Check for numbers
-                if (/\d/.test(password)) {
-                    strength += 25;
-                    document.getElementById('number-req').style.textDecoration = 'line-through';
-                    document.getElementById('number-req').style.color = '#16a34a';
-                } else {
-                    document.getElementById('number-req').style.textDecoration = 'none';
-                    document.getElementById('number-req').style.color = '';
-                }
-                
-                // Check for special characters
-                if (/[^A-Za-z0-9]/.test(password)) {
-                    strength += 25;
-                    document.getElementById('special-req').style.textDecoration = 'line-through';
-                    document.getElementById('special-req').style.color = '#16a34a';
-                } else {
-                    document.getElementById('special-req').style.textDecoration = 'none';
-                    document.getElementById('special-req').style.color = '';
-                }
-                
-                // Update strength bar
-                passwordStrengthBar.style.width = strength + '%';
-                
-                // Update color based on strength
-                if (strength < 50) {
-                    passwordStrengthBar.style.backgroundColor = '#ef4444'; // red
-                } else if (strength < 75) {
-                    passwordStrengthBar.style.backgroundColor = '#f59e0b'; // orange
-                } else {
-                    passwordStrengthBar.style.backgroundColor = '#10b981'; // green
-                }
-            }
-
-            // Update step indicators
-            function updateStepIndicators() {
-                steps.forEach((step, index) => {
-                    step.classList.remove('active', 'completed');
-                    
-                    if (index + 1 < currentStep) {
-                        step.classList.add('completed');
-                    } else if (index + 1 === currentStep) {
-                        step.classList.add('active');
-                    }
-                });
-            }
-
-            // Show step
-            function showStep(stepNumber) {
-                // Validate before proceeding
-                if (stepNumber > currentStep && !validateStep(currentStep)) {
-                    return;
-                }
-                
-                // Hide all step contents
-                stepContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // Show current step content
-                document.getElementById(`step-${stepNumber}-content`).classList.add('active');
-                
-                // Update current step
-                currentStep = stepNumber;
-                
-                // Update step indicators
-                updateStepIndicators();
-                
-                // Scroll to top of form
-                document.querySelector('.form-container').scrollTop = 0;
-            }
-
-            // Validate step
-            function validateStep(step) {
-                let isValid = true;
-                
-                if (step === 1) {
-                    const name = document.getElementById('name').value.trim();
-                    const email = document.getElementById('email-signup').value.trim();
-                    const password = document.getElementById('password-signup').value.trim();
-                    
-                    // Validate name
-                    if (name === '') {
-                        document.getElementById('name-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('name-error').style.display = 'none';
-                    }
-                    
-                    // Validate email
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        document.getElementById('email-signup-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('email-signup-error').style.display = 'none';
-                    }
-                    
-                    // Validate password
-                    if (password.length < 8) {
-                        document.getElementById('password-signup-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('password-signup-error').style.display = 'none';
-                    }
-                }
-                else if (step === 2) {
-                    const dob = document.getElementById('dob').value.trim();
-                    const phone = document.getElementById('phone').value.trim();
-                    const profession = document.getElementById('profession').value.trim();
-                    
-                    // Validate date of birth
-                    if (dob === '') {
-                        document.getElementById('dob-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('dob-error').style.display = 'none';
-                    }
-                    
-                    // Validate phone
-                    const phoneRegex = /^\+?(\d{1,3})?[-. ]?\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{4}$/;
-                    if (!phoneRegex.test(phone)) {
-                        document.getElementById('phone-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('phone-error').style.display = 'none';
-                    }
-                    
-                    // Validate profession
-                    if (profession === '') {
-                        document.getElementById('profession-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('profession-error').style.display = 'none';
-                    }
-                }
-                else if (step === 3) {
-                    const location = document.getElementById('location').value.trim();
-                    const education = document.getElementById('education').value.trim();
-                    const portfolio = document.getElementById('portfolio').value.trim();
-                    
-                    // Validate location
-                    if (location === '') {
-                        document.getElementById('location-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('location-error').style.display = 'none';
-                    }
-                    
-                    // Validate education
-                    if (education === '') {
-                        document.getElementById('education-error').style.display = 'block';
-                        isValid = false;
-                    } else {
-                        document.getElementById('education-error').style.display = 'none';
-                    }
-                    
-                    // Validate portfolio (optional)
-                    if (portfolio !== '') {
-                        const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
-                        if (!urlRegex.test(portfolio)) {
-                            document.getElementById('portfolio-error').style.display = 'block';
-                            isValid = false;
-                        } else {
-                            document.getElementById('portfolio-error').style.display = 'none';
-                        }
-                    }
-                }
-                
-                return isValid;
-            }
-
-            // Next button click handler
-            nextButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const nextStep = parseInt(this.getAttribute('data-next'));
-                    if (nextStep && nextStep <= totalSteps) {
-                        showStep(nextStep);
-                    }
-                });
-            });
-
-            // Previous button click handler
-            prevButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const prevStep = parseInt(this.getAttribute('data-prev'));
-                    if (prevStep && prevStep >= 1) {
-                        showStep(prevStep);
-                    }
-                });
-            });
-
-            // Form submission
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate all steps
-                let allValid = true;
-                for (let i = 1; i <= totalSteps; i++) {
-                    if (!validateStep(i)) {
-                        allValid = false;
-                        // Show the first invalid step
-                        if (currentStep !== i) {
-                            showStep(i);
-                        }
-                        break;
-                    }
-                }
-                
-                if (allValid) {
-                    // Form is valid, submit data
-                    const formData = {
-                        name: document.getElementById('name').value.trim(),
-                        email: document.getElementById('email-signup').value.trim(),
-                        password: document.getElementById('password-signup').value.trim(),
-                        dob: document.getElementById('dob').value.trim(),
-                        phone: document.getElementById('phone').value.trim(),
-                        profession: document.getElementById('profession').value.trim(),
-                        location: document.getElementById('location').value.trim(),
-                        education: document.getElementById('education').value.trim(),
-                        portfolio: document.getElementById('portfolio').value.trim()
-                    };
-                    
-                    // Show loading state
-                    submitText.textContent = 'Processing...';
-                    submitSpinner.classList.remove('hidden');
-                    submitBtn.disabled = true;
-                    
-                    // Simulate API call
-                    setTimeout(function() {
-                        console.log('Form submitted:', formData);
-                        
-                        // Show success message
-                        submitText.textContent = 'Registration Successful!';
-                        submitSpinner.classList.add('hidden');
-                        
-                        // Redirect after delay
-                        setTimeout(function() {
-                            window.location.href = '/dashboard';
-                        }, 1500);
-                    }, 2000);
-                }
-            });
-
-            // Initialize the form
-            initForm();
-        });
-    </script>
+        <div class="signup-link">
+          Already have an account?
+          <a routerLink="/login" class="text-blue-600 underline">Log in here</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

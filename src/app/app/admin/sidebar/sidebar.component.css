@@ -1,0 +1,27 @@
+.sidebar-collapsed {
+    width: 80px !important;
+    transition: width 0.3s ease;
+}
+.sidebar-collapsed .sidebar-text {
+    display: none;
+    transition: all 0.3s ease;
+}
+.sidebar-collapsed .sidebar-icon {
+    margin-right: 0 !important;
+    transition: all 0.3s ease;
+}
+.sidebar-collapsed .logo-text {
+    display: none;
+    transition: all 0.3s ease;
+}
+.sidebar-collapsed .logo-icon {
+    display: block !important;
+    transition: all 0.3s ease;
+}
+
+.glow-effect {
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+.glow-effect:hover {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+}

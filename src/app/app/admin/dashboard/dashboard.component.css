@@ -1,0 +1,117 @@
+.sidebar-collapsed {
+  width: 80px !important;
+  transition: width 0.3s ease;
+}
+.sidebar-collapsed .sidebar-text {
+  display: none;
+  transition: all 0.3s ease;
+}
+.sidebar-collapsed .sidebar-icon {
+  margin-right: 0 !important;
+  transition: all 0.3s ease;
+}
+.sidebar-collapsed .logo-text {
+  display: none;
+  transition: all 0.3s ease;
+}
+.sidebar-collapsed .logo-icon {
+  display: block !important;
+  transition: all 0.3s ease;
+}
+
+.dark-mode {
+  background-color: #1a202c;
+  color: #f7fafc;
+}
+.dark-mode .sidebar {
+  background-color: #2d3748;
+}
+.dark-mode .card {
+  background-color: #2d3748;
+  border-color: #4a5568;
+}
+.dark-mode .text-gray-800 {
+  color: #f7fafc !important;
+}
+.dark-mode .text-gray-600 {
+  color: #cbd5e0 !important;
+}
+.dark-mode .bg-white {
+  background-color: #2d3748 !important;
+}
+.dark-mode .border-gray-200 {
+  border-color: #4a5568 !important;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 155, 0.9);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 100;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.glow-effect {
+  box-shadow: 0 0 10px rgba(0, 0, 155, 0.3);
+}
+.glow-effect:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 155, 0.5);
+}
+
+.floating-action-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+}
+
+.conic-gradient {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body {
+  background-color: #f0f4f8;
+}
+
+.bg-primary {
+  background-color: #00009B;
+}
+.text-primary {
+  color: #00009B;
+}
+.border-primary {
+  border-color: #00009B;
+}
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #00009B 0%, #1e40af 100%);
+}
+.hover\:bg-primary:hover {
+  background-color: #00007B;
+}
