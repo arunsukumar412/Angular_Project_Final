@@ -1,58 +1,12 @@
-<div class="w-full bg-gray-50">
-  <div class="flex min-h-screen overflow-hidden">
-    <app-recruiter-sidebar></app-recruiter-sidebar>
+  <app-recruiter-sidebar></app-recruiter-sidebar>
+<div class="w-full bg-white">
+     
+  <div class="flex ml-64 overflow-hidden">
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Top Navigation -->
-      <header class="bg-white border-b border-gray-200">
-        <div class="flex items-center justify-between px-6 py-4">
-          <div class="flex items-center">
-            <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-800 focus:outline-none md:hidden">
-              <i class="fas fa-bars text-lg"></i>
-            </button>
-            <div class="relative mx-4">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-gray-400"></i>
-              </div>
-              <input type="text" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md bg-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Search interviews..." [(ngModel)]="searchQuery" (input)="filterInterviews()">
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button id="notification-btn" class="text-gray-600 hover:text-gray-800 focus:outline-none relative" (click)="toggleNotificationDropdown()">
-              <i class="fas fa-bell text-lg"></i>
-              <span class="absolute top-0 right-0 inline-block w-2 h-2 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"></span>
-              <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 border border-gray-200" [class.hidden]="!showNotificationDropdown">
-                <div class="p-3 border-b border-gray-200 bg-indigo-500 text-white">
-                  <p class="text-xs font-medium">Notifications ({{ notifications.length }})</p>
-                </div>
-                <div class="divide-y divide-gray-100">
-                  <a *ngFor="let notification of notifications" href="#" class="flex px-3 py-2 hover:bg-gray-50">
-                    <div class="flex-shrink-0">
-                      <i [ngClass]="notification.icon" class="text-indigo-500 mt-1"></i>
-                    </div>
-                    <div class="ml-3">
-                      <p class="text-xs font-medium text-gray-900">{{ notification.message }}</p>
-                      <p class="text-xs text-gray-500">{{ notification.time }}</p>
-                    </div>
-                  </a>
-                </div>
-                <div class="p-2 text-center border-t border-gray-200 bg-gray-50">
-                  <a href="#" class="text-xs font-medium text-indigo-500 hover:text-indigo-700">View all notifications</a>
-                </div>
-              </div>
-            </button>
-            <div class="relative">
-              <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none" (click)="toggleUserDropdown()">
-                <img class="h-6 w-6 rounded-full" src="assets/icons/hr-profile.png" alt="HR profile">
-                <span class="hidden md:inline-block text-sm font-medium text-gray-700">HR Manager</span>
-              </button>
-              <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-gray-200 py-1 z-50" [class.hidden]="!showUserDropdown">
-                <a href="#" class="block px-3 py-2 text-xs text-gray-700 hover:bg-gray-50" (click)="logout()">Sign out</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <app-hr-header></app-hr-header>
+    <br><br>
 
       <!-- Main Content Area -->
       <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">

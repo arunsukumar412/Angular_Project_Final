@@ -1,118 +1,1102 @@
-<div class="w-full bg-white">
-  <div class="flex h-screen overflow-hidden">
-    <app-sidebar class="bg-blue-800 text-white"></app-sidebar>
+<div class="w-full bg-gray-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
 
+    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <header class="bg-white shadow-md">
-        <div class="flex items-center justify-between px-10 py-10">
-          <div class="flex items-center">
-            <button id="mobile-menu-button" class="text-blue-600 hover:text-blue-800 focus:outline-none md:hidden" (click)="toggleSidebar()">
-              <i class="fas fa-bars text-xl"></i>
-            </button>
-            <div class="relative mx-4">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-blue-400"></i>
-              </div>
-              <input type="text" class="block w-full pl-10 pr-3 py-2 border border-blue-200 rounded-md bg-white placeholder-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Search reports..." [(ngModel)]="searchQuery" (input)="filterReports()">
+      <!-- Header -->
+      <app-admin-header></app-admin-header>
+
+      <!-- Main Section -->
+      <main class="flex-1 bg-gray-50 overflow-y-auto p-6">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <!-- Header Section -->
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <h1 class="text-2xl font-bold text-gray-900">GenWorx HR & Candidate Management</h1>
+              <p class="text-sm text-gray-600">Manage users, HR, interviews, and reports as of {{ currentDate | date:'medium' }}</p>
             </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none" (click)="toggleUserDropdown()">
-                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin profile">
-                <span class="hidden md:inline-block text-sm font-medium text-blue-600">{{ currentUser }}</span>
+            <div class="flex flex-wrap gap-2">
+              <button
+                (click)="refreshData()"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center text-xs transition duration-200 shadow-sm hover:shadow-md"
+                title="Refresh data"
+              >
+                <fa-icon [icon]="faSyncAlt" class="mr-2"></fa-icon> Refresh
               </button>
-              <div id="user-menu-dropdown" class="absolute origin-top-right right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50 border border-blue-200" [class.hidden]="!showUserDropdown">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Your Profile</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Settings</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50" (click)="logout()">Sign out</a>
+              <div class="relative group">
+                <button
+                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center text-xs transition duration-200 shadow-sm hover:shadow-md"
+                  title="Export options"
+                >
+                  <fa-icon [icon]="faFileExport" class="mr-2"></fa-icon> Export
+                </button>
+                <div class="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                  <button
+                    (click)="openExportModal('CSV')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faFileCsv" class="mr-2 text-green-600"></fa-icon> CSV
+                  </button>
+                  <button
+                    (click)="openExportModal('PDF')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faFilePdf" class="mr-2 text-red-600"></fa-icon> PDF
+                  </button>
+                  <button
+                    (click)="openExportModal('Excel')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faFileExcel" class="mr-2 text-yellow-600"></fa-icon> Excel
+                  </button>
+                </div>
+              </div>
+              <div class="relative group">
+                <button
+                  class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center text-xs transition duration-200 shadow-sm hover:shadow-md"
+                  title="Bulk actions"
+                >
+                  <fa-icon [icon]="faTasks" class="mr-2"></fa-icon> Actions
+                </button>
+                <div class="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                  <button
+                    (click)="openBulkActionsModal()"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faUsers" class="mr-2 text-purple-600"></fa-icon> Bulk Actions
+                  </button>
+                  <button
+                    (click)="openScheduleExportModal()"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faClock" class="mr-2 text-blue-600"></fa-icon> Schedule Export
+                  </button>
+                  <button
+                    (click)="openDownloadAllModal('candidates')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faDownload" class="mr-2 text-indigo-600"></fa-icon> All Candidates
+                  </button>
+                  <button
+                    (click)="openDownloadAllModal('hr')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <fa-icon [icon]="faDownload" class="mr-2 text-indigo-600"></fa-icon> All HR Reports
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
 
-      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-50">
-        <div class="container mx-auto px-4 py-6">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <div>
-              <h1 class="text-2xl font-bold text-blue-800">Admin Report Management</h1>
-              <p class="text-blue-600">View reports as of {{ currentDate | date:'medium' }}.</p>
+          <!-- HR Metrics Dashboard -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-1">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-500">Total Interviews</h3>
+                  <p class="text-2xl font-bold text-blue-600">{{ hrMetrics.totalInterviews }}</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                  <fa-icon [icon]="faCalendarAlt" class="text-blue-600"></fa-icon>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">By {{ hrMetrics.hrCount }} HR</p>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-1">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-500">Active Candidates</h3>
+                  <p class="text-2xl font-bold text-green-600">{{ hrMetrics.activeCandidates }}</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                  <fa-icon [icon]="faUsers" class="text-green-600"></fa-icon>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">Across {{ hrMetrics.jobOpenings }} jobs</p>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-1">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-500">Hiring Success Rate</h3>
+                  <p class="text-2xl font-bold text-purple-600">{{ hrMetrics.hiringSuccessRate }}%</p>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-full">
+                  <fa-icon [icon]="faChartLine" class="text-purple-600"></fa-icon>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">Offers accepted</p>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-1">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-500">HR Hired People</h3>
+                  <p class="text-2xl font-bold text-teal-600">{{ hrMetrics.hrHiredPeople }}</p>
+                </div>
+                <div class="bg-teal-100 p-3 rounded-full">
+                  <fa-icon [icon]="faUserCheck" class="text-teal-600"></fa-icon>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">Total hired</p>
             </div>
           </div>
 
-          <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between">
-            <div class="flex space-x-4 mb-4 md:mb-0">
-              <input type="date" [(ngModel)]="filterDate" (change)="filterReports()" class="border border-blue-200 rounded-md p-2 text-blue-600">
+          <!-- Quick Filter Presets -->
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-gray-900">Quick Filters</h3>
+              <button 
+                (click)="clearFilters()"
+                class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                Clear all
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button
+                (click)="applyQuickFilter('today')"
+                class="px-3 py-1.5 bg-blue-50 text-blue-800 rounded-md text-xs hover:bg-blue-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faCalendarDay" class="mr-1.5 text-xs"></fa-icon> Today's Reports
+              </button>
+              <button
+                (click)="applyQuickFilter('week')"
+                class="px-3 py-1.5 bg-blue-50 text-blue-800 rounded-md text-xs hover:bg-blue-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faCalendarWeek" class="mr-1.5 text-xs"></fa-icon> This Week
+              </button>
+              <button
+                (click)="applyQuickFilter('month')"
+                class="px-3 py-1.5 bg-blue-50 text-blue-800 rounded-md text-xs hover:bg-blue-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faCalendar" class="mr-1.5 text-xs"></fa-icon> This Month
+              </button>
+              <button
+                (click)="applyQuickFilter('pending')"
+                class="px-3 py-1.5 bg-yellow-50 text-yellow-800 rounded-md text-xs hover:bg-yellow-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faClock" class="mr-1.5 text-xs"></fa-icon> Pending
+              </button>
+              <button
+                (click)="applyQuickFilter('hired')"
+                class="px-3 py-1.5 bg-green-50 text-green-800 rounded-md text-xs hover:bg-green-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faCheckCircle" class="mr-1.5 text-xs"></fa-icon> Hired
+              </button>
+              <button
+                (click)="applyQuickFilter('rejected')"
+                class="px-3 py-1.5 bg-red-50 text-red-800 rounded-md text-xs hover:bg-red-100 transition duration-200 flex items-center"
+              >
+                <fa-icon [icon]="faTimesCircle" class="mr-1.5 text-xs"></fa-icon> Rejected
+              </button>
             </div>
           </div>
 
-          <div class="mb-4">
-            <label for="reportType" class="block text-sm font-medium">Select Report Type:</label>
-            <select [(ngModel)]="selectedReport" (change)="onReportChange()" id="reportType" class="mt-1 block w-full p-2 border rounded">
-              <option *ngFor="let type of reportTypes" [value]="type">{{ type }}</option>
-            </select>
-          </div>
-
-          <div class="mb-4">
-            <h3 class="text-lg font-medium">Report Data</h3>
-            <table class="min-w-full bg-white border">
-              <thead>
-                <tr>
-                  <th *ngFor="let key of getTableHeaders()" class="border p-2">{{ key }}</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="mb-4">
-            <h3 class="text-lg font-medium">Export Options</h3>
-            <div class="flex space-x-2">
-              <button *ngFor="let format of exportFormats" (click)="exportReport(format)" class="px-4 py-2 bg-blue-500 text-white rounded">{{ format }}</button>
+          <!-- Advanced Filters -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <button 
+              (click)="showAdvancedFilters = !showAdvancedFilters"
+              class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-gray-50 transition duration-200"
+            >
+              <h3 class="text-sm font-semibold text-gray-900">Advanced Filters</h3>
+              <fa-icon 
+                [icon]="showAdvancedFilters ? faChevronUp : faChevronDown" 
+                class="text-gray-500"
+              ></fa-icon>
+            </button>
+            
+            <div *ngIf="showAdvancedFilters" class="px-4 pb-4 pt-2 border-t border-gray-200">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Date Range</label>
+                  <div class="flex gap-2">
+                    <input
+                      type="date"
+                      [(ngModel)]="filterDateStart"
+                      (change)="filterReports()"
+                      class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                    <input
+                      type="date"
+                      [(ngModel)]="filterDateEnd"
+                      (change)="filterReports()"
+                      class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Report Type</label>
+                  <select
+                    [(ngModel)]="filterReportType"
+                    (change)="filterReports()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">All Reports</option>
+                    <option value="candidate">Candidate Reports</option>
+                    <option value="hr">HR Reports</option>
+                    <option value="interview">Interview Reports</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">HR Personnel</label>
+                  <select
+                    [(ngModel)]="filterHR"
+                    (change)="filterReports()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">All HR</option>
+                    <option *ngFor="let hr of hrList" [value]="hr.id">{{ hr.name }}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                  <select
+                    [(ngModel)]="filterStatus"
+                    (change)="filterReports()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">All Statuses</option>
+                    <option value="Hired">Hired</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="OnHold">On Hold</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="mb-4">
-            <h3 class="text-lg font-medium">Available Functionalities</h3>
-            <ul class="list-disc pl-5">
-              <li *ngFor="let func of functionalities">{{ func }}</li>
-            </ul>
+          <!-- Candidate Table -->
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+              <h3 class="text-sm font-semibold text-gray-900">Candidate Reports</h3>
+              <div class="flex items-center space-x-2">
+                <div class="relative">
+                  <input
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    (input)="filterReports()"
+                    placeholder="Search candidates..."
+                    class="border border-gray-300 rounded-md py-1 px-3 text-xs w-40 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                  <fa-icon 
+                    [icon]="faSearch" 
+                    class="absolute right-3 top-2 text-gray-400 text-xs"
+                  ></fa-icon>
+                </div>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>Showing {{ (candidatePage - 1) * itemsPerPage + 1 }}-{{ candidatePage * itemsPerPage > candidateReports.length ? candidateReports.length : candidatePage * itemsPerPage }} of {{ candidateReports.length }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr 
+                    *ngFor="let report of paginatedCandidateReports" 
+                    class="hover:bg-gray-50 transition duration-150"
+                    [class.bg-blue-50]="report.selected"
+                  >
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span class="text-blue-600 text-xs font-medium">{{ report.user?.charAt(0) }}</span>
+                        </div>
+                        <div class="ml-3">
+                          <p class="text-xs font-medium text-gray-900">{{ report.user }}</p>
+                          <p class="text-xs text-gray-500">ID: {{ report.candidateId }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <p class="text-xs text-gray-900">{{ report.position }}</p>
+                      <p class="text-xs text-gray-500">Job ID: {{ report.jobId }}</p>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">{{ report.email }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span
+                        [ngClass]="{
+                          'bg-green-100 text-green-800': report.status === 'Hired',
+                          'bg-red-100 text-red-800': report.status === 'Rejected',
+                          'bg-yellow-100 text-yellow-800': report.status === 'Pending' || report.status === 'OnHold'
+                        }"
+                        class="px-2.5 py-1 rounded-full text-xs font-medium inline-flex items-center"
+                      >
+                        <fa-icon 
+                          [icon]="getStatusIcon(report.status)" 
+                          class="mr-1.5 text-xs"
+                        ></fa-icon>
+                        {{ report.status }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                      <div class="flex space-x-2">
+                        <button
+                          (click)="viewDetails(report)"
+                          class="text-blue-600 hover:text-blue-800 transition duration-200 p-1 rounded hover:bg-blue-50"
+                          title="View details"
+                        >
+                          <fa-icon [icon]="faEye"></fa-icon>
+                        </button>
+                        <button
+                          (click)="downloadSingle(report)"
+                          class="text-green-600 hover:text-green-800 transition duration-200 p-1 rounded hover:bg-green-50"
+                          title="Download report"
+                        >
+                          <fa-icon [icon]="faDownload"></fa-icon>
+                        </button>
+                        <button
+                          (click)="editReport(report)"
+                          class="text-yellow-600 hover:text-yellow-800 transition duration-200 p-1 rounded hover:bg-yellow-50"
+                          title="Edit report"
+                        >
+                          <fa-icon [icon]="faEdit"></fa-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="candidateReports.length === 0">
+                    <td [colSpan]="5" class="px-4 py-4 text-center text-xs text-gray-700">
+                      No candidate records found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <button
+                  (click)="previousCandidatePage()"
+                  [disabled]="candidatePage === 1"
+                  class="relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Previous
+                </button>
+                <button
+                  (click)="nextCandidatePage()"
+                  [disabled]="candidatePage * itemsPerPage >= candidateReports.length"
+                  class="ml-3 relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Next
+                </button>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-xs text-gray-700">
+                    Showing <span class="font-medium">{{ (candidatePage - 1) * itemsPerPage + 1 }}</span> to 
+                    <span class="font-medium">{{ candidatePage * itemsPerPage > candidateReports.length ? candidateReports.length : candidatePage * itemsPerPage }}</span> of 
+                    <span class="font-medium">{{ candidateReports.length }}</span> results
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      (click)="firstCandidatePage()"
+                      [disabled]="candidatePage === 1"
+                      class="relative inline-flex items-center px-2 py-1.5 rounded-l-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">First</span>
+                      <fa-icon [icon]="faAngleDoubleLeft"></fa-icon>
+                    </button>
+                    <button
+                      (click)="previousCandidatePage()"
+                      [disabled]="candidatePage === 1"
+                      class="relative inline-flex items-center px-2 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Previous</span>
+                      <fa-icon [icon]="faAngleLeft"></fa-icon>
+                    </button>
+                    <ng-container *ngFor="let page of getCandidatePageNumbers()">
+                      <button
+                        (click)="goToCandidatePage(page)"
+                        [class.bg-blue-50 border-blue-500 text-blue-600]="candidatePage === page"
+                        class="relative inline-flex items-center px-3 py-1 border border-gray-300 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50"
+                      >
+                        {{ page }}
+                      </button>
+                    </ng-container>
+                    <button
+                      (click)="nextCandidatePage()"
+                      [disabled]="candidatePage * itemsPerPage >= candidateReports.length"
+                      class="relative inline-flex items-center px-2 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Next</span>
+                      <fa-icon [icon]="faAngleRight"></fa-icon>
+                    </button>
+                    <button
+                      (click)="lastCandidatePage()"
+                      [disabled]="candidatePage * itemsPerPage >= candidateReports.length"
+                      class="relative inline-flex items-center px-2 py-1.5 rounded-r-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Last</span>
+                      <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="mt-6 bg-white rounded-lg shadow p-6 border border-blue-200">
-            <h2 class="text-lg font-semibold text-blue-800">Activity Log</h2>
-            <div class="mt-4 max-h-40 overflow-y-auto">
-              <div *ngFor="let log of activityLog" class="p-2 border-b border-blue-200 text-sm text-blue-600">
-                {{ log.message }} - {{ log.timestamp | date:'short' }}
+          <!-- HR Table -->
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden mt-6">
+            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+              <h3 class="text-sm font-semibold text-gray-900">HR Reports</h3>
+              <div class="flex items-center space-x-2">
+                <div class="relative">
+                  <input
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    (input)="filterReports()"
+                    placeholder="Search HR..."
+                    class="border border-gray-300 rounded-md py-1 px-3 text-xs w-40 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                  <fa-icon 
+                    [icon]="faSearch" 
+                    class="absolute right-3 top-2 text-gray-400 text-xs"
+                  ></fa-icon>
+                </div>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>Showing {{ (hrPage - 1) * itemsPerPage + 1 }}-{{ hrPage * itemsPerPage > hrReports.length ? hrReports.length : hrPage * itemsPerPage }} of {{ hrReports.length }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">HR Name</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hired</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Offers</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr 
+                    *ngFor="let report of paginatedHrReports" 
+                    class="hover:bg-gray-50 transition duration-150"
+                    [class.bg-blue-50]="report.selected"
+                  >
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+                          <span class="text-purple-600 text-xs font-medium">{{ report.user?.charAt(0) }}</span>
+                        </div>
+                        <div class="ml-3">
+                          <p class="text-xs font-medium text-gray-900">{{ report.user }}</p>
+                          <p class="text-xs text-gray-500">ID: {{ report.hrId }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">{{ report.email }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {{ getHiredCount(report.hrId) }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {{ getOffersGiven(report.hrId) }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                      <div class="flex space-x-2">
+                        <button
+                          (click)="viewDetails(report)"
+                          class="text-blue-600 hover:text-blue-800 transition duration-200 p-1 rounded hover:bg-blue-50"
+                          title="View details"
+                        >
+                          <fa-icon [icon]="faEye"></fa-icon>
+                        </button>
+                        <button
+                          (click)="downloadSingle(report)"
+                          class="text-green-600 hover:text-green-800 transition duration-200 p-1 rounded hover:bg-green-50"
+                          title="Download report"
+                        >
+                          <fa-icon [icon]="faDownload"></fa-icon>
+                        </button>
+                        <button
+                          (click)="editReport(report)"
+                          class="text-yellow-600 hover:text-yellow-800 transition duration-200 p-1 rounded hover:bg-yellow-50"
+                          title="Edit report"
+                        >
+                          <fa-icon [icon]="faEdit"></fa-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="hrReports.length === 0">
+                    <td [colSpan]="5" class="px-4 py-4 text-center text-xs text-gray-700">
+                      No HR records found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <button
+                  (click)="previousHrPage()"
+                  [disabled]="hrPage === 1"
+                  class="relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Previous
+                </button>
+                <button
+                  (click)="nextHrPage()"
+                  [disabled]="hrPage * itemsPerPage >= hrReports.length"
+                  class="ml-3 relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Next
+                </button>
+              </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-xs text-gray-700">
+                    Showing <span class="font-medium">{{ (hrPage - 1) * itemsPerPage + 1 }}</span> to 
+                    <span class="font-medium">{{ hrPage * itemsPerPage > hrReports.length ? hrReports.length : hrPage * itemsPerPage }}</span> of 
+                    <span class="font-medium">{{ hrReports.length }}</span> results
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      (click)="firstHrPage()"
+                      [disabled]="hrPage === 1"
+                      class="relative inline-flex items-center px-2 py-1.5 rounded-l-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">First</span>
+                      <fa-icon [icon]="faAngleDoubleLeft"></fa-icon>
+                    </button>
+                    <button
+                      (click)="previousHrPage()"
+                      [disabled]="hrPage === 1"
+                      class="relative inline-flex items-center px-2 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Previous</span>
+                      <fa-icon [icon]="faAngleLeft"></fa-icon>
+                    </button>
+                    <ng-container *ngFor="let page of getHrPageNumbers()">
+                      <button
+                        (click)="goToHrPage(page)"
+                        [class.bg-blue-50 border-blue-500 text-blue-600]="hrPage === page"
+                        class="relative inline-flex items-center px-3 py-1 border border-gray-300 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50"
+                      >
+                        {{ page }}
+                      </button>
+                    </ng-container>
+                    <button
+                      (click)="nextHrPage()"
+                      [disabled]="hrPage * itemsPerPage >= hrReports.length"
+                      class="relative inline-flex items-center px-2 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Next</span>
+                      <fa-icon [icon]="faAngleRight"></fa-icon>
+                    </button>
+                    <button
+                      (click)="lastHrPage()"
+                      [disabled]="hrPage * itemsPerPage >= hrReports.length"
+                      class="relative inline-flex items-center px-2 py-1.5 rounded-r-md border border-gray-300 bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span class="sr-only">Last</span>
+                      <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report History -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
+              <h3 class="text-sm font-semibold text-gray-900">Report Export History</h3>
+            </div>
+            
+            <div class="p-4">
+              <div class="flex flex-wrap gap-4 mb-4">
+                <div class="flex-1 min-w-[200px]">
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Date Range</label>
+                  <div class="flex gap-2">
+                    <input
+                      type="date"
+                      [(ngModel)]="historyFilterDateStart"
+                      (change)="filterExportHistory()"
+                      class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                    <input
+                      type="date"
+                      [(ngModel)]="historyFilterDateEnd"
+                      (change)="filterExportHistory()"
+                      class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                  </div>
+                </div>
+                <div class="flex-1 min-w-[200px]">
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Format</label>
+                  <select
+                    [(ngModel)]="historyFilterFormat"
+                    (change)="filterExportHistory()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-700 w-full text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">All Formats</option>
+                    <option value="CSV">CSV</option>
+                    <option value="PDF">PDF</option>
+                    <option value="Excel">Excel</option>
+                    <option value="JSON">JSON</option>
+                    <option value="XML">XML</option>
+                  </select>
+                </div>
+                <div class="flex items-end">
+                  <button
+                    (click)="clearHistoryFilters()"
+                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-xs transition duration-200"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              </div>
+              
+              <div class="overflow-x-auto border border-gray-200 rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-100">
+                    <tr>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Export Date</th>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report Type</th>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Format</th>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exported By</th>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    <tr *ngFor="let history of filteredExportHistory" class="hover:bg-gray-50 transition duration-150">
+                      <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">{{ history.date | date:'medium' }}</td>
+                      <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">{{ history.reportType }}</td>
+                      <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                          [ngClass]="{
+                            'bg-green-100 text-green-800': history.format === 'CSV',
+                            'bg-red-100 text-red-800': history.format === 'PDF',
+                            'bg-yellow-100 text-yellow-800': history.format === 'Excel'
+                          }"
+                        >
+                          {{ history.format }}
+                        </span>
+                      </td>
+                      <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">{{ history.exportedBy }}</td>
+                      <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-700">
+                        <button
+                          (click)="downloadExport(history)"
+                          class="text-green-600 hover:text-green-800 transition duration-200 p-1 rounded hover:bg-green-50"
+                          title="Download export"
+                        >
+                          <fa-icon [icon]="faDownload"></fa-icon>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="filteredExportHistory.length === 0">
+                      <td [colSpan]="5" class="px-4 py-4 text-center text-xs text-gray-700">
+                        No export history found
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </main>
 
-  <!-- Footer -->
-    <footer class="bg-white border-t border-blue-200 py-4 px-6">
-      <div class="flex flex-col md:flex-row items-center justify-between">
-        <div class="text-sm text-blue-600 mb-4 md:mb-0">
-          © 2023 GenWorx Jobs Platform. All rights reserved.
-        </div>
-        <div class="flex items-center space-x-6">
-          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Privacy Policy</a>
-          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Terms of Service</a>
-          <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Contact Us</a>
-          <div class="flex items-center space-x-2">
-            <span class="text-sm text-blue-600">Version 2.4.1</span>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              <i class="fas fa-circle mr-1" style="font-size: 6px;"></i>
-              Live
-            </span>
+      <!-- Export Modal -->
+      <div *ngIf="showExportModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Export Report</h2>
+          </div>
+          
+          <div class="px-6 py-4 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Export Format</label>
+              <select
+                [(ngModel)]="exportFormat"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="CSV">CSV</option>
+                <option value="PDF">PDF</option>
+                <option value="Excel">Excel</option>
+                <option value="JSON">JSON</option>
+                <option value="XML">XML</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Select Fields</label>
+              <div class="mt-1 border border-gray-300 rounded-md p-2 max-h-40 overflow-y-auto">
+                <div *ngFor="let field of availableFields" class="flex items-center py-1">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="field.selected"
+                    (change)="updateVisibleColumns()"
+                    [id]="'field-' + field.name"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  >
+                  <label [for]="'field-' + field.name" class="ml-2 block text-sm text-gray-700">
+                    {{ field.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="exportFormat === 'CSV'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Delimiter</label>
+              <select
+                [(ngModel)]="csvDelimiter"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value=",">Comma (,)</option>
+                <option value=";">Semicolon (;)</option>
+                <option value="\t">Tab</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Compression</label>
+              <select
+                [(ngModel)]="exportCompression"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="none">None</option>
+                <option value="zip">ZIP</option>
+                <option value="gzip">GZIP</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button
+              (click)="previewExport()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Preview
+            </button>
+            <button
+              (click)="cancelExport()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmExport()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Export
+            </button>
           </div>
         </div>
       </div>
-    </footer>
+
+      <!-- Download All Modal -->
+      <div *ngIf="showDownloadAllModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Download All {{ downloadAllType === 'candidates' ? 'Candidate' : 'HR' }} Reports</h2>
+          </div>
+          
+          <div class="px-6 py-4 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Select Format</label>
+              <select
+                [(ngModel)]="downloadAllFormat"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="CSV">CSV</option>
+                <option value="PDF">PDF</option>
+                <option value="Excel">Excel</option>
+                <option value="JSON">JSON</option>
+                <option value="XML">XML</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button
+              (click)="cancelDownloadAll()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmDownloadAll()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Preview Modal -->
+      <div *ngIf="showExportPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform transition-all">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Export Preview</h2>
+          </div>
+          
+          <div class="px-6 py-4 space-y-4">
+            <div class="overflow-x-auto max-h-64 border border-gray-200 rounded-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th
+                      *ngFor="let field of availableFields | filter:{selected:true}"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-900 uppercase"
+                    >
+                      {{ field.name }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr *ngFor="let report of paginatedCandidateReports | slice:0:3" class="hover:bg-gray-50 transition duration-200">
+                    <td
+                      *ngFor="let field of availableFields | filter:{selected:true}"
+                      class="px-4 py-2 whitespace-nowrap text-xs text-gray-700"
+                    >
+                      {{ formatCellValue(report[field.name], field.name) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button
+              (click)="showExportPreviewModal = false"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Close
+            </button>
+            <button
+              (click)="confirmExport()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Confirm Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Export Modal -->
+      <div *ngIf="showScheduleExportModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Schedule Report Export</h2>
+          </div>
+          
+          <div class="px-6 py-4 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Export Format</label>
+              <select
+                [(ngModel)]="exportFormat"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="CSV">CSV</option>
+                <option value="PDF">PDF</option>
+                <option value="Excel">Excel</option>
+                <option value="JSON">JSON</option>
+                <option value="XML">XML</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+              <select
+                [(ngModel)]="scheduleFrequency"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+              <input
+                type="date"
+                [(ngModel)]="scheduleStartDate"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+              <input
+                type="date"
+                [(ngModel)]="scheduleEndDate"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email Recipients</label>
+              <input
+                type="text"
+                [(ngModel)]="scheduleEmail"
+                placeholder="Enter emails (comma-separated)"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Time Zone</label>
+              <select
+                [(ngModel)]="scheduleTimeZone"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="UTC">UTC</option>
+                <option value="IST">IST</option>
+                <option value="PST">PST</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Notification Preference</label>
+              <select
+                [(ngModel)]="scheduleNotification"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="email">Email</option>
+                <option value="notification">In-App Notification</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button
+              (click)="cancelScheduleExport()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmScheduleExport()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Schedule
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Actions Modal -->
+      <div *ngIf="showBulkActionsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Bulk Actions</h2>
+          </div>
+          
+          <div class="px-6 py-4 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Action</label>
+              <select
+                [(ngModel)]="bulkAction"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="export">Export Selected</option>
+                <option value="archive">Archive Selected</option>
+                <option value="delete">Delete Selected</option>
+                <option value="updateStatus">Update Status</option>
+                <option value="sendEmail">Send Email</option>
+                <option value="assignHR">Assign HR</option>
+                <option value="tag">Tag Selected</option>
+                <option value="moveToFolder">Move to Folder</option>
+              </select>
+            </div>
+            <div *ngIf="bulkAction === 'updateStatus'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">New Status</label>
+              <select
+                [(ngModel)]="bulkStatus"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="Hired">Hired</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+                <option value="OnHold">On Hold</option>
+              </select>
+            </div>
+            <div *ngIf="bulkAction === 'sendEmail'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email Subject</label>
+              <input
+                type="text"
+                [(ngModel)]="bulkEmailSubject"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+              <label class="block text-sm font-medium text-gray-700 mt-2 mb-1">Email Body</label>
+              <textarea
+                [(ngModel)]="bulkEmailBody"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md h-32"
+              ></textarea>
+            </div>
+            <div *ngIf="bulkAction === 'assignHR'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Assign to HR</label>
+              <select
+                [(ngModel)]="bulkAssignedHR"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="">Select HR</option>
+                <option *ngFor="let hr of hrList" [value]="hr.id">{{ hr.name }}</option>
+              </select>
+            </div>
+            <div *ngIf="bulkAction === 'tag'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tag Name</label>
+              <input
+                type="text"
+                [(ngModel)]="bulkTag"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+            </div>
+            <div *ngIf="bulkAction === 'moveToFolder'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Folder Name</label>
+              <input
+                type="text"
+                [(ngModel)]="bulkFolder"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+            </div>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button
+              (click)="cancelBulkActions()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmBulkActions()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

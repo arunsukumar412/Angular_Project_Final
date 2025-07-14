@@ -1,0 +1,123 @@
+<app-jobseeker-sidebar></app-jobseeker-sidebar>
+
+<div class="min-h-screen w-full bg-gradient-to-br from-blue-50 to-blue-100 p-6">
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-blue-900/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="flex flex-col items-center">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      <p class="mt-4 text-white font-medium">Preparing your interview portal...</p>
+    </div>
+  </div>
+
+  <!-- Interview Portal Content -->
+  <div *ngIf="!isLoading" class="container mx-auto w-full max-w-4xl pt-16 animate-fade-in">
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-200 transition-all duration-300">
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <!-- Back Button -->
+        <button [routerLink]="['/jobseeker-dashboard']" class="flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors duration-200 group" aria-label="Back to dashboard">
+          <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Dashboard
+        </button>
+
+        <!-- Title -->
+        <div class="text-center">
+          <h1 class="text-3xl font-bold text-blue-800">Interview Portal</h1>
+          <p class="text-sm text-blue-600 mt-2">Complete your scheduled assessment</p>
+        </div>
+
+        <!-- Timer/Status Indicator -->
+        <div class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium">
+          Ready to Begin
+        </div>
+      </div>
+
+      <!-- Login Section -->
+      <div *ngIf="!isLoggedIn" class="login-content animate-fade-in max-w-md mx-auto">
+        <form (ngSubmit)="login()" class="space-y-6">
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-blue-800 mb-1">Your Name</label>
+            <input id="name" [(ngModel)]="name" name="name" type="text" required 
+              class="w-full px-4 py-3 border border-blue-200 rounded-lg text-blue-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              placeholder="Enter your full name">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-blue-800 mb-1">HR Provided Email</label>
+            <input id="email" [(ngModel)]="email" name="email" type="email" readonly 
+              class="w-full px-4 py-3 border border-blue-200 rounded-lg text-blue-900 bg-blue-50 cursor-not-allowed"
+              aria-label="Your email (provided by HR)">
+          </div>
+
+          <input type="hidden" [(ngModel)]="password" name="password" readonly>
+
+          <!-- Error Message -->
+          <div *ngIf="loginError" class="text-red-600 text-sm p-3 bg-red-50 rounded-lg flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ loginError }}
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            </svg>
+            Begin Assessment
+          </button>
+        </form>
+      </div>
+
+      <!-- Test Interface -->
+      <div *ngIf="isLoggedIn" class="test-content animate-fade-in" id="fullscreen-content">
+        <!-- Assessment Instructions -->
+        <div class="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+          <h2 class="text-xl font-semibold text-blue-800 mb-3">Assessment Instructions</h2>
+          <ul class="list-disc pl-5 space-y-2 text-blue-900">
+            <li>This assessment contains multiple sections</li>
+            <li>You will have limited time for each question</li>
+            <li>Ensure you have a stable internet connection</li>
+            <li>Do not refresh or close the browser during the test</li>
+          </ul>
+        </div>
+
+        <!-- Question Progress -->
+        <div class="mb-6">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-medium text-blue-800">Question 1 of 10</span>
+            <span class="text-sm font-medium text-blue-600">Time remaining: 14:32</span>
+          </div>
+          <div class="w-full bg-blue-200 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 10%"></div>
+          </div>
+        </div>
+
+        <!-- Current Question -->
+        <div class="mb-8 p-6 bg-white rounded-xl border border-blue-200 shadow-sm">
+          <h3 class="text-lg font-medium text-blue-800 mb-4">What is your approach to solving complex problems in a team environment?</h3>
+          
+          <!-- Answer Textarea -->
+          <textarea class="w-full px-4 py-3 border border-blue-200 rounded-lg text-blue-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" rows="5" placeholder="Type your answer here..."></textarea>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+          <button class="px-6 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 text-sm font-medium transition-colors duration-200">
+            Previous Question
+          </button>
+          <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors duration-200">
+            Next Question
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -44,6 +44,11 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem('email', email);
       sessionStorage.setItem('password', password);
       this.router.navigate(['/hr-dashboard']);
+    } else if (email === 'arun@gmail.com' && password === 'arun1234') {
+      // Jobseeker credentials
+      sessionStorage.setItem('email', email);
+      sessionStorage.setItem('password', password);
+      this.router.navigate(['/jobseeker-dashboard']);
     } else {
       this.errorMessage = 'Invalid email or password.';
     }

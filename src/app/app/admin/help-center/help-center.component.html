@@ -1,0 +1,326 @@
+<div class="w-full bg-gradient-to-b from-blue-50 to-white min-h-screen flex flex-col">
+  <app-sidebar></app-sidebar>
+  <app-chat-assistant></app-chat-assistant>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden transition-all duration-300" [ngClass]="{'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen}">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center">
+          <button id="mobile-menu-button" class="text-blue-600 hover:text-blue-800 focus:outline-none md:hidden" aria-label="Toggle sidebar" (click)="toggleSidebar()">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <div class="relative ml-4">
+            <label for="header-search" class="sr-only">Search AI knowledge base</label>
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-blue-400"></i>
+            </div>
+            <input id="header-search" type="text" class="block w-full pl-10 pr-3 py-2 border border-blue-200 rounded-lg leading-5 bg-white placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Ask the AI assistant..." aria-label="Search AI knowledge base">
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button id="notification-btn" class="text-blue-600 hover:text-blue-800 focus:outline-none relative" aria-label="View notifications" (click)="toggleNotificationDropdown()">
+            <i class="fas fa-bell text-xl"></i>
+            <span *ngIf="notifications.length" class="absolute top-0 right-0 inline-block w-2 h-2 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"></span>
+            <div id="notification-dropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 border border-blue-100" [class.hidden]="!showNotificationDropdown">
+              <div class="p-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
+                <p class="text-sm font-medium">AI Notifications ({{ notifications.length }})</p>
+              </div>
+              <div class="divide-y divide-blue-50 max-h-96 overflow-y-auto">
+                <a *ngFor="let notification of notifications" [routerLink]="notification.link" class="flex px-4 py-3 hover:bg-blue-50 transition-colors duration-150">
+                  <div class="flex-shrink-0">
+                    <i class="fas {{ notification.icon }} mt-1 text-lg" [ngClass]="notification.iconColor"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">{{ notification.message }}</p>
+                    <p class="text-xs text-gray-500">{{ notification.time }}</p>
+                  </div>
+                </a>
+                <div *ngIf="!notifications.length" class="p-4 text-sm text-gray-500 text-center">No new notifications</div>
+              </div>
+              <div class="p-3 text-center border-t border-blue-100 bg-blue-50 rounded-b-lg">
+                <a [routerLink]="['/notifications']" class="text-sm font-medium text-blue-600 hover:text-blue-800">View all notifications</a>
+                <button *ngIf="notifications.length" class="text-sm font-medium text-blue-600 hover:text-blue-800 ml-4" (click)="clearNotifications()">Clear All</button>
+              </div>
+            </div>
+          </button>
+          <div class="relative">
+            <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none group" aria-label="User menu" (click)="toggleUserDropdown()">
+              <div class="relative">
+                <img class="h-8 w-8 rounded-full border-2 border-blue-200 group-hover:border-blue-300 transition-colors" src="/assets/images/admin-profile.jpg" alt="Admin profile">
+                <span class="absolute bottom-0 right-0 h-2 w-2 bg-green-500 rounded-full border border-white"></span>
+              </div>
+              <span class="hidden md:inline-block text-sm font-medium text-blue-600">AI Admin</span>
+            </button>
+            <div id="user-menu-dropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl bg-white border border-blue-100 py-1 z-50" [class.hidden]="!showUserDropdown">
+              <a [routerLink]="['/profile']" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"><i class="fas fa-user-circle mr-2 text-blue-500"></i> Profile</a>
+              <a [routerLink]="['/settings']" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"><i class="fas fa-cog mr-2 text-blue-500"></i> Settings</a>
+              <div class="border-t border-blue-100 my-1"></div>
+              <a [routerLink]="['/logout']" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"><i class="fas fa-sign-out-alt mr-2 text-blue-500"></i> Sign out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-gradient-to-b from-blue-50 to-white pt-6 pb-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- AI Help Center Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+          <div>
+            <h1 class="text-3xl font-bold text-blue-800 mb-2">GenWorx AI Help Center</h1>
+            <p class="text-lg text-blue-600">Your intelligent assistant for everything about the platform</p>
+          </div>
+          <div class="mt-4 md:mt-0">
+            <div class="bg-blue-100 border border-blue-200 rounded-lg p-3 flex items-center">
+              <i class="fas fa-robot text-blue-600 text-xl mr-3"></i>
+              <div>
+                <p class="text-sm font-medium text-blue-800">AI Assistant Status</p>
+                <p class="text-xs text-blue-600 flex items-center">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
+                  Online and ready to help
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Search Bar -->
+        <div class="mb-8">
+          <div class="relative max-w-2xl mx-auto">
+            <label for="ai-search" class="sr-only">Ask the AI assistant</label>
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i class="fas fa-robot text-blue-400 text-lg"></i>
+            </div>
+            <input id="ai-search" type="text" [(ngModel)]="searchQuery" (input)="filterFAQs()" class="block w-full pl-12 pr-4 py-4 border border-blue-200 rounded-xl leading-5 bg-white placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base shadow-sm" placeholder="Ask me anything about the platform..." aria-label="Ask AI assistant">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <button class="p-1 text-blue-400 hover:text-blue-600 focus:outline-none" aria-label="Voice search">
+                <i class="fas fa-microphone"></i>
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-blue-500 mt-2 text-center">Try: "How do I configure AI settings?" or "Show me analytics reports"</p>
+        </div>
+
+        <!-- AI Suggestions Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-5 hover:shadow-md transition-shadow cursor-pointer" (click)="searchQuery = 'How to manage users'; filterFAQs()">
+            <div class="flex items-center mb-3">
+              <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                <i class="fas fa-users text-blue-600"></i>
+              </div>
+              <h3 class="text-sm font-medium text-blue-800">User Management</h3>
+            </div>
+            <p class="text-xs text-blue-600">Learn how to add, edit, and manage user accounts</p>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-5 hover:shadow-md transition-shadow cursor-pointer" (click)="searchQuery = 'How to configure AI settings'; filterFAQs()">
+            <div class="flex items-center mb-3">
+              <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                <i class="fas fa-cog text-purple-600"></i>
+              </div>
+              <h3 class="text-sm font-medium text-blue-800">AI Configuration</h3>
+            </div>
+            <p class="text-xs text-blue-600">Customize your AI assistant and platform settings</p>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-5 hover:shadow-md transition-shadow cursor-pointer" (click)="searchQuery = 'How to view analytics'; filterFAQs()">
+            <div class="flex items-center mb-3">
+              <div class="bg-green-100 p-2 rounded-lg mr-3">
+                <i class="fas fa-chart-line text-green-600"></i>
+              </div>
+              <h3 class="text-sm font-medium text-blue-800">Analytics</h3>
+            </div>
+            <p class="text-xs text-blue-600">Understand platform usage and performance metrics</p>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-5 hover:shadow-md transition-shadow cursor-pointer" (click)="searchQuery = 'Troubleshooting common issues'; filterFAQs()">
+            <div class="flex items-center mb-3">
+              <div class="bg-amber-100 p-2 rounded-lg mr-3">
+                <i class="fas fa-question-circle text-amber-600"></i>
+              </div>
+              <h3 class="text-sm font-medium text-blue-800">Troubleshooting</h3>
+            </div>
+            <p class="text-xs text-blue-600">Resolve common platform issues and errors</p>
+          </div>
+        </div>
+
+        <!-- AI Knowledge Base -->
+        <div class="bg-white rounded-xl shadow-sm border border-blue-100 mb-8 overflow-hidden">
+          <div class="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
+            <h2 class="text-xl font-semibold text-blue-800 flex items-center">
+              <i class="fas fa-brain text-blue-600 mr-3"></i>
+              AI Knowledge Base
+            </h2>
+          </div>
+          <div class="divide-y divide-blue-50">
+            <div *ngFor="let faq of filteredFAQs" class="p-5 hover:bg-blue-50 transition-colors">
+              <div class="flex items-center justify-between cursor-pointer" (click)="toggleFAQ(faq)">
+                <div class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-question text-blue-600"></i>
+                  </div>
+                  <h3 class="text-base font-medium text-blue-800">{{ faq.question }}</h3>
+                </div>
+                <i class="fas text-blue-500 transition-transform duration-200" [ngClass]="faq.isOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+              </div>
+              <div *ngIf="faq.isOpen" class="mt-4 pl-14 pr-4">
+                <div class="text-sm text-blue-600 bg-blue-50 rounded-lg p-4 border border-blue-100">
+                  <p>{{ faq.answer }}</p>
+                  <div class="mt-3 flex items-center text-xs text-blue-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <span>AI-generated answer • Last updated: {{ today | date }}</span>
+                  </div>
+                </div>
+                <div class="mt-3 flex space-x-3">
+                  <button class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                    <i class="far fa-thumbs-up mr-1"></i> Helpful
+                  </button>
+                  <button class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                    <i class="far fa-thumbs-down mr-1"></i> Not helpful
+                  </button>
+                  <button class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                    <i class="far fa-copy mr-1"></i> Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="filteredFAQs.length === 0" class="p-8 text-center">
+            <i class="fas fa-search text-blue-300 text-4xl mb-3"></i>
+            <p class="text-blue-600">No results found for "{{ searchQuery }}"</p>
+            <p class="text-sm text-blue-500 mt-2">Try a different search term or ask the AI assistant directly</p>
+          </div>
+        </div>
+
+        <!-- AI Support Options -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <!-- AI Documentation -->
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
+            <div class="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
+              <h2 class="text-xl font-semibold text-blue-800 flex items-center">
+                <i class="fas fa-book-open text-blue-600 mr-3"></i>
+                AI Documentation
+              </h2>
+            </div>
+            <div class="p-5">
+              <div class="space-y-4">
+                <a [routerLink]="['/docs/ai-guide']" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-robot text-blue-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Assistant Guide</p>
+                    <p class="text-xs text-blue-600">Learn how to interact with the GenWorx AI</p>
+                  </div>
+                  <i class="fas fa-chevron-right text-blue-400 ml-auto"></i>
+                </a>
+                <a [routerLink]="['/docs/ai-settings']" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-purple-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-sliders-h text-purple-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Configuration</p>
+                    <p class="text-xs text-blue-600">Customize AI behavior and preferences</p>
+                  </div>
+                  <i class="fas fa-chevron-right text-blue-400 ml-auto"></i>
+                </a>
+                <a [routerLink]="['/docs/ai-analytics']" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-green-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-chart-pie text-green-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Analytics</p>
+                    <p class="text-xs text-blue-600">Understand AI performance and usage</p>
+                  </div>
+                  <i class="fas fa-chevron-right text-blue-400 ml-auto"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Support Channels -->
+          <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
+            <div class="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
+              <h2 class="text-xl font-semibold text-blue-800 flex items-center">
+                <i class="fas fa-headset text-blue-600 mr-3"></i>
+                AI Support Channels
+              </h2>
+            </div>
+            <div class="p-5">
+              <div class="space-y-4">
+                <div class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-comment-dots text-blue-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Chat Support</p>
+                    <p class="text-xs text-blue-600">24/7 assistance from our AI assistant</p>
+                  </div>
+                  <button class="ml-auto bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 rounded-full transition-colors" (click)="openChat()">
+                    Chat Now
+                  </button>
+                </div>
+                <div class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-amber-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-envelope text-amber-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Email Support</p>
+                    <p class="text-xs text-blue-600">supportgenworx.com</p>
+                  </div>
+                  <button class="ml-auto border border-blue-200 text-blue-600 hover:bg-blue-50 text-xs py-1 px-3 rounded-full transition-colors" (click)="contactSupport()">
+                    Email
+                  </button>
+                </div>
+                <div class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-150 border border-transparent hover:border-blue-200">
+                  <div class="bg-red-100 p-2 rounded-lg mr-4">
+                    <i class="fas fa-phone-alt text-red-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">AI Phone Support</p>
+                    <p class="text-xs text-blue-600">+1-800-GENWORX (Mon-Fri, 9-5)</p>
+                  </div>
+                  <button class="ml-auto border border-blue-200 text-blue-600 hover:bg-blue-50 text-xs py-1 px-3 rounded-full transition-colors" (click)="callSupport()">
+                    Call
+                  </button>
+                </div>
+              </div>
+              <div class="mt-5">
+                <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-200 shadow-md hover:shadow-lg" (click)="contactSupport()">
+                  <i class="fas fa-envelope-open-text mr-2"></i>
+                  <span>Contact AI Support Team</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-blue-100 py-4 px-6 sticky bottom-0 z-50">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="text-sm text-blue-600 mb-4 md:mb-0">
+          © 2025 GenWorx AI Platform. All rights reserved.
+        </div>
+        <div class="flex items-center space-x-6">
+          <a [routerLink]="['/privacy-policy']" class="text-sm text-blue-600 hover:text-blue-800">Privacy Policy</a>
+          <a [routerLink]="['/terms-of-service']" class="text-sm text-blue-600 hover:text-blue-800">Terms of Service</a>
+          <span class="text-sm text-blue-600">AI Version 3.1.0</span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <i class="fas fa-circle mr-1" style="font-size: 6px;"></i>
+            AI Active
+          </span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Floating AI Help Button -->
+  <button class="fixed bottom-6 right-6 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-2xl" (click)="openChat()" title="Ask the AI Assistant" aria-label="Open AI chat">
+    <i class="fas fa-robot text-xl"></i>
+  </button>
+</div>

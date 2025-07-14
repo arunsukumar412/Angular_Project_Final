@@ -4,163 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Genworx - Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #93c5fd;
+      --secondary: #00154D;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+      --bg-light: #f8fafc;
+      --bg-dark: #0f172a;
+    }
+    
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f3f4f6;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
     }
-    .left-side {
-      background-color: #00154D;
-      color: #e2e8f0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 2rem;
-    }
-    .feature-item {
-      position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .feature-item::before {
-      content: '✔';
-      position: absolute;
-      left: 0;
-      color: #4ade80;
-      font-size: 1rem;
-      font-weight: bold;
-    }
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .welcome-back {
-      font-size: 1.75rem;
-      font-weight: bold;
-      color: #1e293b;
-      margin-bottom: 1rem;
-    }
-    .form-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      margin-bottom: 1rem;
-      box-sizing: border-box;
-      color: #374151;
-    }
-    .form-input:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
-    }
-    .error-message {
-      color: #ef4444;
-      font-size: 0.875rem;
-      margin-top: -0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .btn-primary {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.75rem 1rem;
-      border-radius: 0.375rem;
-      text-align: center;
-      font-size: 1rem;
-      width: 100%;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .btn-primary:hover {
-      background-color: #1d4ed8;
-    }
-    .btn-primary:disabled {
-      background-color: #93c5fd;
-      cursor: not-allowed;
-    }
-    .social-login {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .social-btn {
-      flex-grow: 1;
-      padding: 0.75rem 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      text-align: center;
-      color: #374151;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.2s;
-    }
-    .social-btn:hover {
-      border-color: #9ca3af;
-    }
-    .or-divider {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #6b7280;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .or-divider::before,
-    .or-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #d1d5db;
-      margin: 0 0.5rem;
-    }
-    .signup-link {
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.875rem;
-      margin-top: 1.5rem;
-    }
-    .signup-link a {
-      color: #2563eb;
-      text-decoration: underline;
-    }
+    
     .grid-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 100vh;
     }
-    .right-side {
+    
+    /* Left Side Styles */
+    .left-side {
+      background-color: var(--secondary);
+      color: white;
+      position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 2rem;
-      background-color: white;
+      justify-content: space-between;
+      padding: 3rem;
+      background-image: linear-gradient(rgba(0, 21, 77, 0.9), rgba(0, 21, 77, 0.9)), 
+                        url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');
+      background-size: cover;
+      background-position: center;
     }
-    @media (max-width: 768px) {
-      .grid-container {
-        grid-template-columns: 1fr;
-      }
-    }
+    
     .back-arrow {
       position: absolute;
       top: 2rem;
       left: 2rem;
       cursor: pointer;
-      color: #e2e8f0;
-      font-size: 1.5rem;
-      font-weight: bold;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
       text-decoration: none;
       display: flex;
       align-items: center;
       z-index: 10;
+      transition: all 0.2s ease;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
     }
+    
+    .back-arrow:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(-3px);
+    }
+    
     .back-arrow svg {
       margin-right: 0.5rem;
-      stroke: #e2e8f0;
+      stroke: white;
     }
+    
     .left-side-content {
       padding-top: 4rem;
       flex-grow: 1;
@@ -169,158 +85,560 @@
       justify-content: center;
       align-items: flex-start;
     }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    
+    .logo-img {
+      width: 350px;
+      height: 250px;
+    }
+    
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+      margin-left: 0.75rem;
+    }
+    
+    .feature-list {
+      margin-top: 2rem;
+      padding-left: 0;
+      list-style: none;
+    }
+    
+    .feature-item {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .feature-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 28px;
+      height: 28px;
+      background-color: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      content: '\f00c';
+      font-size: 0.8rem;
+    }
+    
+    .feature-item span {
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+    
+    .feature-item p {
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    .copyright {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      margin-top: 2rem;
+    }
+    
+    /* Right Side Styles */
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem;
+      background-color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .right-side::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: url('https://www.genworx.com/wp-content/uploads/2022/05/genworx-logo-blue.png') no-repeat;
+      background-size: contain;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    
+    .right-side::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: url('https://www.genworx.com/wp-content/uploads/2022/05/genworx-logo-blue.png') no-repeat;
+      background-size: contain;
+      opacity: 0.05;
+      z-index: 0;
+      transform: rotate(180deg);
+    }
+    
+    .form-container {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .welcome-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .welcome-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    
+    .welcome-subtitle {
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    
+    .social-login {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .social-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      text-align: center;
+      color: var(--text);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      background: white;
+    }
+    
+    .social-btn:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .social-btn img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+    
+    .or-divider {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-light);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+      margin: 0 0.75rem;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+    
     .required {
-      color: #ef4444;
+      color: var(--danger);
       margin-left: 4px;
     }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      box-sizing: border-box;
+      color: var(--text);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    
+    .input-error {
+      border-color: var(--danger);
+    }
+    
+    .input-error:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+    
+    .error-message {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      padding-left: 0.5rem;
+      display: block;
+    }
+    
     .password-container {
       position: relative;
     }
+    
     .toggle-password {
       position: absolute;
-      right: 10px;
-      top: 10px;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
-      color: #64748b;
+      color: var(--text-light);
+      font-size: 1.1rem;
+      background: none;
+      border: none;
+      padding: 0.5rem;
     }
+    
+    /* Password Strength Meter */
     .password-strength-meter {
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
       margin-bottom: 1rem;
     }
+    
     .strength-bar {
-      height: 4px;
-      border-radius: 2px;
-      background-color: #e2e8f0;
-      margin-bottom: 0.25rem;
+      height: 6px;
+      border-radius: 3px;
+      background-color: var(--border);
+      margin-bottom: 0.5rem;
       overflow: hidden;
     }
+    
     .strength-bar-fill {
       height: 100%;
       width: 0%;
       transition: width 0.3s, background-color 0.3s;
     }
+    
     .strength-text {
-      font-size: 0.75rem;
-      color: #64748b;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      display: flex;
+      justify-content: space-between;
     }
+    
+    .strength-label {
+      font-weight: 500;
+    }
+    
+    /* Password Suggestions */
     .suggestions-list {
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
       padding-left: 1rem;
+      list-style-type: none;
     }
+    
     .suggestions-list li {
       margin-bottom: 0.25rem;
+      position: relative;
+      padding-left: 1.25rem;
     }
+    
+    .suggestions-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+    
+    /* Submit Button */
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.85rem 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    }
+    
+    .btn-primary:disabled {
+      background-color: var(--primary-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    /* Auth Links */
+    .auth-links {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    
+    .auth-link {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    
+    .auth-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .auth-link a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Strength Colors */
+    .strength-very-weak {
+      background-color: var(--danger);
+      width: 20% !important;
+    }
+    
+    .strength-weak {
+      background-color: #f97316;
+      width: 40% !important;
+    }
+    
+    .strength-moderate {
+      background-color: var(--warning);
+      width: 60% !important;
+    }
+    
+    .strength-strong {
+      background-color: #3b82f6;
+      width: 80% !important;
+    }
+    
+    .strength-very-strong {
+      background-color: var(--success);
+      width: 100% !important;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 1024px) {
+      .grid-container {
+        grid-template-columns: 1fr 1.5fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .left-side {
+        display: none;
+      }
+      
+      .right-side {
+        padding: 2rem 1.5rem;
+      }
+      
+      .form-container {
+        max-width: 100%;
+      }
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-container > * {
+      animation: fadeIn 0.3s ease forwards;
+    }
+    
+    .form-container > *:nth-child(1) { animation-delay: 0.1s; }
+    .form-container > *:nth-child(2) { animation-delay: 0.2s; }
+    .form-container > *:nth-child(3) { animation-delay: 0.3s; }
+    .form-container > *:nth-child(4) { animation-delay: 0.4s; }
+    .form-container > *:nth-child(5) { animation-delay: 0.5s; }
   </style>
 </head>
 <body>
   <div class="grid-container">
     <div class="left-side">
       <a href="#" class="back-arrow" onclick="window.history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
         Back
       </a>
       <div class="left-side-content">
-        <div class="flex items-center mb-8">
-          <img src="assets/icons/logo.png" alt="GenWorx Logo" class="w-50 h-50 mr-10 object-contain">
+        <div class="logo-container">
+          <img src="assets/icons/logo.png" alt="GenWorx Logo" class="logo-img">
           <span class="logo-text">Jobs</span>
         </div>
-        <ul>
+        <ul class="feature-list">
           <li class="feature-item">
             <span>Get started quickly</span>
-            <p class="text-gray-300">Integrate with developer-friendly APIs or choose low-code.</p>
+            <p>Access job openings from leading tech companies and global brands across multiple industries.</p>
           </li>
           <li class="feature-item">
-            <span>Support any business model</span>
-            <p class="text-gray-300">Host code privately with full control.</p>
+            <span>Support any career path</span>
+            <p>Track your interviews and applications in one convenient dashboard.</p>
           </li>
           <li class="feature-item">
-            <span>Join millions of businesses</span>
-            <p class="text-gray-300">Trusted by startups and enterprises alike.</p>
+            <span>Join millions of professionals</span>
+            <p>Trusted by job seekers worldwide to find their dream careers.</p>
           </li>
         </ul>
+        <p class="copyright">© 2025 Genworx. All rights reserved.</p>
       </div>
-      <p class="text-gray-400 text-sm">© 2025 Genworx. All rights reserved.</p>
     </div>
 
     <div class="right-side">
-      <div class="max-w-md mx-auto">
-        <h2 class="welcome-back">Create an Account</h2>
+      <div class="form-container">
+        <h2 class="welcome-title">Create an Account</h2>
+        <p class="welcome-subtitle">Join our community of professionals and take the next step in your career</p>
 
         <div class="social-login">
-          <a href="#" class="social-btn">
-            <img src="assets/icons/Google.jpg" alt="Google" class="w-5 h-5 mr-2" />
-            Register with Google
-          </a>
-          <a href="#" class="social-btn">
-            <img src="assets/icons/download.png" alt="Apple" class="w-5 h-5 mr-2" />
-            Register with Apple
-          </a>
+          <button type="button" class="social-btn">
+            <img src="assets/icons/Google.jpg" alt="Google" />
+            Google
+          </button>
+          <button type="button" class="social-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" />
+            Apple
+          </button>
         </div>
 
-        <div class="or-divider">or</div>
+        <div class="or-divider">or register with email</div>
 
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-          <div>
-            <label>Name <span class="required">*</span></label>
-            <input type="text" formControlName="name" class="form-input" placeholder="Enter your full name" />
+          <div class="form-group">
+            <label for="name">Full Name <span class="required">*</span></label>
+            <input type="text" id="name" formControlName="name" class="form-input" 
+                   [ngClass]="{'input-error': registerForm.get('name')?.invalid && registerForm.get('name')?.touched}"
+                   placeholder="Enter your full name" />
             <div class="error-message" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
-              <div *ngIf="registerForm.get('name')?.errors?.['required']">Name is required.</div>
-              <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</div>
-              <div *ngIf="registerForm.get('name')?.errors?.['pattern']">Name can only contain letters and spaces.</div>
+              <div *ngIf="registerForm.get('name')?.errors?.['required']">Name is required</div>
+              <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</div>
+              <div *ngIf="registerForm.get('name')?.errors?.['pattern']">Only letters and spaces allowed</div>
             </div>
           </div>
 
-          <div>
-            <label>Email <span class="required">*</span></label>
-            <input type="email" formControlName="email" class="form-input" placeholder="Enter your email address" />
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" id="email" formControlName="email" class="form-input" 
+                   [ngClass]="{'input-error': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+                   placeholder="Enter your email address" />
             <div class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
-              <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</div>
+              <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</div>
               <div *ngIf="registerForm.get('email')?.errors?.['email'] || registerForm.get('email')?.errors?.['pattern']">
-                Please enter a valid email address.
+                Please enter a valid email address
               </div>
             </div>
           </div>
 
-          <div>
-            <label>Password <span class="required">*</span></label>
+          <div class="form-group">
+            <label for="password">Password <span class="required">*</span></label>
             <div class="password-container">
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-input" 
-                     placeholder="Create a strong password" (input)="onPasswordInput()" />
-              <span class="toggle-password" (click)="togglePasswordVisibility()">
-                {{ showPassword ? 'Hide' : 'Show' }}
-              </span>
+              <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
+                     class="form-input" 
+                     [ngClass]="{'input-error': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+                     placeholder="Create a strong password" 
+                     (input)="onPasswordInput()" />
+              <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="{'fa-eye': showPassword, 'fa-eye-slash': !showPassword}"></i>
+              </button>
             </div>
             
             <div class="password-strength-meter" *ngIf="registerForm.get('password')?.value">
               <div class="strength-bar">
-                <div class="strength-bar-fill" [style.width.%]="passwordStrengthScore" 
-                     [class.bg-red-500]="passwordStrengthScore < 20"
-                     [class.bg-orange-500]="passwordStrengthScore >= 20 && passwordStrengthScore < 40"
-                     [class.bg-yellow-500]="passwordStrengthScore >= 40 && passwordStrengthScore < 60"
-                     [class.bg-blue-500]="passwordStrengthScore >= 60 && passwordStrengthScore < 80"
-                     [class.bg-green-500]="passwordStrengthScore >= 80"></div>
+                <div class="strength-bar-fill" 
+                     [class.strength-very-weak]="passwordStrengthScore < 20"
+                     [class.strength-weak]="passwordStrengthScore >= 20 && passwordStrengthScore < 40"
+                     [class.strength-moderate]="passwordStrengthScore >= 40 && passwordStrengthScore < 60"
+                     [class.strength-strong]="passwordStrengthScore >= 60 && passwordStrengthScore < 80"
+                     [class.strength-very-strong]="passwordStrengthScore >= 80"></div>
               </div>
               <div class="strength-text">
-                Password strength: {{ getPasswordStrengthFeedback() }}
+                <span>Password strength:</span>
+                <span class="strength-label">{{ getPasswordStrengthFeedback() }}</span>
               </div>
             </div>
             
             <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
-              <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
-              <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</div>
+              <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</div>
+              <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Minimum 8 characters required</div>
               <div *ngIf="registerForm.get('password')?.errors?.['complexity']">
-                Password must include uppercase, lowercase, number, and special character.
+                Include uppercase, lowercase, number, and special character
               </div>
               <div *ngIf="registerForm.get('password')?.errors?.['commonPassword']">
-                This password is too common. Please choose a stronger one.
+                This password is too common
               </div>
               <div *ngIf="registerForm.get('password')?.errors?.['containsPersonalInfo']">
-                Password should not contain your name or email.
+                Should not contain your name or email
               </div>
             </div>
             
@@ -329,29 +647,34 @@
             </ul>
           </div>
 
-          <div>
-            <label>Confirm Password <span class="required">*</span></label>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
             <div class="password-container">
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-input" 
+              <input [type]="showPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword" 
+                     class="form-input" 
+                     [ngClass]="{'input-error': registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched}"
                      placeholder="Re-enter your password" />
-              <span class="toggle-password" (click)="togglePasswordVisibility()">
-                {{ showPassword ? 'Hide' : 'Show' }}
-              </span>
+              <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="{'fa-eye': showPassword, 'fa-eye-slash': !showPassword}"></i>
+              </button>
             </div>
             <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
-              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password.</div>
-              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['mustMatch']">Passwords do not match.</div>
+              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</div>
+              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['mustMatch']">Passwords do not match</div>
             </div>
           </div>
 
-          <button type="submit" class="btn-primary" [disabled]="registerForm.invalid">Create Account</button>
+          <button type="submit" class="btn-primary" [disabled]="registerForm.invalid">
+            Create Account
+          </button>
 
           <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
         </form>
 
-        <div class="signup-link">
-          Already have an account?
-          <a routerLink="/login" class="text-blue-600 underline">Log in here</a>
+        <div class="auth-links">
+          <p class="auth-link">
+            Already have an account? <a routerLink="/login">Log in here</a>
+          </p>
         </div>
       </div>
     </div>

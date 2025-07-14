@@ -7,13 +7,18 @@
     <header class="bg-white shadow-md">
       <div class="flex items-center justify-between px-4 py-3">
         <div class="flex items-center">
-          <button class="text-gray-500 hover:text-gray-600 focus:outline-none md:hidden">
+          <button class="text-gray-500 hover:text-gray-600 focus:outline-none md:hidden" (click)="toggleSidebar()">
             <i class="fas fa-bars text-xl"></i>
           </button>
           <h1 class="ml-4 text-xl font-semibold text-gray-800">Settings</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <!-- Your existing header buttons -->
+          <button class="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700" (click)="saveSettings()" [disabled]="!settingsForm.dirty || settingsForm.invalid">
+            <i class="fas fa-save mr-2"></i> Save Changes
+          </button>
+          <button class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600" (click)="resetSettings()" [disabled]="!settingsForm.dirty">
+            <i class="fas fa-undo mr-2"></i> Reset
+          </button>
         </div>
       </div>
     </header>
@@ -24,37 +29,27 @@
         <!-- Settings Header -->
         <div class="mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Admin Settings</h2>
-          <p class="text-gray-600">Manage your platform configuration and preferences</p>
+          <p class="text-gray-600">Manage your platform configuration and preferences as of {{ currentDate | date:'medium' }}</p>
         </div>
         
         <!-- Settings Tabs -->
         <div class="mb-6">
           <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8">
-              <a href="#" class="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                General
-              </a>
-              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Security
-              </a>
-              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Notifications
-              </a>
-              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Appearance
-              </a>
-              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Advanced
-              </a>
+              <a href="#" class="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" (click)="setActiveTab('general')" [class.active]="activeTab === 'general'">General</a>
+              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" (click)="setActiveTab('security')" [class.active]="activeTab === 'security'">Security</a>
+              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" (click)="setActiveTab('notifications')" [class.active]="activeTab === 'notifications'">Notifications</a>
+              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" (click)="setActiveTab('appearance')" [class.active]="activeTab === 'appearance'">Appearance</a>
+              <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" (click)="setActiveTab('advanced')" [class.active]="activeTab === 'advanced'">Advanced</a>
             </nav>
           </div>
         </div>
         
         <!-- Settings Form -->
-        <div class="bg-white shadow rounded-lg overflow-hidden">
-          <div class="divide-y divide-gray-200">
+        <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()" class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="divide-y divide-gray-200" [ngSwitch]="activeTab">
             <!-- General Settings Section -->
-            <div class="px-4 py-5 sm:p-6">
+            <div *ngSwitchCase="'general'" class="px-4 py-5 sm:p-6">
               <h3 class="text-lg font-medium leading-6 text-gray-900">General Settings</h3>
               <div class="mt-2 max-w-xl text-sm text-gray-500">
                 <p>Configure basic platform settings and preferences.</p>
@@ -65,18 +60,21 @@
                   <div class="sm:col-span-4">
                     <label for="platform-name" class="block text-sm font-medium text-gray-700">Platform Name</label>
                     <div class="mt-1">
-                      <input type="text" name="platform-name" id="platform-name" value="GenWorx" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="text" id="platform-name" formControlName="platformName" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" [class.border-red-500]="settingsForm.get('platformName')?.invalid && settingsForm.get('platformName')?.touched">
+                      <div *ngIf="settingsForm.get('platformName')?.invalid && settingsForm.get('platformName')?.touched" class="text-red-600 text-sm mt-1">
+                        Platform name is required.
+                      </div>
                     </div>
                   </div>
                   
                   <div class="sm:col-span-4">
                     <label for="timezone" class="block text-sm font-medium text-gray-700">Timezone</label>
                     <div class="mt-1">
-                      <select id="timezone" name="timezone" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option>(UTC-12:00) International Date Line West</option>
-                        <option>(UTC-05:00) Eastern Time (US & Canada)</option>
-                        <option selected>(UTC+00:00) Coordinated Universal Time</option>
-                        <option>(UTC+05:30) India Standard Time</option>
+                      <select id="timezone" formControlName="timezone" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="UTC-12:00">(UTC-12:00) International Date Line West</option>
+                        <option value="UTC-05:00">(UTC-05:00) Eastern Time (US & Canada)</option>
+                        <option value="UTC+00:00">(UTC+00:00) Coordinated Universal Time</option>
+                        <option value="UTC+05:30" selected>(UTC+05:30) India Standard Time</option>
                       </select>
                     </div>
                   </div>
@@ -84,10 +82,10 @@
                   <div class="sm:col-span-4">
                     <label for="date-format" class="block text-sm font-medium text-gray-700">Date Format</label>
                     <div class="mt-1">
-                      <select id="date-format" name="date-format" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option>MM/DD/YYYY</option>
-                        <option selected>DD/MM/YYYY</option>
-                        <option>YYYY-MM-DD</option>
+                      <select id="date-format" formControlName="dateFormat" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                        <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                       </select>
                     </div>
                   </div>
@@ -95,11 +93,11 @@
               </div>
             </div>
             
-            <!-- System Settings Section -->
-            <div class="px-4 py-5 sm:p-6">
-              <h3 class="text-lg font-medium leading-6 text-gray-900">System Settings</h3>
+            <!-- Security Settings Section -->
+            <div *ngSwitchCase="'security'" class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Security Settings</h3>
               <div class="mt-2 max-w-xl text-sm text-gray-500">
-                <p>Configure system-level preferences and maintenance settings.</p>
+                <p>Manage security configurations.</p>
               </div>
               
               <div class="mt-5 space-y-6">
@@ -107,35 +105,52 @@
                   <div class="sm:col-span-4">
                     <div class="flex items-start">
                       <div class="flex h-5 items-center">
-                        <input id="maintenance-mode" name="maintenance-mode" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <input id="two-factor" formControlName="twoFactor" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                       </div>
                       <div class="ml-3 text-sm">
-                        <label for="maintenance-mode" class="font-medium text-gray-700">Maintenance Mode</label>
-                        <p class="text-gray-500">Put the platform in maintenance mode (visible only to admins).</p>
+                        <label for="two-factor" class="font-medium text-gray-700">Enable Two-Factor Authentication</label>
+                        <p class="text-gray-500">Requires a second verification step for logins.</p>
                       </div>
                     </div>
                   </div>
-                  
+                  <div class="sm:col-span-4">
+                    <label for="session-timeout" class="block text-sm font-medium text-gray-700">Session Timeout (minutes)</label>
+                    <div class="mt-1">
+                      <input type="number" id="session-timeout" formControlName="sessionTimeout" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" min="15" max="1440">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Notifications Settings Section -->
+            <div *ngSwitchCase="'notifications'" class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Notification Settings</h3>
+              <div class="mt-2 max-w-xl text-sm text-gray-500">
+                <p>Configure email and in-app notifications.</p>
+              </div>
+              
+              <div class="mt-5 space-y-6">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div class="sm:col-span-4">
                     <div class="flex items-start">
                       <div class="flex h-5 items-center">
-                        <input id="user-registration" name="user-registration" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <input id="email-notifications" formControlName="emailNotifications" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                       </div>
                       <div class="ml-3 text-sm">
-                        <label for="user-registration" class="font-medium text-gray-700">Allow New User Registrations</label>
-                        <p class="text-gray-500">Enable or disable new user signups.</p>
+                        <label for="email-notifications" class="font-medium text-gray-700">Enable Email Notifications</label>
+                        <p class="text-gray-500">Send emails for account activities.</p>
                       </div>
                     </div>
                   </div>
-                  
                   <div class="sm:col-span-4">
                     <div class="flex items-start">
                       <div class="flex h-5 items-center">
-                        <input id="email-verification" name="email-verification" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <input id="in-app-notifications" formControlName="inAppNotifications" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                       </div>
                       <div class="ml-3 text-sm">
-                        <label for="email-verification" class="font-medium text-gray-700">Require Email Verification</label>
-                        <p class="text-gray-500">Users must verify their email address before accessing the platform.</p>
+                        <label for="in-app-notifications" class="font-medium text-gray-700">Enable In-App Notifications</label>
+                        <p class="text-gray-500">Show notifications within the platform.</p>
                       </div>
                     </div>
                   </div>
@@ -143,8 +158,71 @@
               </div>
             </div>
             
-            <!-- Email Settings Section -->
-            <div class="px-4 py-5 sm:p-6">
+            <!-- Appearance Settings Section -->
+            <div *ngSwitchCase="'appearance'" class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Appearance Settings</h3>
+              <div class="mt-2 max-w-xl text-sm text-gray-500">
+                <p>Customize the platform's visual theme.</p>
+              </div>
+              
+              <div class="mt-5 space-y-6">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div class="sm:col-span-4">
+                    <label for="theme" class="block text-sm font-medium text-gray-700">Theme</label>
+                    <div class="mt-1">
+                      <select id="theme" formControlName="theme" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="system">System Default</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Advanced Settings Section -->
+            <div *ngSwitchCase="'advanced'" class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Advanced Settings</h3>
+              <div class="mt-2 max-w-xl text-sm text-gray-500">
+                <p>Manage system-level configurations and maintenance.</p>
+              </div>
+              
+              <div class="mt-5 space-y-6">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div class="sm:col-span-4">
+                    <div class="flex items-start">
+                      <div class="flex h-5 items-center">
+                        <input id="maintenance-mode" formControlName="maintenanceMode" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" (change)="toggleMaintenanceMode()">
+                      </div>
+                      <div class="ml-3 text-sm">
+                        <label for="maintenance-mode" class="font-medium text-gray-700">Maintenance Mode</label>
+                        <p class="text-gray-500">Put the platform in maintenance mode (visible only to admins).</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sm:col-span-4">
+                    <label for="log-level" class="block text-sm font-medium text-gray-700">Log Level</label>
+                    <div class="mt-1">
+                      <select id="log-level" formControlName="logLevel" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="info">Info</option>
+                        <option value="debug">Debug</option>
+                        <option value="error">Error</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="sm:col-span-4">
+                    <button type="button" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" (click)="testEmailSettings()">
+                      <i class="fas fa-envelope mr-2"></i> Test Email Configuration
+                    </button>
+                    <p *ngIf="emailTestResult" class="mt-2 text-sm text-green-600">{{ emailTestResult }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Email Settings Section (Moved to Advanced) -->
+            <div *ngSwitchCase="'advanced'" class="px-4 py-5 sm:p-6">
               <h3 class="text-lg font-medium leading-6 text-gray-900">Email Settings</h3>
               <div class="mt-2 max-w-xl text-sm text-gray-500">
                 <p>Configure email server and notification settings.</p>
@@ -155,35 +233,31 @@
                   <div class="sm:col-span-4">
                     <label for="smtp-host" class="block text-sm font-medium text-gray-700">SMTP Host</label>
                     <div class="mt-1">
-                      <input type="text" name="smtp-host" id="smtp-host" value="smtp.example.com" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="text" id="smtp-host" formControlName="smtpHost" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" [class.border-red-500]="settingsForm.get('smtpHost')?.invalid && settingsForm.get('smtpHost')?.touched">
                     </div>
                   </div>
-                  
                   <div class="sm:col-span-4">
                     <label for="smtp-port" class="block text-sm font-medium text-gray-700">SMTP Port</label>
                     <div class="mt-1">
-                      <input type="number" name="smtp-port" id="smtp-port" value="587" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="number" id="smtp-port" formControlName="smtpPort" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" min="1" max="65535">
                     </div>
                   </div>
-                  
                   <div class="sm:col-span-4">
                     <label for="smtp-username" class="block text-sm font-medium text-gray-700">SMTP Username</label>
                     <div class="mt-1">
-                      <input type="text" name="smtp-username" id="smtp-username" value="admin@example.com" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="text" id="smtp-username" formControlName="smtpUsername" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                   </div>
-                  
                   <div class="sm:col-span-4">
                     <label for="smtp-password" class="block text-sm font-medium text-gray-700">SMTP Password</label>
                     <div class="mt-1">
-                      <input type="password" name="smtp-password" id="smtp-password" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="password" id="smtp-password" formControlName="smtpPassword" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                   </div>
-                  
                   <div class="sm:col-span-4">
                     <label for="from-email" class="block text-sm font-medium text-gray-700">From Email Address</label>
                     <div class="mt-1">
-                      <input type="email" name="from-email" id="from-email" value="noreply@example.com" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <input type="email" id="from-email" formControlName="fromEmail" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" [class.border-red-500]="settingsForm.get('fromEmail')?.invalid && settingsForm.get('fromEmail')?.touched">
                     </div>
                   </div>
                 </div>
@@ -191,7 +265,7 @@
             </div>
             
             <!-- Danger Zone Section -->
-            <div class="px-4 py-5 sm:p-6">
+            <div *ngSwitchCase="'advanced'" class="px-4 py-5 sm:p-6">
               <h3 class="text-lg font-medium leading-6 text-gray-900">Danger Zone</h3>
               <div class="mt-2 max-w-xl text-sm text-gray-500">
                 <p>These actions are irreversible. Proceed with caution.</p>
@@ -200,21 +274,19 @@
               <div class="mt-5 space-y-6">
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div class="sm:col-span-4">
-                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" (click)="confirmAction('clearCache')">
                       Clear All Cache
                     </button>
                     <p class="mt-2 text-sm text-gray-500">Clears all cached data. This may temporarily slow down the system.</p>
                   </div>
-                  
                   <div class="sm:col-span-4">
-                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" (click)="confirmAction('resetSettings')">
                       Reset All Settings
                     </button>
                     <p class="mt-2 text-sm text-gray-500">Resets all settings to their default values.</p>
                   </div>
-                  
                   <div class="sm:col-span-4">
-                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" (click)="confirmAction('purgeData')">
                       Purge Deleted Data
                     </button>
                     <p class="mt-2 text-sm text-gray-500">Permanently removes all soft-deleted records.</p>
@@ -222,18 +294,19 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Save Settings -->
-            <div class="px-4 py-4 bg-gray-50 text-right sm:px-6">
-              <button type="button" class="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                Reset
-              </button>
-              <button type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                Save
-              </button>
+          </div>
+          
+          <!-- Confirmation Modal -->
+          <div *ngIf="showConfirmation" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+              <h3 class="text-lg font-medium text-gray-900">{{ confirmationMessage }}</h3>
+              <div class="mt-4 flex justify-end space-x-4">
+                <button type="button" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600" (click)="cancelAction()">Cancel</button>
+                <button type="button" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700" (click)="executeAction()">Confirm</button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </main>
   </div>

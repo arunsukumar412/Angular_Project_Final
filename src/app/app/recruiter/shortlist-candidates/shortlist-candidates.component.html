@@ -1,1 +1,331 @@
-<p>shortlist-candidates works!</p>
+<app-recruiter-sidebar></app-recruiter-sidebar>
+<div class="w-full bg-white">
+  <div class="flex ml-64 overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <app-hr-header></app-hr-header>
+<br><br>
+      <!-- Main Content -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div class="container mx-auto px-4 py-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Candidate Applications</h1>
+              <p class="text-gray-600 text-sm">Review applications and shortlist candidates efficiently.</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center space-x-2">
+              <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1.5 px-3 rounded-md flex items-center transition-colors duration-200" (click)="openAddApplicationModal()">
+                <i class="fas fa-plus mr-1.5 text-xs"></i>
+                <span>Add Application</span>
+              </button>
+              <button class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 px-3 rounded-md flex items-center transition-colors duration-200" (click)="exportApplications()">
+                <i class="fas fa-download mr-1.5 text-xs"></i>
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters and Bulk Actions -->
+          <div class="bg-white rounded-md shadow border border-gray-200 mb-6 p-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div class="flex flex-wrap items-center gap-2">
+                <select class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [(ngModel)]="filters.position" (change)="filterApplications()">
+                  <option value="">All Positions</option>
+                  <option *ngFor="let position of positions" [value]="position">{{ position }}</option>
+                </select>
+                <select class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [(ngModel)]="filters.status" (change)="filterApplications()">
+                  <option value="">All Statuses</option>
+                  <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+                </select>
+                <select class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [(ngModel)]="filters.rating" (change)="filterApplications()">
+                  <option value="">All Ratings</option>
+                  <option value="1">1 Star</option>
+                  <option value="2">2 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="5">5 Stars</option>
+                </select>
+                <input type="number" class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" placeholder="Min Experience (years)" [(ngModel)]="filters.minExperience" (input)="filterApplications()" />
+                <input type="date" class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [(ngModel)]="filters.applicationDate" (change)="filterApplications()" />
+              </div>
+              <div class="mt-2 md:mt-0 flex items-center space-x-2">
+                <button class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [disabled]="!selectedApplications.length" (click)="bulkShortlist()">Shortlist Selected</button>
+                <button class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" [disabled]="!selectedApplications.length" (click)="bulkUpdateStatus()">Update Status</button>
+                <button class="border border-gray-300 rounded-md py-1.5 px-3 text-sm" (click)="clearFilters()">Clear Filters</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Applications Table -->
+          <div class="bg-white rounded-md shadow overflow-hidden border border-gray-200 mb-6">
+            <div class="p-4 border-b border-gray-200">
+              <h2 class="text-base font-medium text-gray-900">All Applications</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      <input type="checkbox" (change)="toggleSelectAll($event)" />
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer" (click)="sortBy('name')">Name <i class="fas" [ngClass]="sortIcon('name')"></i></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer" (click)="sortBy('position')">Position <i class="fas" [ngClass]="sortIcon('position')"></i></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Skills</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer" (click)="sortBy('experience')">Experience <i class="fas" [ngClass]="sortIcon('experience')"></i></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Rating</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Source</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                  <tr *ngFor="let application of paginatedApplications" class="hover:bg-gray-50">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <input type="checkbox" [(ngModel)]="application.selected" (change)="updateSelectedApplications()" />
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <img class="h-8 w-8 rounded-full" [src]="application.image" alt="Candidate profile" />
+                        <div class="ml-3">
+                          <div class="text-sm font-medium text-gray-900">{{ application.name }}</div>
+                          <div class="text-xs text-gray-600">{{ application.email }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ application.position }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span *ngFor="let skill of application.skills; let last = last" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mr-1">{{ skill }}{{ !last ? ',' : '' }}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ application.experience }} years</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <i *ngFor="let i of [1,2,3,4,5]" class="fas fa-star cursor-pointer" [ngClass]="i <= application.rating ? 'text-yellow-400' : 'text-gray-300'" (click)="rateApplication(application, i)"></i>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ application.source }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full" [ngClass]="application.statusColor">{{ application.status }}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                      <button class="text-indigo-500 hover:text-indigo-700 mr-3" (click)="viewResume(application)">View Resume</button>
+                      <button class="text-indigo-500 hover:text-indigo-700 mr-3" (click)="addNotes(application)">Add Note</button>
+                      <button class="text-green-500 hover:text-green-700 mr-3" *ngIf="application.status !== 'Shortlisted'" (click)="shortlistApplication(application)">Shortlist</button>
+                      <button class="text-red-500 hover:text-red-700" (click)="rejectApplication(application.id)">Reject</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+              <div class="text-xs text-gray-600">Showing <span class="font-medium">{{ paginatedApplications.length }}</span> of <span class="font-medium">{{ filteredApplications.length }}</span> applications</div>
+              <div class="flex space-x-2">
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-600 bg-white hover:bg-gray-50" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="nextPage()" [disabled]="currentPage * itemsPerPage >= filteredApplications.length">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shortlisted Candidates Table -->
+          <div class="bg-white rounded-md shadow overflow-hidden border border-gray-200">
+            <div class="p-4 border-b border-gray-200">
+              <h2 class="text-base font-medium text-gray-900">Shortlisted Candidates</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      <input type="checkbox" (change)="toggleSelectShortlisted($event)" />
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer" (click)="sortShortlistedBy('name')">Name <i class="fas" [ngClass]="sortIcon('name', true)"></i></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Position</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Skills</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Rating</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Source</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                  <tr *ngFor="let candidate of paginatedShortlisted" class="hover:bg-gray-50">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <input type="checkbox" [(ngModel)]="candidate.selected" (change)="updateSelectedShortlisted()" />
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <img class="h-8 w-8 rounded-full" [src]="candidate.image" alt="Candidate profile" />
+                        <div class="ml-3">
+                          <div class="text-sm font-medium text-gray-900">{{ candidate.name }}</div>
+                          <div class="text-xs text-gray-600">{{ candidate.email }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ candidate.position }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span *ngFor="let skill of candidate.skills; let last = last" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mr-1">{{ skill }}{{ !last ? ',' : '' }}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <i *ngFor="let i of [1,2,3,4,5]" class="fas fa-star" [ngClass]="i <= candidate.rating ? 'text-yellow-400' : 'text-gray-300'"></i>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ candidate.source }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full" [ngClass]="candidate.statusColor">{{ candidate.status }}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                      <button class="text-indigo-500 hover:text-indigo-700 mr-3" (click)="viewResume(candidate)">View Resume</button>
+                      <button class="text-indigo-500 hover:text-indigo-700 mr-3" (click)="openScheduleInterviewModal(candidate)">Schedule</button>
+                      <button class="text-red-500 hover:text-red-700" (click)="removeFromShortlist(candidate.id)">Remove</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+              <div class="text-xs text-gray-600">Showing <span class="font-medium">{{ paginatedShortlisted.length }}</span> of <span class="font-medium">{{ shortlistedCandidates.length }}</span> shortlisted candidates</div>
+              <div class="flex space-x-2">
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-600 bg-white hover:bg-gray-50" (click)="previousShortlistPage()" [disabled]="shortlistPage === 1">Previous</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="nextShortlistPage()" [disabled]="shortlistPage * itemsPerPage >= shortlistedCandidates.length">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Add Application Modal -->
+      <div *ngIf="showAddApplicationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-md shadow-lg p-6 w-full max-w-md">
+          <h2 class="text-base font-medium text-gray-900 mb-4">Add New Application</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Name</label>
+              <input type="text" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.name" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Email</label>
+              <input type="email" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.email" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Position</label>
+              <select class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.position">
+                <option *ngFor="let position of positions" [value]="position">{{ position }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Skills</label>
+              <input type="text" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter skills (comma-separated)" [(ngModel)]="newApplication.skillsInput" (input)="parseSkills()" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Experience (years)</label>
+              <input type="number" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.experience" min="0" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Source</label>
+              <select class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.source">
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Company Website">Company Website</option>
+                <option value="Referral">Referral</option>
+                <option value="Job Board">Job Board</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Resume</label>
+              <input type="file" accept=".pdf" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm" (change)="handleResumeUpload($event)" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Notes</label>
+              <textarea class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newApplication.notes"></textarea>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-end space-x-2">
+            <button class="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-600 hover:bg-gray-50" (click)="closeAddApplicationModal()">Cancel</button>
+            <button class="px-3 py-1.5 border border-indigo-500 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="addApplication()" [disabled]="!isAddApplicationFormValid()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resume Viewer Modal -->
+      <div *ngIf="showResumeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-md shadow-lg p-6 w-full max-w-4xl">
+          <h2 class="text-base font-medium text-gray-900 mb-4">Resume: {{ selectedApplication?.name }}</h2>
+          <div class="relative">
+            <iframe [src]="selectedApplication?.resumeUrl" class="w-full h-[600px] border border-gray-300"></iframe>
+            <div *ngIf="searchQuery" class="absolute top-0 left-0 p-2 bg-white bg-opacity-75">
+              <p class="text-xs text-gray-600">Keywords: <span class="font-medium">{{ searchQuery }}</span></p>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-end space-x-2">
+            <button class="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-600 hover:bg-gray-50" (click)="closeResumeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Modal -->
+      <div *ngIf="showNotesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-md shadow-lg p-6 w-full max-w-md">
+          <h2 class="text-base font-medium text-gray-900 mb-4">Add Notes for {{ selectedApplication?.name }}</h2>
+          <textarea class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="selectedApplication"></textarea>
+          <div class="mt-4 flex justify-end space-x-2">
+            <button class="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-600 hover:bg-gray-50" (click)="closeNotesModal()">Cancel</button>
+            <button class="px-3 py-1.5 border border-indigo-500 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="saveNotes()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Interview Modal -->
+      <div *ngIf="showScheduleInterviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-md shadow-lg p-6 w-full max-w-md">
+          <h2 class="text-base font-medium text-gray-900 mb-4">Schedule Interview</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Candidate</label>
+              <input type="text" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm bg-gray-100" [value]="selectedApplication?.name" disabled />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Position</label>
+              <input type="text" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm bg-gray-100" [value]="selectedApplication?.position" disabled />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Interviewer</label>
+              <select class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newInterview.interviewerId">
+                <option *ngFor="let interviewer of interviewers" [value]="interviewer.id">{{ interviewer.name }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Date</label>
+              <input type="date" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newInterview.date" [min]="todayDate" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700">Time</label>
+              <input type="time" class="block w-full border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" [(ngModel)]="newInterview.time" />
+            </div>
+          </div>
+          <div class="mt-4 flex justify-end space-x-2">
+            <button class="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-600 hover:bg-gray-50" (click)="closeScheduleInterviewModal()">Cancel</button>
+            <button class="px-3 py-1.5 border border-indigo-500 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="scheduleInterview()" [disabled]="!isScheduleInterviewFormValid()">Schedule</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <app-hr-footer></app-hr-footer>
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+</style>

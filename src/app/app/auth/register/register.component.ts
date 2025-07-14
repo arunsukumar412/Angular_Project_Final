@@ -6,11 +6,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule,FormsModule,CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  currentStep(currentStep: any) {
+    throw new Error('Method not implemented.');
+  }
   registerForm!: FormGroup;
   errorMessage: string = '';
   showPassword: boolean = false;
@@ -209,14 +212,34 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  // Handle form submission
   onSubmit() {
     if (this.registerForm.valid) {
       const { name, email, password } = this.registerForm.value;
-      // Simulate registration (replace with API call)
-      console.log('Registration Data:', { name, email, password });
-      sessionStorage.setItem('email', email);
-      sessionStorage.setItem('password', password);
-      this.router.navigate(['/dashboard']);
+
+      // Retrieve existing users from localStorage or initialize an empty array
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      // Check if email already exists
+      const emailExists = users.some((user: any) => user.email === email);
+      if (emailExists) {
+        this.errorMessage = 'This email is already registered.';
+        this.registerForm.markAllAsTouched();
+        return;
+      }
+
+      // Add new user to the array
+      users.push({ name, email, password }); // Security note: Do not store plain passwords in production
+
+      // Save updated users array to localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // Reset form and clear error message
+      this.registerForm.reset();
+      this.errorMessage = '';
+
+      // Navigate to job-seeker-dashboard
+      this.router.navigate(['/jobseeker-dashboard']);
     } else {
       this.errorMessage = 'Please fix the errors in the form.';
       this.registerForm.markAllAsTouched();

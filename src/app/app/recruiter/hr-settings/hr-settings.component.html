@@ -1,0 +1,132 @@
+<div class="w-full bg-white min-h-screen flex flex-col">
+  <app-recruiter-sidebar></app-recruiter-sidebar>
+  <div class="flex ml-64 overflow-hidden flex-1 flex-col">
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Navigation -->
+      <app-hr-header></app-hr-header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-y-auto bg-blue-50 pt-4 pb-20">
+        <div class="container mx-auto px-4 py-6">
+          <!-- Settings Header -->
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+              <h1 class="text-2xl font-bold text-blue-800">HR Settings</h1>
+              <p class="text-blue-600">Customize your GenWorx job portal preferences.</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center">
+                <i class="fas fa-save mr-2"></i>
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Settings Sections -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Account Management -->
+            <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
+              <h2 class="text-lg font-semibold text-blue-800 mb-4">Account Management</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-blue-600">Company Name</label>
+                  <input type="text" class="mt-1 block w-full border border-blue-200 rounded-md py-2 px-3 text-blue-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" value="GenWorx Inc." />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-blue-600">HR Email</label>
+                  <input type="email" class="mt-1 block w-full border border-blue-200 rounded-md py-2 px-3 text-blue-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" value="hr@genworx.com" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-blue-600">Password</label>
+                  <button class="mt-1 text-sm text-blue-600 hover:text-blue-800">Change Password</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Job Posting Settings -->
+            <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
+              <h2 class="text-lg font-semibold text-blue-800 mb-4">Job Posting Settings</h2>
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded" checked>
+                  <label class="ml-2 text-sm text-blue-600">Auto-publish new job postings</label>
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded">
+                  <label class="ml-2 text-sm text-blue-600">Require approval for job postings</label>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-blue-600">Default Application Deadline</label>
+                  <select class="mt-1 block w-full border border-blue-200 rounded-md py-2 px-3 text-blue-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <option>7 Days</option>
+                    <option>14 Days</option>
+                    <option>30 Days</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Preferences -->
+          <div class="bg-white rounded-lg shadow p-6 border border-blue-200 mb-6">
+            <h2 class="text-lg font-semibold text-blue-800 mb-4">Notification Preferences</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex items-center">
+                <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded" checked>
+                <label class="ml-2 text-sm text-blue-600">New application notifications</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded" checked>
+                <label class="ml-2 text-sm text-blue-600">Interview schedule updates</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded">
+                <label class="ml-2 text-sm text-blue-600">Job posting status changes</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-blue-200 rounded">
+                <label class="ml-2 text-sm text-blue-600">Weekly summary reports</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integrations -->
+          <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
+            <h2 class="text-lg font-semibold text-blue-800 mb-4">Integrations</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img class="h-8 w-8 rounded" src="https://imgs.search.brave.com/AX0kEQZr6INNm9FilxNNbtAclhfNp5AzW83NBDcDP0k/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/aWNvbnNjb3V0LmNv/bS9pY29uL2ZyZWUv/cG5nLTI1Ni9mcmVl/LWxpbmtlZGluLWxv/Z28taWNvbi1kb3du/bG9hZC1pbi1zdmct/cG5nLWdpZi1maWxl/LWZvcm1hdHMtLXNv/Y2lhbC1tZWRpYS1s/b2dvcy1wYWNrLWlj/b25zLTE4OTc3NC5w/bmc_Zj13ZWJwJnc9/MTI4" alt="LinkedIn">
+                  <span class="ml-3 text-sm font-medium text-blue-600">LinkedIn</span>
+                </div>
+                <button class="text-sm text-blue-600 hover:text-blue-800">Connect</button>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img class="h-8 w-8 rounded" src="https://www.shuttleglobal.com/wp-content/uploads/slack-logo.jpg" alt="Slack">
+                  <span class="ml-3 text-sm font-medium text-blue-600">Slack</span>
+                </div>
+                <button class="text-sm text-blue-600 hover:text-blue-800">Connect</button>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img class="h-8 w-8 rounded" src="https://cdn.pixabay.com/photo/2016/01/26/17/15/gmail-1162901_640.png" alt="Email">
+                  <span class="ml-3 text-sm font-medium text-blue-600">Email Server</span>
+                </div>
+                <button class="text-sm text-blue-600 hover:text-blue-800">Configure</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+    <app-hr-footer></app-hr-footer>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button class="fixed bottom-20 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-blue-700">
+    <i class="fas fa-plus text-xl"></i>
+  </button>
+</div>

@@ -1,0 +1,33 @@
+.history-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.history-content {
+  margin-top: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+mat-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}

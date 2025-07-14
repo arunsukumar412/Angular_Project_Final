@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Route } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { AdminHeaderComponent } from '../admin-header/admin-header.component';
+import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
 
 
 interface Job {
@@ -37,7 +39,7 @@ interface Tab {
 @Component({
   selector: 'app-job-postings',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule, SidebarComponent,AdminFooterComponent,AdminHeaderComponent],
   templateUrl: './job-postings.component.html',
   styleUrls: ['./job-postings.component.css'],
 })

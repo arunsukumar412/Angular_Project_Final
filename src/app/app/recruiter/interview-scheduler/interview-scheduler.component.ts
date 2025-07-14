@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RecruiterSidebarComponent } from "../recruiter-sidebar/recruiter-sidebar.component";
 import { Route } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { HrHeaderComponent } from '../hr-header/hr-header.component';
 
 interface Candidate {
   id: string;
@@ -53,11 +54,24 @@ interface RescheduleForm {
 @Component({
   selector: 'app-interview-scheduler',
   standalone: true,
-  imports: [CommonModule, FormsModule, RecruiterSidebarComponent],
+  imports: [CommonModule, FormsModule, RecruiterSidebarComponent,HrHeaderComponent, RouterModule],
   templateUrl: './interview-scheduler.component.html',
   styleUrls: ['./interview-scheduler.component.css']
 })
 export class InterviewSchedulerComponent {
+selectDate(arg0: string) {
+throw new Error('Method not implemented.');
+}
+Math: any;
+formatDate(arg0: string) {
+throw new Error('Method not implemented.');
+}
+getInitials(arg0: string) {
+throw new Error('Method not implemented.');
+}
+markAsCompleted(arg0: string) {
+throw new Error('Method not implemented.');
+}
   showNotificationDropdown: boolean = false;
   showUserDropdown: boolean = false;
   showScheduleModal: boolean = false;
@@ -73,9 +87,9 @@ export class InterviewSchedulerComponent {
   todayDate: string = new Date().toISOString().split('T')[0]; // Current date: 2025-07-05
 
   candidates: Candidate[] = [
-    { id: '1', name: 'John Doe', email: 'john.doe@example.com', image: 'assets/profiles/john-doe.png' },
-    { id: '2', name: 'Jane Smith', email: 'jane.smith@example.com', image: 'assets/profiles/jane-smith.png' },
-    { id: '3', name: 'Alex Johnson', email: 'alex.johnson@example.com', image: 'assets/profiles/alex-johnson.png' }
+    { id: '1', name: 'Arun', email: 'arunsukumar03@gmail.com', image: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png' },
+    { id: '2', name: 'Sukumar', email: 'sukumar04@gmail.com', image: 'ahttps://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png' },
+    { id: '3', name: 'Arun Sukumar', email: 'as05@gmail.com', image: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png' }
   ];
 
   jobs: Job[] = [
@@ -85,18 +99,18 @@ export class InterviewSchedulerComponent {
   ];
 
   interviewers: Interviewer[] = [
-    { id: '1', name: 'Sarah Brown' },
-    { id: '2', name: 'Michael Lee' },
-    { id: '3', name: 'Emily Davis' }
+    { id: '1', name: 'Arunsukumar' },
+    { id: '2', name: 'Vasanth' },
+    { id: '3', name: 'Kishore' }
   ];
 
   interviews: Interview[] = [
     {
       id: '1',
       candidateId: '1',
-      candidateName: 'John Doe',
-      candidateEmail: 'john.doe@example.com',
-      candidateImage: 'assets/profiles/john-doe.png',
+      candidateName: 'Arun',
+      candidateEmail: 'Arun@example.com',
+      candidateImage: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
       jobId: '1',
       jobTitle: 'Software Engineer',
       interviewerId: '1',
@@ -109,9 +123,9 @@ export class InterviewSchedulerComponent {
     {
       id: '2',
       candidateId: '2',
-      candidateName: 'Jane Smith',
-      candidateEmail: 'jane.smith@example.com',
-      candidateImage: 'assets/profiles/jane-smith.png',
+      candidateName: 'Sukumar',
+      candidateEmail: 'sukumar@example.com',
+      candidateImage: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
       jobId: '2',
       jobTitle: 'Product Manager',
       interviewerId: '2',
@@ -126,7 +140,7 @@ export class InterviewSchedulerComponent {
       candidateId: '3',
       candidateName: 'Alex Johnson',
       candidateEmail: 'alex.johnson@example.com',
-      candidateImage: 'assets/profiles/alex-johnson.png',
+      candidateImage: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
       jobId: '3',
       jobTitle: 'Data Analyst',
       interviewerId: '3',
@@ -141,8 +155,8 @@ export class InterviewSchedulerComponent {
   filteredInterviews: Interview[] = [...this.interviews];
   paginatedInterviews: Interview[] = [];
   notifications: Notification[] = [
-    { message: 'John Doe interview scheduled', time: '5 minutes ago', icon: 'fas fa-calendar-check' },
-    { message: 'Jane Smith interview rescheduled', time: '1 hour ago', icon: 'fas fa-calendar-alt' },
+    { message: 'Arun interview scheduled', time: '5 minutes ago', icon: 'fas fa-calendar-check' },
+    { message: 'Sukumar interview rescheduled', time: '1 hour ago', icon: 'fas fa-calendar-alt' },
     { message: 'Alex Johnson interview completed', time: 'Yesterday', icon: 'fas fa-check-circle' }
   ];
 

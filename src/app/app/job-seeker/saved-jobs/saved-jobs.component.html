@@ -1,1 +1,152 @@
-<p>saved-jobs works!</p>
+<app-jobseeker-sidebar></app-jobseeker-sidebar>
+<div class="h-screen w-full bg-gradient-to-br from-blue-50 to-white p-4 relative overflow-y-auto" [ngClass]="{'dark-mode': isDarkMode}">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600"></div>
+  </div>
+
+  <!-- Saved Jobs Content -->
+  <div *ngIf="!isLoading" class="container mx-auto w-full max-w-5xl pt-20">
+    <div class="bg-white rounded-xl shadow-lg border border-blue-100 p-6 animate-fade-in" [ngClass]="{'dark-mode': isDarkMode}">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6 border-b border-blue-100 pb-4">
+        <a routerLink="/jobseeker-dashboard" class="text-blue-600 hover:text-blue-800 flex items-center text-sm font-semibold transition-colors duration-200" aria-label="Back to portal" title="Return to Jobseeker Dashboard">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Portal
+        </a>
+        <div class="text-center">
+          <h1 class="text-2xl font-bold text-blue-800">Saved Jobs</h1>
+          <p class="text-sm text-blue-600">Your curated job listings</p>
+        </div>
+        <button (click)="toggleDarkMode()" class="p-2 text-blue-600 hover:text-blue-800 transition-colors duration-200" title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
+          <svg *ngIf="isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <svg *ngIf="!isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Search Filter -->
+      <div class="mb-6">
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterJobs()" placeholder="Search saved jobs..." class="w-full p-2 border border-blue-200 rounded-md text-sm text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200" aria-label="Search saved jobs" title="Search by job title or company">
+      </div>
+
+      <!-- Job List View -->
+      <div *ngIf="!showJobDetails" class="jobs-content">
+        <div class="jobs-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let job of filteredJobs" class="bg-white p-5 rounded-lg shadow-md border border-blue-200 hover:shadow-xl hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-1" [ngClass]="{'dark-mode': isDarkMode}">
+            <h2 class="text-lg font-semibold text-blue-800 line-clamp-2">{{ job.title }}</h2>
+            <p class="text-sm text-blue-600 font-medium">{{ job.company }} - {{ job.location }}</p>
+            <div class="space-y-2 mt-3 text-sm">
+              <p class="text-gray-600"><strong>Type:</strong> {{ job.type }}</p>
+              <p class="text-gray-600"><strong>Salary:</strong> {{ job.salary }}</p>
+              <p class="text-gray-600 line-clamp-2"><strong>Description:</strong> {{ job.description }}</p>
+              <p class="text-gray-600"><strong>Saved on:</strong> {{ job.dateSaved | date:'mediumDate' }}</p>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button (click)="viewJobDetails(job)" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium flex items-center transition-colors duration-200" title="View job details">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                View Details
+              </button>
+              <button (click)="removeJob(job.id)" class="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 text-sm font-medium flex items-center transition-colors duration-200" title="Remove job from saved list">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Remove
+              </button>
+              <button (click)="shareJob(job.id)" class="px-4 py-2 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 text-sm font-medium flex items-center transition-colors duration-200" title="Share this job">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.375 12.651 10.365 12.651 11.056 13.342L15.343 17.629C15.685 17.971 15.685 18.514 15.343 18.856C15.001 19.198 14.458 19.198 14.116 18.856L10.5 15.24L6.884 18.856C6.542 19.198 6 19.198 5.657 18.856C5.315 18.514 5.315 17.971 5.657 17.629L9.944 13.342C10.635 12.651 11.625 12.651 12.316 13.342L16.603 17.629C16.945 17.971 16.945 18.514 16.603 18.856C16.261 19.198 15.718 19.198 15.376 18.856L11.759 15.24L8.143 18.856C7.801 19.198 7.258 19.198 6.916 18.856C6.574 18.514 6.574 17.971 6.916 17.629L11.203 13.342C11.894 12.651 12.884 12.651 13.575 13.342L17.862 17.629C18.204 17.971 18.204 18.514 18.862 18.856C18.52 19.198 17.977 19.198 17.635 18.856L13.348 14.569C12.657 13.878 11.667 13.878 10.976 14.569L6.689 18.856C6.347 19.198 5.804 19.198 5.462 18.856C5.12 18.514 5.12 17.971 5.462 17.629L9.749 13.342C10.44 12.651 11.43 12.651 12.121 13.342L16.408 17.629C16.75 17.971 16.75 18.514 16.408 18.856C16.066 19.198 15.523 19.198 15.181 18.856L10.894 14.569C10.203 13.878 9.213 13.878 8.522 14.569L4.235 18.856C3.893 19.198 3.35 19.198 3.008 18.856C2.666 18.514 2.666 17.971 3.008 17.629L7.295 13.342C7.986 12.651 8.976 12.651 9.667 13.342L13.954 17.629C14.296 17.971 14.296 18.514 13.954 18.856C13.612 19.198 13.069 19.198 12.727 18.856L8.44 14.569C7.749 13.878 6.759 13.878 6.068 14.569L1.781 18.856C1.439 19.198 0.896 19.198 0.554 18.856C0.212 18.514 0.212 17.971 0.554 17.629L4.841 13.342C5.532 12.651 6.522 12.651 7.213 13.342L11.5 17.629C11.842 17.971 11.842 18.514 11.5 18.856C11.158 19.198 10.615 19.198 10.273 18.856L5.986 14.569C5.295 13.878 4.305 13.878 3.614 14.569L-0.673 18.856C-1.015 19.198-1.558 19.198-1.9 18.856C-2.242 18.514-2.242 17.971-1.9 17.629L2.387 13.342C3.078 12.651 4.068 12.651 4.759 13.342L9.046 17.629C9.388 17.971 9.388 18.514 9.046 18.856C8.704 19.198 8.161 19.198 7.819 18.856L3.532 14.569C2.841 13.878 1.851 13.878 1.16 14.569"></path>
+                </svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="filteredJobs.length === 0" class="no-jobs text-center py-8 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-600 font-medium">No saved jobs match your search.</p>
+          <a routerLink="/browse-jobs" class="mt-2 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm transition-colors duration-200">Browse Jobs</a>
+        </div>
+      </div>
+
+      <!-- Job Details View -->
+      <div *ngIf="showJobDetails && selectedJob" class="job-details-content animate-slide-up">
+        <div class="flex items-center justify-between mb-6 border-b border-blue-100 pb-4">
+          <button (click)="hideJobDetails()" class="text-blue-600 hover:text-blue-800 flex items-center text-sm font-semibold transition-colors duration-200" aria-label="Back to saved jobs" title="Return to Saved Jobs">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Saved Jobs
+          </button>
+          <div class="text-center">
+            <h2 class="text-2xl font-bold text-blue-800">{{ selectedJob.title }}</h2>
+            <p class="text-sm text-blue-600 font-medium">{{ selectedJob.company }} - {{ selectedJob.location }}</p>
+          </div>
+          <div></div>
+        </div>
+        <div class="space-y-5 text-sm">
+          <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <p class="text-gray-700"><strong>Type:</strong> <span class="text-blue-800">{{ selectedJob.type }}</span></p>
+            <p class="text-gray-700"><strong>Salary:</strong> <span class="text-blue-800">{{ selectedJob.salary }}</span></p>
+            <p class="text-gray-700"><strong>Description:</strong> <span class="text-blue-800">{{ selectedJob.description }}</span></p>
+            <p class="text-gray-700"><strong>Saved on:</strong> <span class="text-blue-800">{{ selectedJob.dateSaved | date:'mediumDate' }}</span></p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button (click)="applyForJob(selectedJob.id)" class="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium flex items-center transition-colors duration-200" title="Apply for this job">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+              </svg>
+              Apply Now
+            </button>
+            <button (click)="removeJob(selectedJob.id)" class="px-5 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 text-sm font-medium flex items-center transition-colors duration-200" title="Remove job from saved list">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+              Remove
+            </button>
+            <button (click)="shareJob(selectedJob.id)" class="px-5 py-2 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 text-sm font-medium flex items-center transition-colors duration-200" title="Share this job">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.375 12.651 10.365 12.651 11.056 13.342L15.343 17.629C15.685 17.971 15.685 18.514 15.343 18.856C15.001 19.198 14.458 19.198 14.116 18.856L10.5 15.24L6.884 18.856C6.542 19.198 6 19.198 5.657 18.856C5.315 18.514 5.315 17.971 5.657 17.629L9.944 13.342C10.635 12.651 11.625 12.651 12.316 13.342L16.603 17.629C16.945 17.971 16.945 18.514 16.603 18.856C16.261 19.198 15.718 19.198 15.376 18.856L11.759 15.24L8.143 18.856C7.801 19.198 7.258 19.198 6.916 18.856C6.574 18.514 6.574 17.971 6.916 17.629L11.203 13.342C11.894 12.651 12.884 12.651 13.575 13.342L17.862 17.629C18.204 17.971 18.204 18.514 18.862 18.856C18.52 19.198 17.977 19.198 17.635 18.856L13.348 14.569C12.657 13.878 11.667 13.878 10.976 14.569L6.689 18.856C6.347 19.198 5.804 19.198 5.462 18.856C5.12 18.514 5.12 17.971 5.462 17.629L9.749 13.342C10.44 12.651 11.43 12.651 12.121 13.342L16.408 17.629C16.75 17.971 16.75 18.514 16.408 18.856C16.066 19.198 15.523 19.198 15.181 18.856L10.894 14.569C10.203 13.878 9.213 13.878 8.522 14.569L4.235 18.856C3.893 19.198 3.35 19.198 3.008 18.856C2.666 18.514 2.666 17.971 3.008 17.629L7.295 13.342C7.986 12.651 8.976 12.651 9.667 13.342L13.954 17.629C14.296 17.971 14.296 18.514 13.954 18.856C13.612 19.198 13.069 19.198 12.727 18.856L8.44 14.569C7.749 13.878 6.759 13.878 6.068 14.569L1.781 18.856C1.439 19.198 0.896 19.198 0.554 18.856C0.212 18.514 0.212 17.971 0.554 17.629L4.841 13.342C5.532 12.651 6.522 12.651 7.213 13.342L11.5 17.629C11.842 17.971 11.842 18.514 11.5 18.856C11.158 19.198 10.615 19.198 10.273 18.856L5.986 14.569C5.295 13.878 4.305 13.878 3.614 14.569L-0.673 18.856C-1.015 19.198-1.558 19.198-1.9 18.856C-2.242 18.514-2.242 17.971-1.9 17.629L2.387 13.342C3.078 12.651 4.068 12.651 4.759 13.342L9.046 17.629C9.388 17.971 9.388 18.514 9.046 18.856C8.704 19.198 8.161 19.198 7.819 18.856L3.532 14.569C2.841 13.878 1.851 13.878 1.16 14.569"></path>
+              </svg>
+              Share
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+  .animate-slide-up { animation: slideUp 0.4s ease-out; }
+  .dark-mode { background: linear-gradient(to bottom right, #1e3a8a, #1e40af); }
+  .dark-mode .bg-white { background: #1e40af; }
+  .dark-mode .bg-blue-50 { background: #1d4ed8; }
+  .dark-mode .text-blue-800 { color: #93c5fd; }
+  .dark-mode .text-blue-600 { color: #bfdbfe; }
+  .dark-mode .text-gray-600 { color: #d1d5db; }
+  .dark-mode .text-gray-700 { color: #e0e7ff; }
+  .dark-mode .border-blue-100 { border-color: #60a5fa; }
+  .dark-mode .border-blue-200 { border-color: #93c5fd; }
+  .dark-mode .hover\:bg-blue-600:hover { background: #2563eb; }
+  .dark-mode .hover\:bg-red-50:hover { background: #4c1d95; }
+  .dark-mode .hover\:text-blue-800:hover { color: #60a5fa; }
+  .dark-mode .hover\:border-blue-300:hover { border-color: #93c5fd; }
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+</style>

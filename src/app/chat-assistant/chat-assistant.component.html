@@ -1,0 +1,116 @@
+<!-- Chat Assistant Button -->
+<div class="fixed bottom-6 right-6 z-50">
+  <button
+    (click)="toggleChat()"
+    class="bg-blue-600 hover:bg-teal-700 text-white font-bold p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 animate-pulse-slow"
+    aria-label="Open Career Assistant Chat"
+  >
+    <i class="fas fa-robot text-xl"></i>
+  </button>
+</div>
+
+<!-- Chat Modal -->
+<div
+  *ngIf="isChatOpen"
+  id="chat-modal"
+  class="fixed bottom-24 right-6 w-80 sm:w-96 bg-white rounded-xl shadow-2xl z-50 flex flex-col transform transition-all duration-300"
+  style="height: 400px"
+  role="dialog"
+  aria-labelledby="chat-title"
+>
+  <!-- Chat Header with Logo -->
+  <div class="bg-gradient-to-r from-teal-600 to-indigo-600 text-white px-4 py-3 rounded-t-xl flex items-center justify-between">
+    <div class="flex items-center">
+      <img src="assets/icons/Gen.png" alt="GenWorx Logo" class="h-6 w-auto mr-2" />
+      <h3 id="chat-title" class="font-semibold text-lg">GenWorx Jobs Assistant</h3>
+    </div>
+    <button (click)="toggleChat()" class="text-white hover:text-gray-200 focus:outline-none" aria-label="Close chat">
+      <i class="fas fa-times text-lg"></i>
+    </button>
+  </div>
+
+  <!-- Chat Messages -->
+  <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 scrollbar-thin scrollbar-thumb-teal-600 scrollbar-track-gray-200">
+    <div *ngFor="let message of messages" class="mb-4">
+      <div class="flex items-start mb-2" [ngClass]="message.isUser ? 'justify-end' : 'justify-start'">
+        <div *ngIf="!message.isUser" class="bg-teal-100 text-teal-800 p-3 rounded-full mr-2 flex-shrink-0">
+          <i class="fas fa-robot text-lg"></i>
+        </div>
+        <div
+          [ngClass]="message.isUser ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-200'"
+          class="p-3 rounded-lg shadow-md max-w-[70%] break-words"
+        >
+          <p>{{ message.text }}</p>
+          <span class="text-xs text-gray-500 mt-1 block">{{ message.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isTyping" class="flex items-start justify-start mb-2">
+      <div class="bg-teal-100 text-teal-800 p-3 rounded-full mr-2 flex-shrink-0">
+        <i class="fas fa-robot text-lg"></i>
+      </div>
+      <div class="bg-white text-gray-900 border border-gray-200 p-3 rounded-lg shadow-md max-w-[70%]">
+        <div class="flex space-x-1">
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+          <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input and Quick Questions -->
+  <div class="p-3 border-t bg-white rounded-b-xl flex flex-col">
+    <!-- Input Row with File Upload -->
+    <div class="flex items-center mb-2">
+      <input
+        [(ngModel)]="newMessage"
+        (keyup.enter)="sendMessage()"
+        type="text"
+        id="chat-input"
+        placeholder="Type your message or ask a question..."
+        class="flex-1 border rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+        aria-label="Type your message"
+      />
+      <label
+        for="file-upload"
+        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-r-none rounded-l-none border-l-0 border border-gray-300 cursor-pointer flex items-center"
+        aria-label="Upload file"
+      >
+        <i class="fas fa-upload text-lg"></i>
+      </label>
+      <input
+        id="file-upload"
+        type="file"
+        (change)="handleFileUpload($event)"
+        class="hidden"
+        accept=".pdf,.txt,.docx"
+      />
+      <button
+        (click)="sendMessage()"
+        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-r-lg ml-1 flex items-center"
+        aria-label="Send message"
+        [disabled]="!newMessage && !selectedFile"
+      >
+        <i class="fas fa-paper-plane text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Quick Questions Grid -->
+    <div class="grid grid-cols-3 gap-1">
+      <button
+        *ngFor="let question of quickQuestions"
+        (click)="selectQuickQuestion(question)"
+        class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded transition-colors duration-200"
+      >
+        {{ question }}
+      </button>
+      <button
+        (click)="clearChat()"
+        class="bg-red-100 hover:bg-red-200 text-red-800 text-xs px-2 py-1 rounded transition-colors duration-200"
+      >
+        Clear Chat
+      </button>
+    </div>
+  </div>
+</div>

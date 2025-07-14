@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HrFooterComponent } from "../../recruiter/hr-footer/hr-footer.component";
+import { HrHeaderComponent } from '../../recruiter/hr-header/hr-header.component';
+import { AdminHeaderComponent } from "../admin-header/admin-header.component";
+import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
 
 interface User {
   id: string;
@@ -44,7 +48,7 @@ interface UserTab {
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SidebarComponent, AdminHeaderComponent,AdminFooterComponent],
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
   users: User[] = [];
@@ -119,7 +123,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         email: 'hr1@genworx.com',
         role: 'hr',
         status: 'active',
-        avatar: 'assets/avatars/hr1.png',
+        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
         lastUpdated: new Date(),
       },
       {
@@ -128,7 +132,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         email: 'hr2@genworx.com',
         role: 'hr',
         status: 'inactive',
-        avatar: 'assets/avatars/hr2.png',
+        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
         lastUpdated: new Date(),
       },
       {
@@ -137,7 +141,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         email: 'cand1@genworx.com',
         role: 'candidate',
         status: 'active',
-        avatar: 'assets/avatars/cand1.png',
+        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
         lastUpdated: new Date(),
       },
     ];

@@ -1,71 +1,135 @@
-<!-- components/header/header.component.html -->
-<header class="bg-[#00154D] text-white p-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
+<!-- Sticky Fixed Header -->
+<!-- Sticky Fixed Header -->
+<header
+  class="bg-[#00154D] text-white px-6 min-h-[4rem] flex items-center justify-between fixed top-0 left-0 w-full z-50 shadow-md 
+         backdrop-blur-sm backdrop-saturate-150 transition-all duration-300">
   <div class="flex items-center">
-    <a href="/" class="flex items-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#00154D] rounded">
+    <a routerLink="/" aria-label="Go to homepage"
+       class="flex items-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#00154D] rounded">
       <img src="assets/icons/logo.png" alt="Genworx Logo"
-           class="h-auto max-h-[6em] inline-block align-middle mr-3 hover:scale-105 transition-transform duration-300"
+           class="h-auto max-h-[6em] mr-3 hover:scale-105 transition-transform duration-300"
            width="120" height="60">
       <span class="font-bold text-xl hover:text-blue-200 transition-colors duration-300">Jobs</span>
     </a>
   </div>
 
-  <nav class="hidden md:flex space-x-4 items-center">
-    <a routerLink="/"
-       class="nav-link bg-white text-[#00154D] font-semibold rounded-full px-4 py-2 hover:bg-gray-200 hover:scale-105 transition-all duration-300 transform hover:shadow-lg cursor-pointer">
-      Home
+  <nav class="hidden md:flex space-x-4 items-center justify-end ml-2">
+    <!-- Home -->
+    <a href="#home"
+       class="nav-link bg-white/10 text-white font-semibold rounded-lg px-6 py-2 w-24 h-10 border border-white/20
+              hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-md
+              flex items-center justify-center group relative overflow-hidden"
+       aria-label="Go to Home">
+      <span class="relative z-10">Home</span>
+      <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
     </a>
+
+    <!-- About us -->
     <a href="#about"
-       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
-      About us
-      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
-      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+       class="nav-link bg-white/10 text-white font-semibold rounded-lg px-6 py-2 w-24 h-10 border border-white/20
+              hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-md
+              flex items-center justify-center group relative overflow-hidden"
+       aria-label="Go to About us">
+      <span class="relative z-10">About</span>
+      <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
     </a>
+
+    <!-- Jobs -->
     <a href="#jobs"
-       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
-      Jobs
-      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
-      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+       class="nav-link bg-white/10 text-white font-semibold rounded-lg px-6 py-2 w-24 h-10 border border-white/20
+              hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-md
+              flex items-center justify-center group relative overflow-hidden"
+       aria-label="Go to Jobs">
+      <span class="relative z-10">Jobs</span>
+      <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
     </a>
+
+    <!-- Achievements -->
     <a href="#achievements"
-       class="nav-link bg-[#E0E7FF] text-[#00154D] rounded-full px-4 py-2 hover:bg-[#c7d2fe] hover:scale-105 transition-all duration-300 transform hover:shadow-lg group relative cursor-pointer">
-      Achievements
-      <span class="absolute -bottom-1 left-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
-      <span class="absolute -bottom-1 right-1/2 w-0 h-1 bg-blue-500 group-hover:w-1/2 group-hover:transition-all duration-300"></span>
+       class="nav-link bg-white/10 text-white font-semibold rounded-lg px-6 py-2 w-28 h-10 border border-white/20
+              hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-md
+              flex items-center justify-center group relative overflow-hidden"
+       aria-label="Go to Achievements">
+      <span class="relative z-10">Achievements</span>
+      <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
     </a>
+
+    <!-- Login - Slightly more prominent -->
     <a routerLink="/login"
-       class="cursor-pointer bg-red-500 text-white font-medium rounded-full px-8 py-2 hover:bg-red-600 hover:scale-105 transition-all duration-300 transform hover:shadow-lg animate-pulse hover:animate-none relative overflow-hidden">
+       class="bg-red-500 text-white font-semibold rounded-lg px-6 py-2 w-28 h-10 border border-red-600
+              hover:bg-red-600 transition-all duration-300 hover:shadow-md
+              flex items-center justify-center group relative overflow-hidden"
+       aria-label="Go to Login">
       <span class="relative z-10">Login</span>
-      <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
+      <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
     </a>
   </nav>
 
   <!-- Mobile menu button -->
-  <button class="md:hidden focus:outline-none p-2 rounded-full hover:bg-blue-800 transition-colors duration-300"
-          aria-label="Menu" (click)="toggleMobileMenu()">
+  <button class="md:hidden focus:outline-none p-3 w-10 h-10 rounded-lg hover:bg-white/10 transition duration-300 flex items-center justify-center border border-white/20"
+          aria-label="Toggle menu" (click)="toggleMobileMenu()">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
   </button>
 </header>
 
-<!-- Mobile menu -->
-<div class="md:hidden fixed inset-0 bg-[#00154D] bg-opacity-95 z-40 transition-all duration-300"
-     [class]="mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'" *ngIf="mobileMenuOpen">
+<!-- Spacer below fixed header -->
+<div class="h-[4rem] md:h-[5rem]"></div>
+
+<!-- Mobile Menu -->
+<div class="md:hidden fixed inset-0 bg-[#00154D] bg-opacity-95 z-40 transition duration-300 ease-in-out"
+     [ngClass]="{'translate-x-0': mobileMenuOpen, 'translate-x-full': !mobileMenuOpen}" *ngIf="mobileMenuOpen" role="dialog" aria-label="Mobile navigation menu">
   <div class="flex justify-end p-4">
-    <button class="p-2 rounded-full hover:bg-blue-800 transition-colors duration-300"
+    <button class="p-3 w-10 h-10 rounded-full hover:bg-blue-800 transition duration-300 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#00154D] flex items-center justify-center"
             aria-label="Close menu" (click)="toggleMobileMenu()">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
   </div>
-  <nav class="flex flex-col items-center space-y-6 p-8">
-    <a href="#" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Home</a>
-    <a href="#about" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">About us</a>
-    <a href="#jobs" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Jobs</a>
-    <a href="#achievements" class="text-white text-xl font-medium hover:text-blue-200 transition-colors duration-300" (click)="toggleMobileMenu()">Achievements</a>
+  <nav class="flex flex-col items-center justify-center flex-grow space-y-6 p-8">
+    <a routerLink="/" class="text-white text-xl font-medium hover:text-blue-200 transition duration-300" (click)="toggleMobileMenu()">Home</a>
+    <a href="#about" class="text-white text-xl font-medium hover:text-blue-200 transition duration-300" (click)="toggleMobileMenu()">About us</a>
+    <a href="#jobs" class="text-white text-xl font-medium hover:text-blue-200 transition duration-300" (click)="toggleMobileMenu()">Jobs</a>
+    <a href="#achievements" class="text-white text-xl font-medium hover:text-blue-200 transition duration-300" (click)="toggleMobileMenu()">Achievements</a>
     <a routerLink="/login"
-       class="bg-red-500 text-white font-medium rounded-full px-8 py-3 text-xl hover:bg-red-600 transition-colors duration-300 cursor-pointer" 
+       class="bg-red-500 text-white font-medium rounded-full px-8 py-3 text-xl hover:bg-red-600 transition duration-300"
        (click)="toggleMobileMenu()">Login</a>
   </nav>
+</div>
+
+<!-- Floating Dots on Right for Section Navigation -->
+<div class="fixed top-0 right-4 h-full flex flex-col justify-center space-y-6 z-40">
+  <a href="#about" title="About" class="relative group">
+    <span class="w-4 h-4 block rounded-full bg-blue-600 hover:bg-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transform hover:scale-125"></span>
+    <span class="absolute right-8 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+      About
+      <span class="absolute right-0 top-1/2 w-2 h-2 bg-gray-800 transform translate-x-1/2 -translate-y-1/2 rotate-45"></span>
+    </span>
+  </a>
+  
+  <a href="#jobs" title="Jobs" class="relative group">
+    <span class="w-4 h-4 block rounded-full bg-blue-600 hover:bg-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transform hover:scale-125"></span>
+    <span class="absolute right-8 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+      Jobs
+      <span class="absolute right-0 top-1/2 w-2 h-2 bg-gray-800 transform translate-x-1/2 -translate-y-1/2 rotate-45"></span>
+    </span>
+  </a>
+  
+  <a href="#achievements" title="Achievements" class="relative group">
+    <span class="w-4 h-4 block rounded-full bg-blue-600 hover:bg-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transform hover:scale-125"></span>
+    <span class="absolute right-8 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+      Achievements
+      <span class="absolute right-0 top-1/2 w-2 h-2 bg-gray-800 transform translate-x-1/2 -translate-y-1/2 rotate-45"></span>
+    </span>
+  </a>
+  
+  <a href="#contact" title="Contact" class="relative group">
+    <span class="w-4 h-4 block rounded-full bg-blue-600 hover:bg-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transform hover:scale-125"></span>
+    <span class="absolute right-8 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+      Contact
+      <span class="absolute right-0 top-1/2 w-2 h-2 bg-gray-800 transform translate-x-1/2 -translate-y-1/2 rotate-45"></span>
+    </span>
+  </a>
 </div>

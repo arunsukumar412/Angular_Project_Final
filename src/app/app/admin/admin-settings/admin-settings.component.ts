@@ -1,140 +1,144 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-settings',
+  selector: 'app-settings',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, SidebarComponent, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule, SidebarComponent,ReactiveFormsModule],
   templateUrl: './admin-settings.component.html',
   styleUrls: ['./admin-settings.component.css']
 })
 export class AdminSettingsComponent implements OnInit {
-  activeTab = 'general';
+  currentDate: Date = new Date(); // 01:53 PM IST, July 05, 2025
+  activeTab: string = 'general';
   settingsForm: FormGroup;
-  newRoleName = '';
-  roles = [{ id: 1, name: 'Admin' }, { id: 2, name: 'User' }];
-  apiKeys = [{ id: 1, key: 'abc123-def456-ghi789' }];
-  auditLogs = [
-    { action: 'User Created', user: 'admin', timestamp: new Date() },
-    { action: 'Settings Updated', user: 'admin', timestamp: new Date() }
-  ];
-  backups = [{ id: 1, name: 'backup_20230704', date: new Date() }];
-  autoBackup = false;
+  showConfirmation: boolean = false;
+  confirmationMessage: string = '';
+  actionToExecute: string = '';
+  emailTestResult: string = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.settingsForm = this.fb.group({
-      platformName: ['GenWorx', Validators.required],
-      timezone: ['UTC+05:30', Validators.required],
-      dateFormat: ['DD/MM/YYYY', Validators.required],
+      platformName: ['', [Validators.required, Validators.minLength(2)]],
+      timezone: ['UTC+05:30'],
+      dateFormat: ['DD/MM/YYYY'],
+      twoFactor: [false],
+      sessionTimeout: [30, [Validators.min(15), Validators.max(1440)]],
+      emailNotifications: [true],
+      inAppNotifications: [true],
+      theme: ['light'],
       maintenanceMode: [false],
-      userRegistration: [true],
-      emailVerification: [true],
-      smtpHost: ['smtp.example.com'],
-      smtpPort: [587],
+      logLevel: ['info'],
+      smtpHost: ['smtp.example.com', [Validators.required]],
+      smtpPort: [587, [Validators.min(1), Validators.max(65535)]],
       smtpUsername: ['admin@example.com'],
       smtpPassword: [''],
-      fromEmail: ['noreply@example.com'],
-      theme: ['light'],
-      cacheDuration: [30, [Validators.min(1)]]
+      fromEmail: ['noreply@example.com', [Validators.email]]
     });
   }
 
-  ngOnInit() {
-    // Initialize with current settings (mocked for example)
-    this.settingsForm.patchValue({
-      platformName: 'GenWorx',
-      timezone: 'UTC+05:30', // Set to India Standard Time based on current date
-      dateFormat: 'DD/MM/YYYY'
-    });
+  ngOnInit(): void {}
+
+  toggleSidebar(): void {
+    // Implement sidebar toggle logic if needed
   }
 
-  setActiveTab(tab: string) {
+  setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
 
-  saveSettings() {
+  toggleMaintenanceMode(): void {
+    if (this.settingsForm.get('maintenanceMode')?.value) {
+      alert('Maintenance mode enabled. Platform is now restricted to admins.');
+    }
+  }
+
+  testEmailSettings(): void {
+    const smtpHost = this.settingsForm.get('smtpHost')?.value;
+    const smtpPort = this.settingsForm.get('smtpPort')?.value;
+    const smtpUsername = this.settingsForm.get('smtpUsername')?.value;
+    const smtpPassword = this.settingsForm.get('smtpPassword')?.value;
+    const fromEmail = this.settingsForm.get('fromEmail')?.value;
+
+    // Simulate email test
+    if (smtpHost && smtpPort && smtpUsername && fromEmail) {
+      this.emailTestResult = 'Email configuration test successful! Message sent to ' + fromEmail;
+      setTimeout(() => this.emailTestResult = '', 5000); // Clear after 5 seconds
+    } else {
+      this.emailTestResult = 'Email configuration test failed. Please check settings.';
+      setTimeout(() => this.emailTestResult = '', 5000);
+    }
+  }
+
+  saveSettings(): void {
     if (this.settingsForm.valid) {
-      console.log('Settings Saved:', this.settingsForm.value);
+      console.log('Settings saved:', this.settingsForm.value);
+      this.settingsForm.markAsPristine();
       alert('Settings saved successfully!');
     }
   }
 
-  resetForm() {
+  resetSettings(): void {
     this.settingsForm.reset({
       platformName: 'GenWorx',
       timezone: 'UTC+05:30',
       dateFormat: 'DD/MM/YYYY',
+      twoFactor: false,
+      sessionTimeout: 30,
+      emailNotifications: true,
+      inAppNotifications: true,
+      theme: 'light',
       maintenanceMode: false,
-      userRegistration: true,
-      emailVerification: true,
+      logLevel: 'info',
       smtpHost: 'smtp.example.com',
       smtpPort: 587,
       smtpUsername: 'admin@example.com',
       smtpPassword: '',
-      fromEmail: 'noreply@example.com',
-      theme: 'light',
-      cacheDuration: 30
+      fromEmail: 'noreply@example.com'
     });
+    alert('Settings reset to default.');
   }
 
-  refreshSettings() {
-    console.log('Refreshing settings...');
-    // Simulate API call or refresh logic
+  confirmAction(action: string): void {
+    this.actionToExecute = action;
+    this.confirmationMessage = `Are you sure you want to ${action.replace(/([A-Z])/g, ' $1').toLowerCase()}? This action cannot be undone.`;
+    this.showConfirmation = true;
   }
 
-  addRole() {
-    if (this.newRoleName) {
-      this.roles.push({ id: Date.now(), name: this.newRoleName });
-      this.newRoleName = '';
+  cancelAction(): void {
+    this.showConfirmation = false;
+    this.actionToExecute = '';
+  }
+
+  executeAction(): void {
+    switch (this.actionToExecute) {
+      case 'clearCache':
+        console.log('Cache cleared at', new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        alert('Cache cleared successfully.');
+        break;
+      case 'resetSettings':
+        this.resetSettings();
+        break;
+      case 'purgeData':
+        console.log('Deleted data purged at', new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        alert('Deleted data purged successfully.');
+        break;
     }
+    this.showConfirmation = false;
+    this.actionToExecute = '';
   }
 
-  deleteRole(id: number) {
-    this.roles = this.roles.filter(role => role.id !== id);
+  openPolicy(type: string): void {
+    console.log(`Opening ${type} policy at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })}`);
+    this.router.navigate([`/policy/${type}`]);
   }
 
-  generateApiKey() {
-    const newKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    this.apiKeys.push({ id: Date.now(), key: newKey });
-    alert(`New API Key Generated: ${newKey}`);
-  }
-
-  revokeApiKey(id: number) {
-    this.apiKeys = this.apiKeys.filter(key => key.id !== id);
-  }
-
-  createBackup() {
-    const backupName = `backup_${new Date().toISOString().split('T')[0]}`;
-    this.backups.push({ id: Date.now(), name: backupName, date: new Date() });
-    alert('Backup created successfully!');
-  }
-
-  restoreBackup(id: number) {
-    console.log(`Restoring backup with ID: ${id}`);
-    alert('Backup restored!');
-  }
-
-  deleteBackup(id: number) {
-    this.backups = this.backups.filter(backup => backup.id !== id);
-  }
-
-  clearCache() {
-    console.log('Cache cleared!');
-    alert('Cache cleared successfully!');
-  }
-
-  resetSettings() {
-    this.resetForm();
-    alert('Settings reset to default!');
-  }
-
-  purgeData() {
-    console.log('Purging deleted data!');
-    alert('Deleted data purged successfully!');
+  openContact(): void {
+    console.log(`Opening contact page at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })}`);
+    this.router.navigate(['/contact']);
   }
 }

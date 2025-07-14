@@ -1,0 +1,55 @@
+<div class="w-full bg-white">
+  <div class="flex h-screen overflow-hidden">
+    <app-sidebar class="bg-blue-800 text-white"></app-sidebar>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white">
+        <div class="container mx-auto px-4 py-6">
+          <!-- Logout Confirmation -->
+          <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
+            <h1 class="text-2xl font-bold text-blue-800 mb-4">Logout Confirmation</h1>
+            <p class="text-blue-600 mb-6">Are you sure you want to log out of your account? You will need to sign in again to access the platform.</p>
+            <div class="flex space-x-4">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200" (click)="logout()">Yes, Log Out</button>
+              <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors duration-200" (click)="cancelLogout()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Last Activity Log -->
+          <div class="mt-6 bg-white rounded-lg shadow p-6 border border-blue-200">
+            <h2 class="text-lg font-semibold text-blue-800 mb-4">Last Activity</h2>
+            <div class="mt-4 max-h-40 overflow-y-auto">
+              <div *ngFor="let log of activityLog" class="p-2 border-b border-blue-200 text-sm text-blue-600">
+                {{ log.message }} - {{ log.timestamp | date:'short' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-white border-t border-blue-200 py-4 px-6">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="text-sm text-blue-600 mb-4 md:mb-0">
+            © {{ currentYear }} GenWorx Jobs Platform. All rights reserved.
+          </div>
+          <div class="flex items-center space-x-6">
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-800" (click)="openPolicy('privacy')">Privacy Policy</a>
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-800" (click)="openPolicy('terms')">Terms of Service</a>
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-800" (click)="openContact()">Contact Us</a>
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-600">Version {{ version }}</span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <i class="fas fa-circle mr-1" style="font-size: 6px;"></i>
+                Live
+              </span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>

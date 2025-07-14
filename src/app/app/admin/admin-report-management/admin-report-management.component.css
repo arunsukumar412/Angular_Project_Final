@@ -22,3 +22,12 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.grid-cols-2.sm:grid-cols-3.md:grid-cols-4 > div {
+  padding: 0.5rem;
+}
+.text-base {
+  font-size: 1rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+}

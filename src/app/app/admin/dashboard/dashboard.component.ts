@@ -7,6 +7,9 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
 import { interval, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ChatAssistantComponent } from "../../../chat-assistant/chat-assistant.component";
+import { AdminHeaderComponent } from '../admin-header/admin-header.component';
+import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
 
 type WeekKey = 'week1' | 'week2' | 'week3' | 'week4';
 type TimeRangeKey = '7days' | '30days' | '90days';
@@ -86,11 +89,31 @@ interface UserActivityData {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule, SidebarComponent, ChatAssistantComponent,AdminHeaderComponent,AdminFooterComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
+  // Add these new methods to your component class
+navigateToActivity(activity: ActivityItem): void {
+  // Implementation for navigating to activity details
+  console.log('Navigating to activity:', activity);
+}
+
+navigateToUserProfile(user: TopUser): void {
+  // Implementation for navigating to user profile
+  console.log('Navigating to user profile:', user);
+}
+
+navigateToJobDetails(job: JobPosting): void {
+  // Implementation for navigating to job details
+  console.log('Navigating to job details:', job);
+}
+
+// Update the chart initialization methods with better accessibility options
+// (Removed duplicate initializeLoginChart implementation)
+
+// Similar updates should be made to initializeApplicationsChart and initializeUserActivityChart
   constructor(private router: Router) {}
 
   // View Refs
@@ -250,9 +273,9 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Job categories
     this.jobCategories = [
-      { name: 'Technology', value: 42, color: '#4F46E5' },
-      { name: 'Healthcare', value: 23, color: '#EC4899' },
-      { name: 'Finance', value: 15, color: '#F59E0B' },
+      { name: 'IT Support', value: 42, color: '#4F46E5' },
+      { name: 'Engineering', value: 23, color: '#EC4899' },
+      { name: 'Testing', value: 15, color: '#F59E0B' },
       { name: 'Other', value: 20, color: '#10B981' }
     ];
   }
@@ -288,13 +311,13 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
       { icon: 'fa-exclamation-triangle', title: 'System alert', description: 'high traffic detected' }
     ];
     const colors = ['blue', 'green', 'purple', 'yellow', 'red'];
-    const names = ['John Smith', 'TechLead Inc.', 'Sarah Johnson', 'Digital Solutions', 'System'];
+    const names = ['ArunSukumar', 'Genworx', 'Sukumar', 'Genworx', 'System'];
 
     for (let i = 0; i < count; i++) {
       const type = types[i % types.length];
       const timeOptions = [
-        `${Math.floor(Math.random() * 60)} minutes ago`,
-        `${Math.floor(Math.random() * 24)} hours ago`,
+        `${Math.floor(Math.random() * 20)} minutes ago`,
+        `${Math.floor(Math.random() * 14)} hours ago`,
         'Yesterday',
         `${Math.floor(Math.random() * 7)} days ago`
       ];
@@ -313,15 +336,15 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
 
   generateTopUsers(count: number): TopUser[] {
     const users: TopUser[] = [];
-    const names = ['Emily Johnson', 'Michael Chen', 'David Wilson', 'Sarah Williams', 'Robert Taylor'];
+    const names = ['Arun', 'Arunsukumar', 'Vasanth', 'Aruns', 'Sukumar'];
     const roles = ['HR Professional', 'Recruiter', 'Hiring Manager', 'Talent Acquisition', 'HR Director'];
     const roleColors = ['green', 'blue', 'purple', 'pink', 'indigo'];
     const images = [
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+      'https://static.vecteezy.com/system/resources/previews/048/216/761/non_2x/modern-male-avatar-with-black-hair-and-hoodie-illustration-free-png.png',
+      'https://static.vecteezy.com/system/resources/previews/048/216/761/non_2x/modern-male-avatar-with-black-hair-and-hoodie-illustration-free-png.png',
+      'https://static.vecteezy.com/system/resources/previews/048/216/761/non_2x/modern-male-avatar-with-black-hair-and-hoodie-illustration-free-png.png',
+      'https://static.vecteezy.com/system/resources/previews/048/216/761/non_2x/modern-male-avatar-with-black-hair-and-hoodie-illustration-free-png.png',
+      'https://static.vecteezy.com/system/resources/previews/048/216/761/non_2x/modern-male-avatar-with-black-hair-and-hoodie-illustration-free-png.png'
     ];
 
     for (let i = 0; i < count; i++) {
@@ -342,8 +365,8 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
   generateRecentJobs(count: number): JobPosting[] {
     const jobs: JobPosting[] = [];
     const titles = ['Senior UX Designer', 'Backend Developer', 'Marketing Manager', 'Data Scientist', 'HR Coordinator'];
-    const companies = ['TechLead Inc.', 'Digital Solutions', 'Brand Vision', 'Analytics Pro', 'HR Inc.'];
-    const locations = ['San Francisco, CA', 'New York, NY', 'Chicago, IL', 'Boston, MA', 'Austin, TX'];
+    const companies = ['Genworx', 'Genworx', 'Genworx', 'Genworx', 'Genworx'];
+    const locations = ['Chennai', 'Chennai', 'Chennai', 'Chennai', 'Chennai'];
     const categories = ['Design', 'Development', 'Marketing', 'Data', 'Human Resources'];
     const categoryColors = ['blue', 'purple', 'pink', 'indigo', 'red'];
     const statuses = ['Active', 'Pending', 'Closed'];
@@ -390,7 +413,7 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
       
       // Generate daily data with some randomness
       for (let i = 0; i < 7; i++) {
-        const dayValue = Math.floor(weekAvg + (Math.random() * 100 - 50));
+        const dayValue = Math.floor(weekAvg + (Math.random() * 10 - 5));
         currentWeek.push(dayValue);
         weekTotal += dayValue;
         
@@ -465,7 +488,7 @@ export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
     data['30days'] = {
       applications: apps30,
       hires: hires30,
-      conversion: parseFloat(((totalHires30 / totalApps30) * 100).toFixed(1))
+      conversion: parseFloat(((totalHires30 / totalApps30) * 10).toFixed(1))
     };
 
     // Generate 90 days data (monthly pattern)

@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Genworx - Log In</title>
+  <title>Genworx Jobs - Log In</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
     }
     .left-side {
       background-color: #00154D;
@@ -17,108 +20,163 @@
       flex-direction: column;
       justify-content: space-between;
       padding: 2rem;
+      background-image: url('https://images.unsplash.com/photo-1521791055366-0d553872125f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
     }
     .feature-item {
       position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
+      padding-left: 2rem;
+      margin-bottom: 1.5rem;
     }
     .feature-item::before {
-      content: '✔';
+      content: '✓';
       position: absolute;
       left: 0;
       color: #4ade80;
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: bold;
+    }
+    .feature-item span {
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: white;
+    }
+    .feature-item p {
+      color: #d1d5db;
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
     .logo-text {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
+      color: white;
+      margin-left: 0.5rem;
     }
     .welcome-back {
-      font-size: 1.75rem;
-      font-weight: bold;
-      color: #1e293b;
-      margin-bottom: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a237e;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .welcome-back::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 4px;
+      background: #2563eb;
+      border-radius: 2px;
     }
     .form-input {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.85rem 1rem;
       border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      border-radius: 8px;
       margin-bottom: 1rem;
       box-sizing: border-box;
       color: #374151;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
     }
     .form-input:focus {
       outline: none;
       border-color: #2563eb;
-      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
     .error-message {
-      color: red;
-      font-size: 0.875rem;
-      margin-top: -0.75rem;
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-top: -0.5rem;
       margin-bottom: 1rem;
       display: none;
+      padding-left: 0.5rem;
     }
     .btn-primary {
       background-color: #2563eb;
       color: white;
-      padding: 0.75rem 1rem;
-      border-radius: 0.375rem;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
       text-align: center;
       font-size: 1rem;
+      font-weight: 600;
       width: 100%;
       border: none;
       cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
     }
     .btn-primary:hover {
       background-color: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
     }
     .social-login {
       display: flex;
       gap: 0.75rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     .social-btn {
       flex-grow: 1;
       padding: 0.75rem 1rem;
       border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      border-radius: 8px;
       text-align: center;
       color: #374151;
-      font-size: 1rem;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s ease;
+      font-weight: 500;
     }
     .social-btn:hover {
       border-color: #9ca3af;
+      transform: translateY(-1px);
+    }
+    .social-btn img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
     }
     .or-divider {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: #6b7280;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
     .or-divider::before,
     .or-divider::after {
       content: '';
       flex: 1;
-      border-bottom: 1px solid #d1d5db;
+      border-bottom: 1px solid #e5e7eb;
       margin: 0 0.5rem;
     }
     .signup-link {
       text-align: center;
       color: #6b7280;
-      font-size: 0.875rem;
+      font-size: 0.95rem;
+      margin-top: 1.5rem;
     }
     .signup-link a {
       color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .signup-link a:hover {
       text-decoration: underline;
     }
     .grid-container {
@@ -130,11 +188,20 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 2rem;
+      padding: 3rem;
+      background-color: white;
+      position: relative;
+      overflow: hidden;
     }
     @media (max-width: 768px) {
       .grid-container {
         grid-template-columns: 1fr;
+      }
+      .left-side {
+        display: none;
+      }
+      .right-side {
+        padding: 2rem 1.5rem;
       }
     }
     .back-arrow {
@@ -143,12 +210,17 @@
       left: 2rem;
       cursor: pointer;
       color: #e2e8f0;
-      font-size: 1.5rem;
-      font-weight: bold;
+      font-size: 1rem;
+      font-weight: 600;
       text-decoration: none;
       display: flex;
       align-items: center;
       z-index: 10;
+      transition: all 0.2s ease;
+    }
+    .back-arrow:hover {
+      color: white;
+      transform: translateX(-3px);
     }
     .back-arrow svg {
       margin-right: 0.5rem;
@@ -163,8 +235,100 @@
       align-items: flex-start;
     }
     .required {
-      color: red;
+      color: #ef4444;
       margin-left: 4px;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: #4b5563;
+      font-weight: 500;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    .logo-img {
+      width: 350px;
+      height: 250px;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 42px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+    .forgot-password {
+      text-align: right;
+      margin-bottom: 1.5rem;
+    }
+    .forgot-password a {
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+    .right-side::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: url('https://www.genworx.com/wp-content/uploads/2022/05/genworx-logo-blue.png') no-repeat;
+      background-size: contain;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    .right-side::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: url('https://www.genworx.com/wp-content/uploads/2022/05/genworx-logo-blue.png') no-repeat;
+      background-size: contain;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    .form-container {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .floating-image {
+      position: absolute;
+      z-index: 2;
+    }
+    .floating-image.top-right {
+      top: 50px;
+      right: 50px;
+      width: 80px;
+      opacity: 0.8;
+    }
+    .floating-image.bottom-left {
+      bottom: 50px;
+      left: 50px;
+      width: 100px;
+      opacity: 0.8;
+    }
+    .auth-links {
+      margin-top: 1.5rem;
     }
   </style>
 </head>
@@ -172,131 +336,91 @@
   <div class="grid-container">
     <div class="left-side">
       <a href="#" class="back-arrow" onclick="window.history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
         Back
       </a>
       <div class="left-side-content">
-        <div class="flex items-center mb-8">
-          <img src="assets/icons/logo.png" alt="GenWorx Logo" class="w-50 h-50 mr-10 object-contain">
+        <div class="logo-container">
+          <img src="assets/icons/logo.png" alt="GenWorx Logo" class="logo-img">
           <span class="logo-text">Jobs</span>
         </div>
         <ul>
           <li class="feature-item">
-            <span>Get started quickly</span>
-            <p class="text-gray-300">Integrate with developer-friendly APIs or choose low-code.</p>
+            <span>Explore Top Opportunities</span>
+            <p>Access job openings from leading tech companies and global brands across multiple industries.</p>
           </li>
           <li class="feature-item">
-            <span>Support any business model</span>
-            <p class="text-gray-300">Host code privately with full control.</p>
+            <span>Streamlined Application</span>
+            <p>Apply quickly with your profile and manage all applications from your personalized dashboard.</p>
           </li>
           <li class="feature-item">
-            <span>Join millions of businesses</span>
-            <p class="text-gray-300">Trusted by startups and enterprises alike.</p>
+            <span>Verified Companies Only</span>
+            <p>We carefully vet all employers to ensure you only see legitimate job opportunities.</p>
           </li>
         </ul>
       </div>
       <p class="text-gray-400 text-sm">© 2025 Genworx. All rights reserved.</p>
     </div>
 
-    <div class="right-side bg-white">
-      <div class="max-w-md mx-auto">
+    <div class="right-side">
+      
+      <div class="form-container">
         <h2 class="welcome-back">Welcome back</h2>
+        <p style="color: #6b7280; margin-bottom: 2rem;">Log in to access your personalized job dashboard</p>
 
         <div class="social-login">
           <a href="#" class="social-btn">
-            <img src="assets/icons/Google.jpg" alt="Google" class="w-5 h-5 mr-2" />
-            Log in with Google
+            <img src="assets/icons/Google.jpg" alt="Google" />
+            Google
           </a>
           <a href="#" class="social-btn">
-            <img src="assets/icons/download.png" alt="Apple" class="w-5 h-5 mr-2" />
-            Log in with Apple
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" />
+            Apple
           </a>
         </div>
 
-        <div class="or-divider">or</div>
+        <div class="or-divider">or continue with email</div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Email <span class="required">*</span></label>
-    <input type="email" formControlName="email" class="form-input" placeholder="Enter your email" />
-    <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
-      <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
-      <div *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email.</div>
-    </div>
-  </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div>
+            <label for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" formControlName="email" class="form-input" placeholder="Enter your email" />
+            <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+              <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+              <div *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address.</div>
+            </div>
+          </div>
 
-  <div>
-    <label>Password <span class="required">*</span></label>
-    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-input" placeholder="Enter a Password " />
-    <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
-      <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
-      <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Minimum 6 characters required.</div>
-    </div>
-  </div>
+          <div class="password-container">
+            <label for="password">Password <span class="required">*</span></label>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-input" placeholder="Enter your password" />
+            <i class="toggle-password" [ngClass]="{'fa-eye': showPassword, 'fa-eye-slash': !showPassword}" (click)="showPassword = !showPassword"></i>
+            <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+              <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
+            </div>
+          </div>
 
-  <!-- 🔥 Corrected login button: -->
-  <button type="submit" class="btn-primary">
-    Log In
-  </button>
-<div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-</form>
+          <div class="forgot-password">
+            <a [routerLink]="['/forgot-password']">Forgot your password?</a>
+          </div>
 
-<div class="auth-links">
-  <div class="forgot-password">
-    <a [routerLink]="['/forgot-password']" class="text-blue-600 underline">Forgot Password?</a>
-  </div>
-  
-  <div class="signup-link">
-    Don't have an account?
-    <a [routerLink]="['/register']" class="text-blue-600 underline">Sign up here</a>
-  </div>
-</div>
+          <button type="submit" class="btn-primary" [disabled]="loginForm.invalid">
+            Log In
+          </button>
+          <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        </form>
+
+        <div class="auth-links">
+          <div class="signup-link">
+            Don't have an account? <a [routerLink]="['/register']">Sign up here</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <script>
-    function validateForm() {
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const emailError = document.getElementById('emailError');
-      const passwordError = document.getElementById('passwordError');
-
-      let isValid = true;
-
-      emailError.textContent = '';
-      emailError.style.display = 'none';
-      passwordError.textContent = '';
-      passwordError.style.display = 'none';
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      if (email === '') {
-        emailError.textContent = 'Email is required.';
-        emailError.style.display = 'block';
-        isValid = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        emailError.textContent = 'Please enter a valid email address.';
-        emailError.style.display = 'block';
-        isValid = false;
-      }
-
-      if (password === '') {
-        passwordError.textContent = 'Password is required.';
-        passwordError.style.display = 'block';
-        isValid = false;
-      } else if (password.length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters.';
-        passwordError.style.display = 'block';
-        isValid = false;
-      }
-
-      return isValid;
-    }
-  </script>
 </body>
 </html>

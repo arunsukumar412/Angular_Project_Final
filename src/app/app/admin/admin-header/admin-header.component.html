@@ -1,0 +1,27 @@
+<header class="bg-white shadow-md fixed top-0 left-80 md:left-0 right-0 px-4 py-2 w-[calc(100%-20rem)] md:w-full min-h-[64px] z-30 transition-all duration-300">
+  <div class="flex items-center justify-between px-4 py-2">
+    <div class="flex items-center">
+      <button id="mobile-menu-button" class="text-blue-600 hover:text-blue-800 focus:outline-none md:hidden">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+      <div class="relative mx-4 w-full max-w-xs">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-search text-blue-400"></i>
+        </div>
+        <input type="text" class="block w-full pl-10 pr-3 py-2 border border-blue-200 rounded-md leading-5 bg-white placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200" placeholder="Search candidates...">
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button id="notification-btn" class="text-blue-600 hover:text-blue-800 focus:outline-none relative">
+        <i class="fas fa-bell text-xl"></i>
+        <span class="absolute top-0 right-0 inline-block w-2 h-2 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"></span>
+      </button>
+      <div class="relative">
+        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+          <img class="h-8 w-8 rounded-full" src="assets/icons/Gen.png" alt="HR profile">
+          <span class="hidden md:inline-block text-sm font-medium text-blue-600">Admin</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header><br><br>

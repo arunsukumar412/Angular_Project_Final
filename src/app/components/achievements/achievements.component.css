@@ -1,0 +1,36 @@
+  /* Animation for number counting */
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-number {
+    animation: countUp 1s ease-out forwards;
+  }
+  
+  /* Carousel Animation */
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-150px * 7)); }
+  }
+  
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+    display: flex;
+    width: calc(150px * 14);
+  }
+  
+  /* Modal Active State */
+  .modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .modal.active .modal-container {
+    transform: scale(1);
+  }
+  
+  /* Achievement Card Hover Effect */
+  .achievement-card:hover {
+    transform: translateY(-8px);
+  }

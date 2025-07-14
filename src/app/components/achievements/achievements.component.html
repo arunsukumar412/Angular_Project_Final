@@ -1,190 +1,146 @@
-<!-- Prestigious Clients Section -->
-<div class="mt-12 bg-[#00154D] py-12 px-4">
-  <h3 class="text-3xl font-semibold mb-8 text-white text-center">Our Prestigious Clients</h3>
-  <div class="carousel-container overflow-hidden max-w-7xl mx-auto">
-    <div class="carousel-track flex animate-scroll">
-      <!-- Client Logos - First Set -->
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets/icons/microsoft.jpg" alt="Microsoft" class="image max-h-16 object-contain">
-      </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets/icons/microsoftazure-1.jpg" alt="Microsoft Azure" class="image max-h-16 object-contain">
-      </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets/icons/apple-logo-png-12908.png" alt="Apple" class="image max-h-16 object-contain">
-      </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets/icons/google-logo-png-29549.png" alt="Google" class="image max-h-16 object-contain">
-      </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets/icons/logo-png-27811.png" alt="Client" class="image max-h-16 object-contain">
-      </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="assets\icons\ibm.png" alt="IBM" class="image max-h-16 object-contain">
+<!-- Enhanced Achievements Section -->
+<section id="achievements" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="text-blue-600 font-semibold uppercase tracking-wider">Our Success</span>
+      <h2 class="text-4xl font-bold text-gray-900 mt-2">Milestones & Achievements</h2>
+      <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mt-6">Celebrating our journey of innovation and excellence in AI technology</p>
+    </div>
+    
+    <!-- Achievement Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Project Card -->
+      <div class="achievement-card bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-xl p-8 text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1085&q=80')] bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+        <div class="relative z-10">
+          <div class="text-5xl font-bold mb-3 animate-number" data-target="50">50+</div>
+          <div class="text-xl font-semibold mb-2">AI Projects</div>
+          <p class="text-blue-200">Delivered successfully worldwide</p>
+          <button class="mt-4 text-sm font-medium text-white/80 hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto">
+            View case studies
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
       
-      <!-- Duplicate items for seamless looping -->
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" class="image max-h-16 object-contain">
+      <!-- Patents Card -->
+      <div class="achievement-card bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-xl p-8 text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')] bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+        <div class="relative z-10">
+          <div class="text-5xl font-bold mb-3 animate-number" data-target="25">25+</div>
+          <div class="text-xl font-semibold mb-2">Patents</div>
+          <p class="text-indigo-200">In AI and machine learning</p>
+          <button class="mt-4 text-sm font-medium text-white/80 hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto">
+            Explore innovations
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" alt="Microsoft Azure" class="image max-h-16 object-contain">
+      
+      <!-- Clients Card -->
+      <div class="achievement-card bg-gradient-to-br from-blue-800 to-blue-900 text-white rounded-xl p-8 text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+        <div class="relative z-10">
+          <div class="text-5xl font-bold mb-3 animate-number" data-target="100">100+</div>
+          <div class="text-xl font-semibold mb-2">Clients</div>
+          <p class="text-gray-300">Global enterprises served</p>
+          <button class="mt-4 text-sm font-medium text-white/80 hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto">
+            Client testimonials
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" class="image max-h-16 object-contain">
-      </div>
-       <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Apple" class="image max-h-16 object-contain">
-      </div>
-       <div class="carousel-item min-w-[200px] px-4 flex items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Meta-Logo.png" alt="Apple" class="image max-h-16 object-contain">
+      
+      <!-- Awards Card -->
+      <div class="achievement-card bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-xl p-8 text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80')] bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+        <div class="relative z-10">
+          <div class="text-5xl font-bold mb-3 animate-number" data-target="10">10+</div>
+          <div class="text-xl font-semibold mb-2">Awards</div>
+          <p class="text-blue-200">For excellence in AI</p>
+          <button class="mt-4 text-sm font-medium text-white/80 hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto">
+            See recognition
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="w-full text-center mt-8">
-    <p class="text-lg text-gray-400 italic">And many more leading organizations...</p>
-  </div>
+    
+    <!-- Client Logos Carousel -->
+    <div class="mt-20">
+      <h3 class="text-2xl font-bold text-center mb-8 text-gray-800">Trusted By Industry Leaders</h3>
+      <div class="relative overflow-hidden py-6">
+        <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-gray-50 to-transparent z-10"></div>
+        <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-gray-50 to-transparent z-10"></div>
+ <div class="flex items-center justify-center space-x-12 animate-scroll">
+  <!-- Google -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- ChatGPT -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT" class="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- Microsoft -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft" class="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- Apple -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" class="h-10 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- Amazon -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" class="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- Meta -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" alt="Meta" class="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
+  
+  <!-- Tesla -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg" alt="Tesla" class="h-10 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300">
 </div>
-
-<!-- Achievements Section -->
-<section id="achievements" class="py-20 px-6 bg-white">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">OUR ACHIEVEMENTS</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl">
-        <div class="text-4xl font-bold mb-2">50+</div>
-        <div class="text-xl font-semibold">AI Projects</div>
-        <p class="mt-2 text-blue-200">Completed successfully</p>
-      </div>
-      <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl">
-        <div class="text-4xl font-bold mb-2">25+</div>
-        <div class="text-xl font-semibold">Patents</div>
-        <p class="mt-2 text-blue-200">In AI technology</p>
-      </div>
-      <div class="bg-gradient-to-br from-gray-700 to-gray-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl">
-        <div class="text-4xl font-bold mb-2">100+</div>
-        <div class="text-xl font-semibold">Clients</div>
-        <p class="mt-2 text-gray-300">Served worldwide</p>
-      </div>
-      <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-lg p-6 text-center hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl">
-        <div class="text-4xl font-bold mb-2">10+</div>
-        <div class="text-xl font-semibold">Awards</div>
-        <p class="mt-2 text-blue-200">For innovation</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Modal Structure (CSS-only version) -->
-<div class="modal fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
-  <div class="modal-content bg-white rounded-lg max-w-md w-full mx-4 p-8 relative">
-    <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<!-- Enhanced Modal -->
+<div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 invisible transition-opacity duration-300">
+  <div class="modal-overlay absolute inset-0 bg-black/70"></div>
+  <div class="modal-container bg-white rounded-2xl max-w-2xl w-full mx-4 relative z-10 transform scale-95 transition-transform duration-300">
+    <button class="modal-close absolute -top-12 right-0 text-white hover:text-blue-300 transition-colors duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-    <div class="flex justify-center mb-6">
-      <div class="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
+    
+    <div class="p-8">
+      <div class="flex justify-center mb-6">
+        <div class="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
       </div>
-    </div>
-    <h3 class="modal-title text-2xl font-bold text-center text-gray-800 mb-4">Achievement Title</h3>
-    <div class="modal-body text-gray-600 text-center">Achievement details will appear here.</div>
-    <div class="mt-6 flex justify-center">
-      <button class="modal-close-btn px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-        Close
-      </button>
+      
+      <h3 class="modal-title text-3xl font-bold text-center text-gray-800 mb-4">Achievement Details</h3>
+      <div class="modal-body text-gray-600 text-lg text-center mb-8">
+        Detailed information about this achievement will appear here.
+      </div>
+      
+      <div class="flex justify-center space-x-4">
+        <button class="modal-close-btn px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">
+          Close
+        </button>
+        <button class="px-8 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300 font-medium">
+          Learn More
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-  /* Carousel Animation */
-  .animate-scroll {
-    animation: scroll 20s linear infinite;
-    display: flex;
-    width: calc(200px * 9); /* Number of items * width */
-  }
-  
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-200px * 6)); /* Move by half of total width */ }
-  }
-  
-  /* Modal Transition */
-  .modal {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-  }
-  
-  .modal.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .modal-content {
-    transform: scale(0.95);
-    transition: transform 0.3s;
-  }
-  
-  .modal.active .modal-content {
-    transform: scale(1);
-  }
-</style>
-
-<script>
-  // Simple JavaScript for modal functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    const achievementCards = document.querySelectorAll('#achievements > div > div');
-    const modal = document.querySelector('.modal');
-    const modalTitle = document.querySelector('.modal-title');
-    const modalBody = document.querySelector('.modal-body');
-    const closeButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
-    
-    // Achievement data
-    const achievements = [
-      {
-        title: "50+ AI Projects",
-        content: "We have successfully delivered 50+ AI projects across various industries."
-      },
-      {
-        title: "25+ Patents",
-        content: "Our team has been granted 25+ patents in AI technology."
-      },
-      {
-        title: "100+ Clients",
-        content: "We have served 100+ clients worldwide with our AI solutions."
-      },
-      {
-        title: "10+ Awards",
-        content: "Our work has been recognized with 10+ prestigious awards."
-      }
-    ];
-    
-    // Add click events to achievement cards
-    achievementCards.forEach((card, index) => {
-      card.addEventListener('click', () => {
-        modalTitle.textContent = achievements[index].title;
-        modalBody.textContent = achievements[index].content;
-        modal.classList.add('active');
-      });
-    });
-    
-    // Add click events to close buttons
-    closeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
-    });
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-      }
-    });
-  });
-</script>

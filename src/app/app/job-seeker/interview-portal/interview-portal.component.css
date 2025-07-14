@@ -1,0 +1,75 @@
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dark {
+  background: linear-gradient(to bottom right, #1e3a8a, #1e40af);
+}
+
+.dark .bg-white {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border-color: #374151;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-800 {
+  color: #93c5fd;
+}
+
+.dark .bg-blue-50 {
+  background-color: #374151;
+}
+
+.dark .bg-blue-100 {
+  background-color: #4b5563;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800 {
+  color: #d1d5db;
+}
+
+.dark .bg-gray-200 {
+  background-color: #4b5563;
+}
+
+.dark .border-blue-200 {
+  border-color: #6b7280;
+}
+
+.dark .bg-blue-500 {
+  background-color: #2563eb;
+}
+
+.dark .hover\:bg-blue-600:hover {
+  background-color: #1d4ed8;
+}
+
+.dark .bg-red-500 {
+  background-color: #ef4444;
+}
+
+.dark .hover\:bg-red-600:hover {
+  background-color: #dc2626;
+}
+
+.dark .bg-gray-500 {
+  background-color: #6b7280;
+}
+
+.dark .hover\:bg-gray-600:hover {
+  background-color: #4b5563;
+}
