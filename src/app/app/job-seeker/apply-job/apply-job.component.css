@@ -1,45 +1,21 @@
- @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* apply-job.component.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
-  }
-  
-  /* Smooth transitions */
-  .transition-all {
-    transition-property: all;
-  }
-  
-  .duration-200 {
-    transition-duration: 200ms;
-  }
-  
-  .duration-300 {
-    transition-duration: 300ms;
-  }
-  
-  /* Line clamping for text */
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+}
+
+/* Add any additional custom styles if needed */

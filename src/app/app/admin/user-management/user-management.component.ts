@@ -3,22 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { HrFooterComponent } from "../../recruiter/hr-footer/hr-footer.component";
-import { HrHeaderComponent } from '../../recruiter/hr-header/hr-header.component';
-import { AdminHeaderComponent } from "../admin-header/admin-header.component";
+import { AdminHeaderComponent } from '../admin-header/admin-header.component';
 import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'hr' | 'candidate';
-  status: 'active' | 'inactive';
-  avatar?: string;
-  selected?: boolean;
-  lastUpdated?: Date;
-  [key: string]: any; // Added index signature to allow dynamic indexing
-}
+import { UserService, User } from '../../../services/user.service';
+import { Subscription } from 'rxjs';
 
 interface Activity {
   userName: string;
@@ -32,12 +20,6 @@ interface Log {
   timestamp: Date;
 }
 
-interface Notification {
-  message: string;
-  time: string;
-  read: boolean;
-}
-
 interface UserTab {
   label: string;
   value: 'all' | 'hr' | 'candidateActivity';
@@ -48,7 +30,8 @@ interface UserTab {
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SidebarComponent, AdminHeaderComponent,AdminFooterComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SidebarComponent, AdminHeaderComponent, AdminFooterComponent],
+  providers: [UserService],
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
   users: User[] = [];
@@ -57,123 +40,125 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   selectedUser: User | null = null;
   isEditing = false;
   showUserModal = false;
-  showNotificationDropdown = false;
-  showUserDropdown = false;
-  showSidebar = false; // Added for toggleSidebar
-  searchQuery = '';
   filterRole: 'hr' | 'candidate' | '' = '';
   filterStatus: 'active' | 'inactive' | '' = '';
   filterDate: string | null = null;
   activeTab: 'all' | 'hr' | 'candidateActivity' = 'all';
-  notifications: Notification[] = [];
-  unreadNotifications = 0;
   selectAll = false;
   selectedUsers: User[] = [];
   currentPage = 1;
   itemsPerPage = 10;
-  startIndex = 0; // Reintroduced
-  endIndex = 0; // Reintroduced
+  startIndex = 0;
+  endIndex = 0;
   totalUsers = 0;
   autoGeneratePassword = true;
   activityLog: Log[] = [];
-  currentUser = 'Admin'; // Reintroduced
-  currentDate = new Date(); // Reintroduced
-  currentYear = this.currentDate.getFullYear(); // Reintroduced
-  version = '2.4.1'; // Reintroduced
-
+  currentDate = new Date();
   userTabs: UserTab[] = [
     { label: 'All Users', value: 'all', count: 0 },
     { label: 'HR Users', value: 'hr', count: 0 },
     { label: 'Candidate Activity', value: 'candidateActivity', count: 0 },
   ];
-
   userForm: FormGroup;
   private sortField: keyof User = 'name';
   private sortDirection: 'asc' | 'desc' = 'asc';
   private activityLogInterval: ReturnType<typeof setInterval> | null = null;
+  private subscriptions: Subscription = new Subscription();
+  private defaultAvatar = 'https://png.pngtree.com/png-vector/20250109/ourlarge/pngtree-smiling-professional-avatar-png-image_14851558.png'; // PNGTree image path
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService) {
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       role: ['hr', Validators.required],
       status: ['active', Validators.required],
+      phone: [''],
     });
   }
 
   ngOnInit(): void {
     this.loadUsers();
-    this.generateMockActivities();
-    this.updateTabCounts();
+    this.generateMockActivities(5); // Generate 5 mock activities
     this.startActivityLogging();
   }
 
   ngOnDestroy(): void {
     if (this.activityLogInterval) {
       clearInterval(this.activityLogInterval);
-      this.activityLogInterval = null;
     }
+    this.subscriptions.unsubscribe();
   }
 
   loadUsers(): void {
-    this.users = [
-      {
-        id: 'hr1',
-        name: 'HR Manager 1',
-        email: 'hr1@genworx.com',
-        role: 'hr',
-        status: 'active',
-        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
-        lastUpdated: new Date(),
-      },
-      {
-        id: 'hr2',
-        name: 'HR Manager 2',
-        email: 'hr2@genworx.com',
-        role: 'hr',
-        status: 'inactive',
-        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
-        lastUpdated: new Date(),
-      },
-      {
-        id: 'cand1',
-        name: 'Candidate 1',
-        email: 'cand1@genworx.com',
-        role: 'candidate',
-        status: 'active',
-        avatar: 'https://static.vecteezy.com/system/resources/thumbnails/027/951/137/small_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png',
-        lastUpdated: new Date(),
-      },
-    ];
-    this.filterUsers();
+    this.subscriptions.add(
+      this.userService.getUsers().subscribe({
+        next: (users: User[]) => {
+          this.users = users.map(user => ({
+            ...user,
+            selected: false,
+            avatar: user.avatar || this.defaultAvatar, // Use PNGTree image as default
+            lastUpdated: user.lastUpdated ? new Date(user.lastUpdated) : new Date(),
+          }));
+          this.filterUsers();
+        },
+        error: (err: any) => {
+          console.error('Error loading users:', err);
+          this.logActivity('Failed to load users, generating mock users');
+          this.generateMockUsers(); // Fallback to mock users
+        },
+      })
+    );
   }
 
-  generateMockActivities(): void {
-    this.candidateActivities = [
-      {
-        userName: 'Candidate 1',
-        action: 'Applied for job',
-        details: 'Applied to Software Engineer role',
-        timestamp: new Date(),
-      },
-      {
-        userName: 'Candidate 1',
-        action: 'Viewed profile',
-        details: 'Updated personal details',
-        timestamp: new Date(Date.now() - 3600000),
-      },
+  generateMockUsers(count: number = 4, role: 'hr' | 'candidate' | 'all' = 'all'): void {
+    const users: User[] = [];
+    for (let i = 0; i < count; i++) {
+      const userRole = role === 'all' ? (Math.random() > 0.5 ? 'hr' : 'candidate') : role;
+      users.push({
+        id: `${userRole}${Date.now() + i}`,
+        name: `User ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+        phone: `+1-555-010${i}`,
+        role: userRole,
+        status: Math.random() > 0.5 ? 'active' : 'inactive',
+        lastUpdated: new Date(Date.now() - Math.random() * 86400000 * 7), // Random time within 7 days
+        selected: false,
+        avatar: this.defaultAvatar, // Use PNGTree image
+      });
+    }
+    this.users = users;
+    this.filterUsers();
+    this.logActivity(`Generated ${count} mock ${role} users with default avatar`);
+  }
+
+  generateMockActivities(count: number = 5): void {
+    const actions = [
+      'Applied for job',
+      'Updated profile',
+      'Completed assessment',
+      'Scheduled interview',
+      'Viewed job listing',
     ];
+    const roles = ['Software Engineer', 'Data Analyst', 'Product Manager', 'Designer'];
+    this.candidateActivities = Array.from({ length: count }, (_, index) => ({
+      userName: `Candidate ${index + 1}`,
+      action: actions[Math.floor(Math.random() * actions.length)],
+      details: `${actions[Math.floor(Math.random() * actions.length)]} for ${roles[Math.floor(Math.random() * roles.length)]} role`,
+      timestamp: new Date(Date.now() - Math.random() * 86400000 * 7), // Random time within 7 days
+    }));
+    this.updateTabCounts();
+    this.logActivity(`Generated ${count} mock candidate activities`);
   }
 
   filterUsers(): void {
     this.filteredUsers = this.users.filter(
       (user) =>
-        user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
+        (this.activeTab === 'hr' ? user.role === 'hr' : true) &&
         (this.filterRole ? user.role === this.filterRole : true) &&
         (this.filterStatus ? user.status === this.filterStatus : true) &&
         (!this.filterDate ||
           (user.lastUpdated &&
-            new Date(user.lastUpdated).toISOString().split('T')[0] === this.filterDate)),
+            new Date(user.lastUpdated).toISOString().split('T')[0] === this.filterDate))
     );
     this.totalUsers = this.filteredUsers.length;
     this.updateTabCounts();
@@ -181,30 +166,20 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   updateTabCounts(): void {
-    this.userTabs[0].count = this.filteredUsers.length;
-    this.userTabs[1].count = this.filteredUsers.filter((u) => u.role === 'hr').length;
+    this.userTabs[0].count = this.users.length;
+    this.userTabs[1].count = this.users.filter((u) => u.role === 'hr').length;
     this.userTabs[2].count = this.candidateActivities.length;
   }
 
   setActiveTab(tab: 'all' | 'hr' | 'candidateActivity'): void {
     this.activeTab = tab;
-  }
-
-  toggleSidebar(): void {
-    this.showSidebar = !this.showSidebar;
-  }
-
-  toggleNotificationDropdown(): void {
-    this.showNotificationDropdown = !this.showNotificationDropdown;
-  }
-
-  toggleUserDropdown(): void {
-    this.showUserDropdown = !this.showUserDropdown;
+    this.currentPage = 1;
+    this.filterUsers();
   }
 
   openAddUserModal(): void {
     this.isEditing = false;
-    this.userForm.reset({ status: 'active', role: 'hr' });
+    this.userForm.reset({ status: 'active', role: 'hr', phone: '' });
     this.selectedUser = null;
     this.showUserModal = true;
   }
@@ -219,56 +194,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         email: user.email,
         role: user.role,
         status: user.status,
+        phone: user.phone || '',
       });
       this.showUserModal = true;
     }
-  }
-
-  cancelEdit(): void {
-    this.isEditing = false;
-    this.selectedUser = null;
-    this.showUserModal = false;
-  }
-
-  submitUserForm(): void {
-    if (this.userForm.invalid) return;
-
-    const formValue = this.userForm.value;
-    if (
-      !this.isEditing &&
-      this.users.some((u) => u.email === formValue.email && u.id !== this.selectedUser?.id)
-    ) {
-      alert('Email already exists.');
-      return;
-    }
-
-    if (this.isEditing && this.selectedUser) {
-      Object.assign(this.selectedUser, {
-        name: formValue.name,
-        email: formValue.email,
-        role: formValue.role,
-        status: formValue.status,
-        lastUpdated: new Date(),
-      });
-      this.logActivity(`Updated user ${this.selectedUser.name}`);
-    } else {
-      const newUser: User = {
-        id: `hr${this.users.length + 1}`,
-        name: formValue.name,
-        email: formValue.email,
-        role: formValue.role,
-        status: formValue.status,
-        avatar: `assets/avatars/hr${this.users.length + 1}.png`,
-        lastUpdated: new Date(),
-      };
-      this.users.push(newUser);
-      if (this.autoGeneratePassword) {
-        this.generateAndSendCredentials(newUser);
-      }
-      this.logActivity(`Added new user ${newUser.name}`);
-    }
-    this.closeUserModal();
-    this.filterUsers();
   }
 
   closeUserModal(): void {
@@ -277,50 +206,96 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.selectedUser = null;
   }
 
+  submitUserForm(): void {
+    if (this.userForm.invalid) return;
+
+    const formValue = this.userForm.value;
+    const user: User = {
+      id: this.isEditing && this.selectedUser ? this.selectedUser.id : `hr${Date.now()}`,
+      name: formValue.name,
+      email: formValue.email,
+      phone: formValue.phone,
+      role: formValue.role,
+      status: formValue.status,
+      lastUpdated: new Date(),
+      avatar: this.defaultAvatar, // Use PNGTree image as default
+    };
+
+    if (this.isEditing && this.selectedUser) {
+      this.subscriptions.add(
+        this.userService.updateUser(user).subscribe({
+          next: (updatedUser: User) => {
+            const index = this.users.findIndex((u) => u.id === updatedUser.id);
+            if (index !== -1) {
+              this.users[index] = { ...this.users[index], ...updatedUser, selected: this.users[index].selected };
+            }
+            this.logActivity(`Updated user ${user.name}`);
+            this.closeUserModal();
+            this.filterUsers();
+          },
+          error: (err: any) => {
+            console.error('Error updating user:', err);
+            this.logActivity(`Failed to update user ${user.name}`);
+          },
+        })
+      );
+    } else {
+      this.subscriptions.add(
+        this.userService.addUser(user).subscribe({
+          next: (newUser: User) => {
+            const userObj: User = {
+              id: newUser.id || `hr${Date.now()}`,
+              name: newUser.name,
+              email: newUser.email,
+              phone: newUser.phone,
+              role: newUser.role || 'hr',
+              status: newUser.status || 'active',
+              lastUpdated: newUser.lastUpdated ? new Date(newUser.lastUpdated) : new Date(),
+              selected: false,
+              avatar: newUser.avatar || this.defaultAvatar,
+            };
+            this.users.push(userObj);
+            if (this.autoGeneratePassword) {
+              this.generateAndSendCredentials(userObj);
+            }
+            this.logActivity(`Added new user ${newUser.name}`);
+            this.closeUserModal();
+            this.filterUsers();
+          },
+          error: (err: any) => {
+            console.error('Error adding user:', err);
+            this.logActivity(`Failed to add user ${user.name}`);
+          },
+        })
+      );
+    }
+  }
+
   generateAndSendCredentials(user: User): void {
     const password = this.autoGeneratePassword
       ? Math.random().toString(36).slice(-8)
       : 'default123';
-    const currentTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-    this.notifications.unshift({
-      message: `Credentials sent to ${user.email}`,
-      time: currentTime,
-      read: false,
-    });
-    this.unreadNotifications++;
     this.logActivity(`Generated credentials for ${user.name}`);
-    console.log(
-      `Credentials for ${user.name}: Email: ${user.email}, Password: ${password} (Sent at ${currentTime})`,
-    );
+    console.log(`Credentials for ${user.name}: Email: ${user.email}, Password: ${password}`);
   }
 
   deleteUser(userId: string): void {
     if (confirm('Are you sure you want to delete this user?')) {
-      const user = this.users.find((u) => u.id === userId);
-      this.users = this.users.filter((u) => u.id !== userId);
-      this.filterUsers();
-      this.logActivity(`Deleted user ${user?.name || 'with ID ' + userId}`);
+      this.subscriptions.add(
+        this.userService.deleteUser(userId).subscribe({
+          next: () => {
+            const user = this.users.find((u) => u.id === userId);
+            this.users = this.users.filter((u) => u.id !== userId);
+            this.logActivity(`Deleted user ${user?.name || 'with ID ' + userId}`);
+            this.filterUsers();
+          },
+          error: (err: any) => {
+            console.error('Error deleting user:', err);
+            this.logActivity(`Failed to delete user with ID ${userId}`);
+          },
+        })
+      );
     }
-  }
-
-  exportUsers(): void {
-    const escapeCsv = (value: string) =>
-      `"${value.replace(/"/g, '""')}"`;
-    const headers = 'Name,Email,Role,Status\n';
-    const csv = headers + this.filteredUsers
-      .map(
-        (user) =>
-          `${escapeCsv(user.name)},${escapeCsv(user.email)},${user.role},${user.status}`,
-      )
-      .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `users_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    this.logActivity('Exported user list');
   }
 
   importUsers(): void {
@@ -334,28 +309,58 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   bulkActivate(): void {
-    this.selectedUsers.forEach((user) => (user.status = 'active'));
-    this.filterUsers();
+    this.selectedUsers.forEach((user) => {
+      user.status = 'active';
+      this.subscriptions.add(
+        this.userService.updateUser(user).subscribe({
+          error: (err: any) => {
+            console.error('Error activating user:', err);
+            this.logActivity(`Failed to activate user ${user.name}`);
+          },
+        })
+      );
+    });
     this.logActivity(`Activated ${this.selectedUsers.length} users`);
     this.selectedUsers = [];
     this.selectAll = false;
+    this.filterUsers();
   }
 
   bulkDeactivate(): void {
-    this.selectedUsers.forEach((user) => (user.status = 'inactive'));
-    this.filterUsers();
+    this.selectedUsers.forEach((user) => {
+      user.status = 'inactive';
+      this.subscriptions.add( // Fixed typo: subplications -> subscriptions
+        this.userService.updateUser(user).subscribe({
+          error: (err: any) => {
+            console.error('Error deactivating user:', err);
+            this.logActivity(`Failed to deactivate user ${user.name}`);
+          },
+        })
+      );
+    });
     this.logActivity(`Deactivated ${this.selectedUsers.length} users`);
     this.selectedUsers = [];
     this.selectAll = false;
+    this.filterUsers();
   }
 
   bulkDelete(): void {
     if (confirm(`Are you sure you want to delete ${this.selectedUsers.length} users?`)) {
+      this.selectedUsers.forEach((user) => {
+        this.subscriptions.add(
+          this.userService.deleteUser(user.id).subscribe({
+            error: (err: any) => {
+              console.error('Error deleting user:', err);
+              this.logActivity(`Failed to delete user ${user.name}`);
+            },
+          })
+        );
+      });
       this.users = this.users.filter((u) => !this.selectedUsers.some((su) => su.id === u.id));
-      this.filterUsers();
       this.logActivity(`Deleted ${this.selectedUsers.length} users`);
       this.selectedUsers = [];
       this.selectAll = false;
+      this.filterUsers();
     }
   }
 
@@ -409,26 +414,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.endIndex = Math.min(this.startIndex + this.itemsPerPage, this.totalUsers);
   }
 
-  logout(): void {
-    console.log('Logged out');
-    this.logActivity('User logged out');
-  }
-
-  openPolicy(type: string): void {
-    console.log(`Opening ${type} policy`);
-    this.logActivity(`Opened ${type} policy`);
-  }
-
-  openContact(): void {
-    console.log('Opening contact form');
-    this.logActivity('Opened contact form');
-  }
-
-  markAllAsRead(): void {
-    this.unreadNotifications = 0;
-    this.notifications.forEach((n) => (n.read = true));
-  }
-
   logActivity(message: string): void {
     this.activityLog.unshift({ message, timestamp: new Date() });
     if (this.activityLog.length > 10) {
@@ -441,8 +426,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       this.logActivity(
         `System checked at ${new Date().toLocaleTimeString('en-IN', {
           timeZone: 'Asia/Kolkata',
-        })}`,
+        })}`
       );
-    }, 300000);
+    }, 300000); // Log every 5 minutes
   }
 }

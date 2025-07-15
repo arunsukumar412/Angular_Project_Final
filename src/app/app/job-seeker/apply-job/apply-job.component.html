@@ -1,7 +1,7 @@
 <app-jobseeker-sidebar></app-jobseeker-sidebar>
 <br><br>
 <div class="h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-6 overflow-y-auto">
-  <!-- Enhanced Back Button with Micro-interaction -->
+  <!-- Back Button -->
   <div class="flex items-center mb-6">
     <button (click)="goToDashboard()" class="text-blue-700 hover:text-blue-900 flex items-center text-sm font-medium transition-all duration-300 group" aria-label="Back to Dashboard">
       <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,7 +11,7 @@
     </button>
   </div>
 
-  <!-- Loading Spinner with Better Visual Feedback -->
+  <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
     <div class="flex flex-col items-center">
       <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 border-solid mb-4"></div>
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <!-- Job List with Enhanced Cards -->
+  <!-- Job List -->
   <div *ngIf="!showApplicationForm && !showPolicyModal" class="container mx-auto w-full pt-8 animate-fade-in">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
       <div>
@@ -88,6 +88,7 @@
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
+            {{ job.postedDate | date }}
           </div>
           <button (click)="selectJob(job)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-all duration-300 flex items-center group-hover:scale-105 shadow-md hover:shadow-lg">
             Apply Now
@@ -112,27 +113,9 @@
         </button>
       </div>
     </div>
-    
-    <!-- Pagination -->
-    <div *ngIf="filteredJobs.length > 0" class="flex items-center justify-between mt-8">
-      <div class="text-sm text-gray-500">
-        Showing <span class="font-medium">{{ currentPage * pageSize + 1 }}</span> to 
-        <span class="font-medium">{{ filteredJobs.length }}</span> results
-      </div>
-      <div class="flex space-x-2">
-        <button (click)="previousPage()" [disabled]="currentPage === 0" 
-          class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-          Previous
-        </button>
-        <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= filteredJobs.length" 
-          class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-          Next
-        </button>
-      </div>
-    </div>
   </div>
 
-  <!-- Enhanced Policy Modal -->
+  <!-- Policy Modal -->
   <div *ngIf="showPolicyModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
     <div class="bg-white p-8 rounded-2xl shadow-2xl border border-blue-100 max-w-3xl w-full max-h-[85vh] overflow-y-auto transform transition-all duration-300 scale-95 hover:scale-100">
       <div class="flex items-center justify-between mb-6">
@@ -174,7 +157,7 @@
               <input id="policyAccepted" [(ngModel)]="policyAccepted" type="checkbox" class="focus:ring-blue-500 h-5 w-5 text-blue-600 border-blue-300 rounded cursor-pointer">
             </div>
             <div class="ml-3 text-sm">
-              <label for="policyAccepted" class="font-medium text-gray-700">I agree to the <a href="/privacy-policy" class="text-blue-600 hover:underline">Privacy Policy</a> and terms</label>
+              <label for="policyAccepted" class="font-medium text-gray-700">I agree to the Privacy Policy and terms</label>
               <p class="text-gray-500 mt-1">By checking this box, you acknowledge reading our data policy.</p>
             </div>
           </div>
@@ -196,7 +179,7 @@
     </div>
   </div>
 
-  <!-- Enhanced Application Form -->
+  <!-- Application Form -->
   <div *ngIf="showApplicationForm && selectedJob" class="container mx-auto w-full max-w-4xl pt-8 animate-fade-in">
     <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-100 relative overflow-hidden">
       <!-- Progress Indicator -->
@@ -210,7 +193,7 @@
         </div>
       </div>
       
-      <!-- Form Header with Improved Visual Hierarchy -->
+      <!-- Form Header -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
           <button (click)="selectJob(null)" class="text-blue-700 hover:text-blue-900 flex items-center text-sm font-medium group transition-colors duration-200">
@@ -234,9 +217,9 @@
         </div>
       </div>
 
-      <!-- Enhanced Form Layout -->
+      <!-- Form Layout -->
       <form [formGroup]="applicationForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Form Fields with Improved Validation UI -->
+        <!-- Form Fields -->
         <div *ngFor="let field of formFields" [class.md:col-span-2]="field.fullWidth">
           <label [for]="field.id" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
             {{ field.label }}
@@ -249,14 +232,6 @@
               class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               [class.border-red-300]="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched"
               [placeholder]="field.placeholder">
-            
-            <!-- Select Dropdown -->
-            <select *ngSwitchCase="'select'" [id]="field.id" [formControlName]="field.control"
-              class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              [class.border-red-300]="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched">
-              <option value="" disabled selected>Select an option</option>
-              <option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option>
-            </select>
             
             <!-- File Input -->
             <div *ngSwitchCase="'file'" class="relative">
@@ -274,7 +249,7 @@
               [placeholder]="field.placeholder"></textarea>
           </div>
           
-          <!-- Validation Messages with Animation -->
+          <!-- Validation Messages -->
           <div *ngIf="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched" 
                class="mt-1 text-red-600 text-xs animate-pulse">
             <div *ngIf="applicationForm.get(field.control)?.hasError('required')">This field is required</div>
@@ -303,7 +278,7 @@
       </form>
     </div>
 
-    <!-- Enhanced Success Modal -->
+    <!-- Success Modal -->
     <div *ngIf="showSuccessMessage" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
       <div class="bg-white p-8 rounded-2xl shadow-2xl border border-blue-100 max-w-md w-full transform transition-all duration-300 scale-95 hover:scale-100">
         <div class="text-center">
@@ -326,7 +301,7 @@
       </div>
     </div>
 
-    <!-- Enhanced Application History -->
+    <!-- Application History -->
     <div class="mt-8 bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
       <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
         <h2 class="text-xl font-bold text-blue-900">Application History</h2>
@@ -344,7 +319,7 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th *ngFor="let column of applicationColumns" [attr.data-column]="column.key" (click)="sortApplications(column.key)"
+              <th *ngFor="let column of applicationColumns" [attr.data-column]="column.key"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200">
                 <div class="flex items-center">
                   {{ column.label }}
@@ -366,9 +341,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ app.company }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ app.date | date:'mediumDate' }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span [ngClass]="statusClasses[app.status]" class="px-3 py-1 rounded-full text-xs font-medium">
-                  {{ app.status }}
-                </span>
+
               </td>
             </tr>
             <tr *ngIf="filteredApplications.length === 0">

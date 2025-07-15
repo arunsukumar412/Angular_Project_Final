@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { JobseekerSidebarComponent } from '../jobseeker-sidebar/jobseeker-sidebar.component';
+import { ApplicationService } from '../../../services/application.service';
+import { JobseekerSidebarComponent } from "../jobseeker-sidebar/jobseeker-sidebar.component";
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 
 interface Job {
   id: number;
@@ -19,26 +22,10 @@ interface Job {
   featured?: boolean;
   postedDate: string;
 }
-
 interface Resume {
   id: number;
   name: string;
   file?: File;
-}
-
-interface FormField {
-  id: string;
-  label: string;
-  control: string;
-  type: string;
-  placeholder: string;
-  required: boolean;
-  minLength?: number;
-  fullWidth: boolean;
-  accept?: string;
-  hint?: string;
-  rows?: number;
-  options?: { value: string; label: string }[];
 }
 
 interface Application {
@@ -55,7 +42,7 @@ interface Application {
   templateUrl: './apply-job.component.html',
   styleUrls: ['./apply-job.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, JobseekerSidebarComponent,DatePipe],
+  imports: [JobseekerSidebarComponent,ReactiveFormsModule, CommonModule,FormsModule]
 })
 export class ApplyJobComponent implements OnInit {
   applicationForm: FormGroup;
@@ -81,57 +68,22 @@ export class ApplyJobComponent implements OnInit {
   pageSize: number = 10;
   activeFilters: string[] = [];
 
-  formFields: FormField[] = [
-    {
-      id: 'fullName',
-      label: 'Full Name',
-      control: 'fullName',
-      type: 'text',
-      placeholder: 'Enter your full name',
-      required: true,
-      minLength: 2,
-      fullWidth: false
-    },
-    {
-      id: 'email',
-      label: 'Email Address',
-      control: 'email',
-      type: 'text',
-      placeholder: 'Enter your email',
-      required: true,
-      minLength: 5,
-      fullWidth: false
-    },
-    {
-      id: 'phone',
-      label: 'Phone Number',
-      control: 'phone',
-      type: 'text',
-      placeholder: 'Enter your phone number',
-      required: true,
-      minLength: 10,
-      fullWidth: false
-    },
-    {
-      id: 'coverLetter',
-      label: 'Cover Letter',
-      control: 'coverLetter',
-      type: 'textarea',
-      placeholder: 'Write a brief cover letter...',
-      required: false,
-      fullWidth: true,
-      rows: 4
-    }
+  formFields = [
+    { id: 'fullName', label: 'Full Name', control: 'fullName', type: 'text', placeholder: 'Enter your full name', required: true, minLength: 2, fullWidth: false },
+    { id: 'email', label: 'Email Address', control: 'email', type: 'text', placeholder: 'Enter your email', required: true, minLength: 5, fullWidth: false },
+    { id: 'phone', label: 'Phone Number', control: 'phone', type: 'text', placeholder: 'Enter your phone number', required: true, minLength: 10, fullWidth: false },
+    { id: 'resume', label: 'Resume', control: 'resume', type: 'file', placeholder: '', required: true, fullWidth: false, accept: '.pdf,.doc,.docx', hint: 'PDF or Word document (max 2MB)' },
+    { id: 'coverLetter', label: 'Cover Letter', control: 'coverLetter', type: 'textarea', placeholder: 'Write a brief cover letter...', required: false, fullWidth: true, rows: 4 }
   ];
 
-  tableColumns = [
+  applicationColumns = [
     { key: 'jobTitle', label: 'Job Title' },
     { key: 'company', label: 'Company' },
     { key: 'date', label: 'Date Applied' },
     { key: 'status', label: 'Status' }
   ];
 
-  statusClasses: { [key: string]: string } = {
+  statusClasses = {
     'Pending': 'bg-yellow-100 text-yellow-800',
     'Accepted': 'bg-green-100 text-green-800',
     'Rejected': 'bg-red-100 text-red-800',
@@ -147,12 +99,14 @@ export class ApplyJobComponent implements OnInit {
     { value: 'Rejected', label: 'Rejected' },
     { value: 'Accepted', label: 'Accepted' }
   ];
-applicationColumns: any;
+Math: any;
+column: any;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private applicationService: ApplicationService
   ) {
     this.applicationForm = this.fb.group({
       jobId: ['', Validators.required],
@@ -178,59 +132,17 @@ applicationColumns: any;
       }
       this.isLoading = false;
     });
-    
+
     this.fetchResumes().subscribe(resumes => {
       this.resumes = resumes;
     });
-    
-    this.fetchApplications().subscribe(applications => {
-      this.applications = applications;
-      this.filteredApplications = [...applications];
-      this.interviewCount = applications.filter(app => app.status === 'Interview').length;
-    });
-  }
-
-  private resumeValidator(form: AbstractControl): { [key: string]: boolean } | null {
-    const group = form as FormGroup;
-    const resumeId = group.get('resumeId')?.value;
-    const resumeFile = group.get('resumeFile')?.value;
-    return resumeId || resumeFile ? null : { resumeRequired: true };
   }
 
   private fetchJobs(): Observable<Job[]> {
     return of([
-      { 
-        id: 1, 
-        title: 'AI Research Scientist', 
-        company: 'Genworx.ai', 
-        description: 'Develop advanced machine learning models for cutting-edge AI applications.',
-        type: 'Full-time',
-        experience: 'Senior',
-        remote: true,
-        urgent: true,
-        featured: true,
-        postedDate: '2025-06-15'
-      },
-      { 
-        id: 2, 
-        title: 'Machine Learning Engineer', 
-        company: 'Genworx.ai', 
-        description: 'Build scalable AI systems for real-time data processing.',
-        type: 'Full-time',
-        experience: 'Mid-level',
-        remote: false,
-        postedDate: '2025-06-10'
-      },
-      { 
-        id: 3, 
-        title: 'Data Scientist', 
-        company: 'Genworx.ai', 
-        description: 'Analyze complex datasets to drive AI-driven business insights.',
-        type: 'Contract',
-        experience: 'Junior',
-        remote: true,
-        postedDate: '2025-06-05'
-      },
+      { id: 1, title: 'AI Research Scientist', company: 'Genworx.ai', description: 'Develop advanced machine learning models...', type: 'Full-time', experience: 'Senior', remote: true, urgent: true, featured: true, postedDate: '2025-06-15' },
+      { id: 2, title: 'Machine Learning Engineer', company: 'Genworx.ai', description: 'Build scalable AI systems...', type: 'Full-time', experience: 'Mid-level', remote: false, postedDate: '2025-06-10' },
+      { id: 3, title: 'Data Scientist', company: 'Genworx.ai', description: 'Analyze complex datasets...', type: 'Contract', experience: 'Junior', remote: true, postedDate: '2025-06-05' },
     ]);
   }
 
@@ -241,32 +153,19 @@ applicationColumns: any;
     ]);
   }
 
-  private fetchApplications(): Observable<Application[]> {
-    return of([
-      { id: 1, jobId: 1, jobTitle: 'AI Research Scientist', company: 'Genworx.ai', date: new Date('2025-06-15'), status: 'Under Review' },
-      { id: 2, jobId: 2, jobTitle: 'Machine Learning Engineer', company: 'Genworx.ai', date: new Date('2025-06-10'), status: 'Interview' },
-    ]);
-  }
-
   filterJobs(event: Event): void {
     const input = event.target as HTMLInputElement;
     const searchTerm = input.value.toLowerCase();
-    
-    if (!searchTerm) {
-      this.filteredJobs = [...this.jobs];
-      return;
-    }
-    
-    this.filteredJobs = this.jobs.filter(job => 
-      job.title.toLowerCase().includes(searchTerm) || 
+    this.filteredJobs = searchTerm ? this.jobs.filter(job =>
+      job.title.toLowerCase().includes(searchTerm) ||
       job.company.toLowerCase().includes(searchTerm) ||
       job.description.toLowerCase().includes(searchTerm)
-    );
+    ) : [...this.jobs];
   }
 
   removeFilter(filter: string): void {
     this.activeFilters = this.activeFilters.filter(f => f !== filter);
-    // Implement filter logic here
+    this.filteredJobs = [...this.jobs];
   }
 
   resetFilters(): void {
@@ -303,30 +202,43 @@ applicationColumns: any;
   submitApplication(): void {
     if (this.applicationForm.valid) {
       this.isLoading = true;
-      setTimeout(() => {
-        const formValue = this.applicationForm.value;
-        const newApplication: Application = {
-          id: this.applications.length + 1,
-          jobId: formValue.jobId,
-          jobTitle: this.selectedJob?.title || '',
-          company: this.selectedJob?.company || '',
-          date: new Date(),
-          status: 'Under Review',
-        };
-        
-        this.submittedJobTitle = this.selectedJob?.title || '';
-        this.submittedJobCompany = this.selectedJob?.company || '';
-        
-        this.applications.unshift(newApplication);
-        this.filteredApplications = [...this.applications];
-        this.interviewCount = this.applications.filter(app => app.status === 'Interview').length;
-        
-        this.applicationForm.reset();
-        this.showApplicationForm = false;
-        this.selectedJob = null;
-        this.isLoading = false;
-        this.showSuccessMessage = true;
-      }, 1000);
+      const formValue = this.applicationForm.value;
+      const applicationData = {
+        jobId: formValue.jobId,
+        firstName: formValue.fullName.split(' ')[0] || '',
+        email: formValue.email,
+        phone: formValue.phone,
+        resume: formValue.resume ? formValue.resume.name : '',
+        coverLetter: formValue.coverLetter || '',
+      };
+      console.log('Submitting Data:', applicationData); // Debug log
+      this.applicationService.submitApplication(applicationData).subscribe({
+        next: (response: any) => {
+          const newApplication: Application = {
+            id: response.id,
+            jobId: formValue.jobId,
+            jobTitle: this.selectedJob?.title || '',
+            company: this.selectedJob?.company || '',
+            date: new Date(response.createdAt || new Date()),
+            status: response.status || 'Under Review',
+          };
+          this.submittedJobTitle = this.selectedJob?.title || '';
+          this.submittedJobCompany = this.selectedJob?.company || '';
+          this.applications.unshift(newApplication);
+          this.filteredApplications = [...this.applications];
+          this.interviewCount = this.applications.filter(app => app.status === 'Interview').length;
+          this.applicationForm.reset();
+          this.showApplicationForm = false;
+          this.selectedJob = null;
+          this.isLoading = false;
+          this.showSuccessMessage = true;
+        },
+        error: (error: any) => {
+          console.error('Error submitting application:', error);
+          this.isLoading = false;
+          alert('Failed to submit application. Please try again.');
+        }
+      });
     } else {
       this.applicationForm.markAllAsTouched();
     }
@@ -334,6 +246,7 @@ applicationColumns: any;
 
   closeSuccessMessage(): void {
     this.showSuccessMessage = false;
+    this.router.navigate(['/jobseeker-dashboard']);
   }
 
   resetForm(): void {
@@ -347,7 +260,7 @@ applicationColumns: any;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+      if (file.size > 2 * 1024 * 1024) {
         this.applicationForm.get('resume')?.setErrors({ fileTooLarge: true });
       } else {
         this.applicationForm.patchValue({ resume: file });
@@ -356,37 +269,23 @@ applicationColumns: any;
     }
   }
 
-  validateField(field: string): void {
-    const control = this.applicationForm.get(field);
-    if (control) {
-      control.markAsTouched();
-      control.updateValueAndValidity();
-    }
-  }
-
   filterApplications(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.filterStatus = select.value;
-    
     this.filteredApplications = this.filterStatus
-      ? this.applications.filter(app => 
-          app.status.toLowerCase() === this.filterStatus.toLowerCase())
+      ? this.applications.filter(app => app.status.toLowerCase() === this.filterStatus.toLowerCase())
       : [...this.applications];
   }
 
   searchApplications(event: Event): void {
     const input = event.target as HTMLInputElement;
     const searchTerm = input.value.toLowerCase();
-    
-    if (!searchTerm) {
-      this.filteredApplications = [...this.applications];
-      return;
-    }
-    
-    this.filteredApplications = this.applications.filter(app => 
-      app.jobTitle.toLowerCase().includes(searchTerm) || 
-      app.company.toLowerCase().includes(searchTerm)
-    );
+    this.filteredApplications = searchTerm
+      ? this.applications.filter(app =>
+          app.jobTitle.toLowerCase().includes(searchTerm) ||
+          app.company.toLowerCase().includes(searchTerm)
+        )
+      : [...this.applications];
   }
 
   sortApplications(column: keyof Application): void {
@@ -396,22 +295,15 @@ applicationColumns: any;
       this.sortColumn = column;
       this.sortDirection = 'asc';
     }
-
     this.filteredApplications.sort((a, b) => {
       const valA = a[column];
       const valB = b[column];
-      
       if (valA == null) return 1;
       if (valB == null) return -1;
-      
       if (typeof valA === 'string' && typeof valB === 'string') {
-        return this.sortDirection === 'asc' 
-          ? valA.localeCompare(valB) 
-          : valB.localeCompare(valA);
+        return this.sortDirection === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
       } else if (valA instanceof Date && valB instanceof Date) {
-        return this.sortDirection === 'asc' 
-          ? valA.getTime() - valB.getTime() 
-          : valB.getTime() - valA.getTime();
+        return this.sortDirection === 'asc' ? valA.getTime() - valB.getTime() : valB.getTime() - valA.getTime();
       }
       return 0;
     });

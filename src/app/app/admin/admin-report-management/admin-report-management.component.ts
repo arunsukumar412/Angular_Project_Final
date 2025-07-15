@@ -282,6 +282,7 @@ export class AdminReportManagementComponent implements OnInit {
   exportProgress = 0;
   showAdditionalMetrics = false;
   selectAll = false;
+isRefreshing: any;
 
   constructor(
     private http: HttpClient,

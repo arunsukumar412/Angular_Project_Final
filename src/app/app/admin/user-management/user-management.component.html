@@ -5,7 +5,7 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Top Navigation -->
-     <app-admin-header></app-admin-header>
+      <app-admin-header></app-admin-header>
 
       <!-- Main Content Area -->
       <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-50">
@@ -22,7 +22,7 @@
                 <span>Add HR User</span>
               </button>
               <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" (click)="importUsers()">Import Users</button>
-              <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded" (click)="syncUsers()">Sync withrDirectory</button>
+              <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded" (click)="syncUsers()">Sync with Directory</button>
             </div>
           </div>
 
@@ -71,7 +71,7 @@
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-blue-100">
-                    <tr *ngFor="let user of filteredUsers" class="hover:bg-blue-50" [class.bg-blue-50]="selectedUser?.id === user.id">
+                    <tr *ngFor="let user of filteredUsers | slice:startIndex:endIndex" class="hover:bg-blue-50">
                       <td class="px-6 py-4 whitespace-nowrap">
                         <input type="checkbox" [(ngModel)]="user.selected" (change)="updateSelectedUsers()" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
                       </td>

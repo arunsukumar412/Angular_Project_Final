@@ -1,678 +1,283 @@
 <app-recruiter-sidebar></app-recruiter-sidebar>
 <div class="w-full bg-white">
   <div class="flex ml-64 overflow-hidden">
-    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- Top Navigation -->
       <app-hr-header></app-hr-header>
-
-      <!-- Main Content Area -->
       <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
         <div class="container mx-auto px-4 py-8">
-          <!-- Dashboard Header -->
           <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">Application and Report Management</h1>
-              <p class="text-gray-500 mt-1">Manage candidate applications and generate reports</p>
+              <h1 class="text-2xl font-bold text-gray-900">Job Management</h1>
+              <p class="text-gray-500 mt-1">View job postings and candidate applications</p>
             </div>
-            <div class="mt-4 md:mt-0">
-              <div class="flex items-center space-x-3">
-                <button 
-                  class="bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 py-2.5 px-4 rounded-lg flex items-center transition-all duration-200 shadow-sm"
-                  (click)="generateReport()">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                  <span>Generate Report</span>
-                </button>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="mb-6">
+            <div class="relative">
+              <input 
+                type="text" 
+                placeholder="Search jobs..." 
+                class="block w-full bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                [(ngModel)]="searchQuery"
+                (input)="filterJobs()">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
               </div>
             </div>
           </div>
 
-          <!-- Tabs Navigation -->
-          <div class="border-b border-gray-200 mb-6">
-            <nav class="-mb-px flex space-x-8">
-              <button 
-                [class.border-indigo-500]="activeTab === 'applications'"
-                [class.text-indigo-600]="activeTab === 'applications'"
-                [class.border-transparent]="activeTab !== 'applications'"
-                [class.text-gray-500]="activeTab !== 'applications'"
-                [class.hover:text-gray-700]="activeTab !== 'applications'"
-                [class.hover:border-gray-300]="activeTab !== 'applications'"
-                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                (click)="setActiveTab('applications')">
-                Applications
-                <span class="ml-2 bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  {{ newApplicationsCount }}
-                </span>
-              </button>
-              <button 
-                [class.border-indigo-500]="activeTab === 'reports'"
-                [class.text-indigo-600]="activeTab === 'reports'"
-                [class.border-transparent]="activeTab !== 'reports'"
-                [class.text-gray-500]="activeTab !== 'reports'"
-                [class.hover:text-gray-700]="activeTab !== 'reports'"
-                [class.hover:border-gray-300]="activeTab !== 'reports'"
-                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                (click)="setActiveTab('reports')">
-                Reports
-              </button>
-            </nav>
-          </div>
-
-          <!-- Applications Tab Content -->
-          <div *ngIf="activeTab === 'applications'" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-            <div class="px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <h2 class="text-lg font-semibold text-gray-900">Candidate Applications</h2>
-              <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                <div class="relative">
-                  <select 
-                    class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-2.5 px-4 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                    [(ngModel)]="applicationStatusFilter" 
-                    (change)="filterApplications()">
-                    <option value="all">All Statuses</option>
-                    <option value="New">New</option>
-                    <option value="Reviewed">Reviewed</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Hired">Hired</option>
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-                <div class="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Search applicants..." 
-                    class="block w-full bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                    [(ngModel)]="applicantSearchQuery"
-                    (input)="filterApplications()">
-                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+          <!-- Jobs Table -->
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
-                    <th scope="col" class="px-6 py-3 come-from-job-postings.component.css
-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Applied</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Title</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applications</th>
                     <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr *ngFor="let application of paginatedApplications" class="hover:bg-gray-50 transition-colors duration-150">
+                  <tr *ngFor="let job of paginatedJobs" class="hover:bg-gray-50 transition-colors duration-150">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="flex items-center">
-                        <div class="flex-shrink-0 h-10 w-10">
-                          <img class="h-10 w-10 rounded-full" [src]="application.candidate.avatar || 'assets/default-avatar.png'" alt="">
-                        </div>
-                        <div class="ml-4">
-                          <div class="text-sm font-medium text-gray-900">{{ application.candidate.name }}</div>
-                          <div class="text-xs text-gray-500 mt-1">{{ application.candidate.email }}</div>
-                        </div>
-                      </div>
+                      <div class="text-sm font-medium text-gray-900">{{ job.title }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{ application.jobTitle }}</div>
-                      <div class="text-xs text-gray-500 mt-1">{{ application.department }}</div>
+                      <div class="text-sm text-gray-900">{{ job.company }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{ application.appliedDate | date:'mediumDate' }}</div>
-                      <div class="text-xs text-gray-500">{{ application.appliedDate | date:'shortTime' }}</div>
+                      <div class="text-sm text-gray-900">{{ job.department }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                        [ngClass]="{
-                          'bg-blue-100 text-blue-800': application.status === 'New',
-                          'bg-purple-100 text-purple-800': application.status === 'Reviewed',
-                          'bg-yellow-100 text-yellow-800': application.status === 'Interview',
-                          'bg-red-100 text-red-800': application.status === 'Rejected',
-                          'bg-green-100 text-green-800': application.status === 'Hired'
-                        }">
-                        {{ application.status }}
-                      </span>
+                      <div class="text-sm text-gray-900">{{ job.location }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ getApplicationsCount(job.id) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div class="flex justify-end space-x-3">
-                        <button 
-                          class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
-                          (click)="viewApplication(application.id)"
-                          title="View">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                          </svg>
-                        </button>
-                        <button 
-                          class="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                          (click)="downloadResume(application.resumeUrl)"
-                          title="Download Resume">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                          </svg>
-                        </button>
-                        <div class="relative" ngbDropdown>
-                          <button 
-                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                            ngbDropdownToggle
-                            title="More options">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                            </svg>
-                          </button>
-                          <div ngbDropdownMenu class="absolute right-0 mt-2 w-48 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                            <div class="py-1">
-                              <button ngbDropdownItem class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" (click)="changeApplicationStatus(application.id, 'Reviewed')">Mark as Reviewed</button>
-                              <button ngbDropdownItem class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" (click)="changeApplicationStatus(application.id, 'Interview')">Schedule Interview</button>
-                              <button ngbDropdownItem class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" (click)="changeApplicationStatus(application.id, 'Rejected')">Reject Application</button>
-                              <button ngbDropdownItem class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" (click)="changeApplicationStatus(application.id, 'Hired')">Hire Candidate</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <button 
+                        class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                        (click)="viewApplications(job.id)"
+                        title="View Applications">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                      </button>
                     </td>
                   </tr>
-                  <tr *ngIf="paginatedApplications.length === 0">
-                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-                      No applications found matching your criteria
+                  <tr *ngIf="paginatedJobs.length === 0">
+                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                      No jobs found matching your criteria
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            
+
+            <!-- Pagination -->
             <div class="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div class="text-sm text-gray-500 mb-3 sm:mb-0">
-                Showing <span class="font-medium">{{ (currentAppPage - 1) * itemsPerPage + 1 }}</span> to <span class="font-medium">{{ Math.min(currentAppPage * itemsPerPage, filteredApplications.length) }}</span> of <span class="font-medium">{{ filteredApplications.length }}</span> results
+                Showing <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> to <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, filteredJobs.length) }}</span> of <span class="font-medium">{{ filteredJobs.length }}</span> results
               </div>
               <div class="flex space-x-2">
                 <button 
                   class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
-                  (click)="previousAppPage()" 
-                  [disabled]="currentAppPage === 1">
+                  (click)="previousPage()" 
+                  [disabled]="currentPage === 1">
                   Previous
                 </button>
                 <div class="flex space-x-1">
                   <button 
-                    *ngFor="let page of getAppPageNumbers()"
+                    *ngFor="let page of getPageNumbers()"
                     class="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors duration-200"
-                    [class.bg-indigo-600]="page === currentAppPage"
-                    [class.text-white]="page === currentAppPage"
-                    [class.text-gray-700]="page !== currentAppPage"
-                    [class.bg-white]="page !== currentAppPage"
-                    [class.hover:bg-gray-100]="page !== currentAppPage"
-                    (click)="goToAppPage(page)">
+                    [class.bg-indigo-600]="page === currentPage"
+                    [class.text-white]="page === currentPage"
+                    [class.text-gray-700]="page !== currentPage"
+                    [class.bg-white]="page !== currentPage"
+                    [class.hover:bg-gray-100]="page !== currentPage"
+                    (click)="goToPage(page)">
                     {{ page }}
                   </button>
                 </div>
                 <button 
                   class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
-                  (click)="nextAppPage()" 
-                  [disabled]="currentAppPage * itemsPerPage >= filteredApplications.length">
+                  (click)="nextPage()" 
+                  [disabled]="currentPage * itemsPerPage >= filteredJobs.length">
                   Next
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Reports Tab Content -->
-          <div *ngIf="activeTab === 'reports'" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-            <div class="px-6 py-5 border-b border-gray-200">
-              <h2 class="text-lg font-semibold text-gray-900">Recruitment Reports</h2>
+          <!-- Applications Modal -->
+          <div *ngIf="showApplicationsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Applications for {{ selectedJobApplications[0]?.jobTitle }}</h2>
+                <button 
+                  class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
+                  (click)="closeApplicationsModal()">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let application of selectedJobApplications" class="hover:bg-gray-50 transition-colors duration-150">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="flex-shrink-0 h-10 w-10">
+                            <img class="h-10 w-10 rounded-full" [src]="application.candidate.avatar" alt="">
+                          </div>
+                          <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">{{ application.candidate.firstName }}</div>
+                            <div class="text-xs text-gray-500 mt-1">{{ application.candidate.email }}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ application.appliedDate | date:'mediumDate' }}</div>
+                        <div class="text-xs text-gray-500">{{ application.appliedDate | date:'shortTime' }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                          [ngClass]="{
+                            'bg-blue-100 text-blue-800': application.status === 'New',
+                            'bg-purple-100 text-purple-800': application.status === 'Reviewed',
+                            'bg-yellow-100 text-yellow-800': application.status === 'Interview',
+                            'bg-red-100 text-red-800': application.status === 'Rejected',
+                            'bg-green-100 text-green-800': application.status === 'Hired'
+                          }">
+                          {{ application.status }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button 
+                          class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                          (click)="viewApplication(application)"
+                          title="View Details">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="selectedJobApplications.length === 0">
+                      <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                        No applications for this job
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            
-            <div class="p-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Applications Overview</h3>
-                    <button class="text-indigo-600 hover:text-indigo-900 text-sm font-medium" (click)="exportReport('applications')">
-                      Export
-                    </button>
-                  </div>
-                  <div class="h-64">
-                    <canvas id="applicationsChart"></canvas>
+          </div>
+
+          <!-- Application Detail Modal -->
+          <div *ngIf="showApplicationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Application Details</h2>
+                <button 
+                  class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
+                  (click)="closeApplicationModal()">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Candidate Info -->
+                <div class="md:col-span-1">
+                  <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex flex-col items-center">
+                      <img class="h-24 w-24 rounded-full mb-4" [src]="selectedApplication?.candidate?.avatar" alt="">
+                      <p class="text-sm text-gray-500">{{ selectedApplication?.candidate?.email }}</p>
+                      <p class="text-sm text-gray-500 mt-1">{{ selectedApplication?.candidate?.phone }}</p>
+                      <div class="mt-4 w-full">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Actions</h4>
+                        <button 
+                          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200 mb-2"
+                          (click)="downloadResume(selectedApplication?.resume || '')">
+                          Download Resume
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Hiring Funnel</h3>
-                    <button class="text-indigo-600 hover:text-indigo-900 text-sm font-medium" (click)="exportReport('funnel')">
-                      Export
-                    </button>
+                <!-- Application Details -->
+                <div class="md:col-span-2">
+                  <div class="mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Job Applied For</h3>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h4 class="font-medium text-gray-900">{{ selectedApplication?.jobTitle }}</h4>
+                      <p class="text-sm text-gray-600 mt-1">{{ selectedApplication?.company }} • {{ selectedApplication?.department }} • {{ selectedApplication?.location }}</p>
+                      <p class="text-sm text-gray-500 mt-2">Applied on {{ selectedApplication?.appliedDate | date:'mediumDate' }}</p>
+                      <p class="text-sm text-gray-500 mt-1">Status: 
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                          [ngClass]="{
+                            'bg-blue-100 text-blue-800': selectedApplication?.status === 'New',
+                            'bg-purple-100 text-purple-800': selectedApplication?.status === 'Reviewed',
+                            'bg-yellow-100 text-yellow-800': selectedApplication?.status === 'Interview',
+                            'bg-red-100 text-red-800': selectedApplication?.status === 'Rejected',
+                            'bg-green-100 text-green-800': selectedApplication?.status === 'Hired'
+                          }">
+                          {{ selectedApplication?.status }}
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                  <div class="h-64">
-                    <canvas id="funnelChart"></canvas>
+                  <div class="mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Cover Letter</h3>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <p class="text-sm text-gray-700 whitespace-pre-line">{{ selectedApplication?.coverLetter || 'No cover letter provided' }}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Application Questions</h3>
+                    <div class="space-y-4">
+                      <div *ngFor="let question of selectedApplication?.questions" class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900">{{ question.question }}</h4>
+                        <p class="text-sm text-gray-700 mt-1 whitespace-pre-line">{{ question.answer }}</p>
+                      </div>
+                      <div *ngIf="!selectedApplication?.questions" class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-700">No questions answered</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between mb-4">
-                  <h3 class="text-lg font-medium text-gray-900">Recent Reports</h3>
-                  <button 
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200"
-                    (click)="generateReport()">
-                    Generate New Report
-                  </button>
-                </div>
-                
-                <div class="overflow-x-auto">
-                  <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Generated On</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                      <tr *ngFor="let report of reports" class="hover:bg-gray-50 transition-colors duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          <div class="text-sm font-medium text-gray-900">{{ report.name }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          <div class="text-sm text-gray-900">{{ report.type }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          <div class="text-sm text-gray-900">{{ report.generatedOn | date:'mediumDate' }}</div>
-                          <div class="text-xs text-gray-500">{{ report.generatedOn | date:'shortTime' }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div class="flex justify-end space-x-3">
-                            <button 
-                              class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
-                              (click)="viewReport(report.id)"
-                              title="View">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                              </svg>
-                            </button>
-                            <button 
-                              class="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                              (click)="downloadReport(report.id)"
-                              title="Download">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                              </svg>
-                            </button>
-                            <button 
-                              class="text-red-600 hover:text-red-900 transition-colors duration-200"
-                              (click)="deleteReport(report.id)"
-                              title="Delete">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr *ngIf="reports.length === 0">
-                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
-                          No reports generated yet
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+              <div class="mt-8 flex justify-end">
+                <button 
+                  class="px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+                  (click)="closeApplicationModal()">
+                  Close
+                </button>
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      <!-- Application Detail Modal -->
-      <div *ngIf="showApplicationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-900">Application Details</h2>
-            <button 
-              class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
-              (click)="closeApplicationModal()">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Candidate Info -->
-            <div class="md:col-span-1">
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="flex flex-col items-center">
-                  <img class="h-24 w-24 rounded-full mb-4" [src]="selectedApplication.candidate.avatar || 'assets/default-avatar.png'" alt="">
-                  <h3 class="text-lg font-medium text-gray-900">{{ selectedApplication.candidate.name }}</h3>
-                  <p class="text-sm text-gray-500">{{ selectedApplication.candidate.email }}</p>
-                  <p class="text-sm text-gray-500 mt-1">{{ selectedApplication.candidate.phone }}</p>
-                  
-                  <div class="mt-4 w-full">
-                    <h4 class="text-sm font-medium text-gray-700 mb-2">Application Status</h4>
-                    <select 
-                      class="block w-full border border-gray-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      [(ngModel)]="selectedApplication.status"
-                      (change)="updateApplicationStatus()">
-                      <option value="New">New</option>
-                      <option value="Reviewed">Reviewed</option>
-                      <option value="Interview">Interview</option>
-                      <option value="Rejected">Rejected</option>
-                      <option value="Hired">Hired</option>
-                    </select>
-                  </div>
-                  
-                  <div class="mt-4 w-full">
-                    <h4 class="text-sm font-medium text-gray-700 mb-2">Actions</h4>
-                    <button 
-                      class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200 mb-2"
-                      (click)="downloadResume(selectedApplication.resumeUrl)">
-                      Download Resume
-                    </button>
-                    <button 
-                      class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200"
-                      (click)="scheduleInterview(selectedApplication.id)">
-                      Schedule Interview
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Application Details -->
-            <div class="md:col-span-2">
-              <div class="mb-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Job Applied For</h3>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <h4 class="font-medium text-gray-900">{{ selectedApplication.jobTitle }}</h4>
-                  <p class="text-sm text-gray-600 mt-1">{{ selectedApplication.department }} • {{ selectedApplication.location }}</p>
-                  <p class="text-sm text-gray-500 mt-2">Applied on {{ selectedApplication.appliedDate | date:'mediumDate' }}</p>
-                </div>
-              </div>
-              
-              <div class="mb-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Cover Letter</h3>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <p class="text-sm text-gray-700 whitespace-pre-line">{{ selectedApplication.coverLetter || 'No cover letter provided' }}</p>
-                </div>
-              </div>
-              
-              <div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Application Questions</h3>
-                <div class="space-y-4">
-                  <div *ngFor="let question of selectedApplication.questions" class="bg-gray-50 p-4 rounded-lg">
-                    <h4 class="font-medium text-gray-900">{{ question.question }}</h4>
-                    <p class="text-sm text-gray-700 mt-1 whitespace-pre-line">{{ question.answer }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="mt-8 flex justify-end">
-            <button 
-              class="px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
-              (click)="closeApplicationModal()">
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Schedule Interview Modal -->
-      <div *ngIf="showInterviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-900">Schedule Interview</h2>
-            <button 
-              class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
-              (click)="closeInterviewModal()">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          
-          <div class="space-y-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Interview Date *</label>
-              <input 
-                type="date" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.date"
-                required>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Interview Time *</label>
-              <input 
-                type="time" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.time"
-                required>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Interview Type *</label>
-              <select 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.type"
-                required>
-                <option value="Phone">Phone</option>
-                <option value="Video">Video Call</option>
-                <option value="On-site">On-site</option>
-              </select>
-            </div>
-            
-            <div *ngIf="interviewDetails.type === 'Video'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Video Meeting Link</label>
-              <input 
-                type="text" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.meetingLink"
-                placeholder="https://meet.google.com/abc-xyz">
-            </div>
-            
-            <div *ngIf="interviewDetails.type === 'On-site'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-              <input 
-                type="text" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.location"
-                placeholder="Office address">
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Interviewers</label>
-              <input 
-                type="text" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="interviewDetails.interviewers"
-                placeholder="Enter interviewer names, separated by commas">
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
-              <textarea 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 min-h-[100px]"
-                [(ngModel)]="interviewDetails.notes"
-                placeholder="Any special instructions for the candidate"></textarea>
-            </div>
-          </div>
-          
-          <div class="mt-8 flex justify-end space-x-4">
-            <button 
-              class="px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
-              (click)="closeInterviewModal()">
-              Cancel
-            </button>
-            <button 
-              class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              (click)="confirmInterview()" 
-              [disabled]="!isInterviewFormValid()">
-              Schedule Interview
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Report Generation Modal -->
-      <div *ngIf="showReportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-900">Generate New Report</h2>
-            <button 
-              class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
-              (click)="closeReportModal()">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          
-          <div class="space-y-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Report Name *</label>
-              <input 
-                type="text" 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="reportDetails.name"
-                placeholder="e.g. Monthly Recruitment Report - June 2023"
-                required>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Report Type *</label>
-              <select 
-                class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                [(ngModel)]="reportDetails.type"
-                required>
-                <option value="Applications">Applications Overview</option>
-                <option value="Hiring Funnel">Hiring Funnel</option>
-                <option value="Time to Hire">Time to Hire</option>
-                <option value="Source Analysis">Source Analysis</option>
-                <option value="Custom">Custom Report</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs text-gray-500 mb-1">From</label>
-                  <input 
-                    type="date" 
-                    class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                    [(ngModel)]="reportDetails.startDate">
-                </div>
-                <div>
-                  <label class="block text-xs text-gray-500 mb-1">To</label>
-                  <input 
-                    type="date" 
-                    class="block w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                    [(ngModel)]="reportDetails.endDate">
-                </div>
-              </div>
-            </div>
-            
-            <div *ngIf="reportDetails.type === 'Custom'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Custom Filters</label>
-              <div class="space-y-3">
-                <div class="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="filter-department"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    [(ngModel)]="reportDetails.filters.byDepartment">
-                  <label for="filter-department" class="ml-2 block text-sm text-gray-700">By Department</label>
-                </div>
-                <div class="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="filter-status"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    [(ngModel)]="reportDetails.filters.byStatus">
-                  <label for="filter-status" class="ml-2 block text-sm text-gray-700">By Application Status</label>
-                </div>
-                <div class="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="filter-source"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    [(ngModel)]="reportDetails.filters.bySource">
-                  <label for="filter-source" class="ml-2 block text-sm text-gray-700">By Source</label>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Format *</label>
-              <div class="flex space-x-4">
-                <div class="flex items-center">
-                  <input 
-                    type="radio" 
-                    id="format-pdf"
-                    name="report-format"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-                    value="PDF"
-                    [(ngModel)]="reportDetails.format">
-                  <label for="format-pdf" class="ml-2 block text-sm text-gray-700">PDF</label>
-                </div>
-                <div class="flex items-center">
-                  <input 
-                    type="radio" 
-                    id="format-excel"
-                    name="report-format"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-                    value="Excel"
-                    [(ngModel)]="reportDetails.format">
-                  <label for="format-excel" class="ml-2 block text-sm text-gray-700">Excel</label>
-                </div>
-                <div class="flex items-center">
-                  <input 
-                    type="radio" 
-                    id="format-csv"
-                    name="report-format"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-                    value="CSV"
-                    [(ngModel)]="reportDetails.format">
-                  <label for="format-csv" class="ml-2 block text-sm text-gray-700">CSV</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="mt-8 flex justify-end space-x-4">
-            <button 
-              class="px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
-              (click)="closeReportModal()">
-              Cancel
-            </button>
-            <button 
-              class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              (click)="generateCustomReport()" 
-              [disabled]="!isReportFormValid()">
-              Generate Report
-            </button>
-          </div>
-        </div>
-      </div>
+      <app-hr-footer></app-hr-footer>
     </div>
-
-    <!-- Footer -->
-    <app-hr-footer></app-hr-footer>
   </div>
 </div>
 
@@ -691,24 +296,5 @@
   }
   .custom-scroll::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
-  }
-  
-  /* Smooth transitions for modal */
-  .modal-enter {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  .modal-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity 200ms, transform 200ms;
-  }
-  .modal-exit {
-    opacity: 1;
-  }
-  .modal-exit-active {
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 200ms, transform 200ms;
   }
 </style>
