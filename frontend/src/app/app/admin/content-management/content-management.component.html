@@ -1,0 +1,408 @@
+<div class="w-full bg-white">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Navigation -->
+      <app-admin-header></app-admin-header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div class="container mx-auto px-4 py-6 max-w-7xl">
+          <!-- Back Button -->
+          <div class="mb-6">
+            <a routerLink="/dashboard" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>
+              Back to Dashboard
+            </a>
+          </div>
+
+          <!-- Navigation Tabs -->
+          <div class="mb-8 border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8">
+              <button *ngFor="let tab of tabs" class="py-4 px-1 text-sm font-medium"
+                      [ngClass]="{'border-b-2 border-primary text-primary': activeTab === tab.value, 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== tab.value}"
+                      (click)="activeTab = tab.value">
+                {{ tab.label }}
+              </button>
+            </nav>
+          </div>
+
+          <!-- Hero Section Editor -->
+          <div *ngIf="activeTab === 'hero'" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Form Column -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Hero Content Editor</h2>
+              <form [formGroup]="heroForm" (ngSubmit)="updateHeroSection()" class="space-y-6">
+                <div>
+                  <label for="mainHeading" class="block text-sm font-medium text-gray-700 mb-1">Main Heading*</label>
+                  <input id="mainHeading" formControlName="mainHeading" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Enter main heading">
+                  <p *ngIf="heroForm.get('mainHeading')?.touched && heroForm.get('mainHeading')?.invalid" class="mt-1 text-sm text-red-600">
+                    <span *ngIf="heroForm.get('mainHeading')?.errors?.['required']">Main heading is required</span>
+                    <span *ngIf="heroForm.get('mainHeading')?.errors?.['maxlength']">Main heading cannot exceed 100 characters</span>
+                  </p>
+                </div>
+                <div>
+                  <label for="subText" class="block text-sm font-medium text-gray-700 mb-1">Sub Text*</label>
+                  <textarea id="subText" formControlName="subText" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Enter sub text"></textarea>
+                  <p *ngIf="heroForm.get('subText')?.touched && heroForm.get('subText')?.invalid" class="mt-1 text-sm text-red-600">
+                    <span *ngIf="heroForm.get('subText')?.errors?.['required']">Sub text is required</span>
+                    <span *ngIf="heroForm.get('subText')?.errors?.['maxlength']">Sub text cannot exceed 500 characters</span>
+                  </p>
+                </div>
+                <div>
+                  <label for="buttonText" class="block text-sm font-medium text-gray-700 mb-1">Button Text*</label>
+                  <input id="buttonText" formControlName="buttonText" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Enter button text">
+                  <p *ngIf="heroForm.get('buttonText')?.touched && heroForm.get('buttonText')?.invalid" class="mt-1 text-sm text-red-600">
+                    <span *ngIf="heroForm.get('buttonText')?.errors?.['required']">Button text is required</span>
+                    <span *ngIf="heroForm.get('buttonText')?.errors?.['maxlength']">Button text cannot exceed 50 characters</span>
+                  </p>
+                </div>
+                <div>
+                  <label for="buttonLink" class="block text-sm font-medium text-gray-700 mb-1">Button Link*</label>
+                  <input id="buttonLink" formControlName="buttonLink" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Enter button link or upload image URL">
+                  <p *ngIf="heroForm.get('buttonLink')?.touched && heroForm.get('buttonLink')?.invalid" class="mt-1 text-sm text-red-600">
+                    <span *ngIf="heroForm.get('buttonLink')?.errors?.['required']">Button link is required</span>
+                    <span *ngIf="heroForm.get('buttonLink')?.errors?.['pattern']">Valid link or URL is required (start with # or http)</span>
+                  </p>
+                </div>
+                <div class="space-y-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Animation Options</label>
+                  <div class="flex items-center">
+                    <input id="animateButton" formControlName="animateButton" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="animateButton" class="ml-2 block text-sm text-gray-700">Enable button animation</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input id="fadeInText" formControlName="fadeInText" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="fadeInText" class="ml-2 block text-sm text-gray-700">Fade-in text animation</label>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Background Image</label>
+                  <div class="mt-1 flex items-center">
+                    <span class="inline-block h-12 w-12 rounded-md overflow-hidden bg-gray-100 mr-3">
+                      <img [src]="heroForm.get('bgImage')?.value" alt="Current background" class="h-full w-full object-cover" (error)="onImageError()">
+                    </span>
+                    <div class="file-upload">
+                      <button type="button" class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                        Upload Image
+                      </button>
+                      <input type="file" (change)="onBgImageUpload($event)" accept="image/*" class="hidden">
+                    </div>
+                    <div class="ml-4">
+                      <input type="text" [(ngModel)]="bgImageUrl" (ngModelChange)="updateBgImageFromUrl()" placeholder="Or paste image URL" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Overlay Color</label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                      <input id="overlayDark" formControlName="overlayColor" value="dark" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="overlayDark" class="ml-2 block text-sm text-gray-700">Dark</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="overlayPrimary" formControlName="overlayColor" value="primary" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="overlayPrimary" class="ml-2 block text-sm text-gray-700">Primary Color</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="overlayCustom" formControlName="overlayColor" value="custom" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="overlayCustom" class="ml-2 block text-sm text-gray-700">Custom</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-4">
+                  <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200 flex items-center justify-center">
+                    <i class="fas fa-save mr-2"></i> Update Hero Section
+                  </button>
+                </div>
+              </form>
+              <div *ngIf="showHeroSuccess" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-md animate-fade-in">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <p class="text-green-800 font-medium">Hero section updated successfully!</p>
+                </div>
+                <div class="mt-2 text-sm text-green-600">
+                  <p>The changes have been applied to your hero section. <a routerLink="/careers" class="text-green-700 font-medium hover:underline">View live site</a></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preview Column -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Live Preview</h2>
+              <div class="bg-hero-preview relative h-96 rounded-lg overflow-hidden shadow-lg hover-scale transition-all" [style.backgroundImage]="'url(' + heroForm.get('bgImage')?.value + ')'">
+                <div class="absolute inset-0 flex items-center justify-center" [ngClass]="getOverlayClass()">
+                  <div class="text-center text-white px-4">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4" [ngClass]="{'animate-fade-in': heroForm.get('fadeInText')?.value}">{{ heroForm.get('mainHeading')?.value }}</h1>
+                    <p class="text-xl mb-8 max-w-2xl mx-auto" [ngClass]="{'animate-fade-in': heroForm.get('fadeInText')?.value}">{{ heroForm.get('subText')?.value }}</p>
+                    <a [href]="heroForm.get('buttonLink')?.value" class="inline-block bg-secondary hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full" [ngClass]="{'animate-pulse floating': heroForm.get('animateButton')?.value}">
+                      {{ heroForm.get('buttonText')?.value }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-medium text-gray-700 mb-2">Preview Controls</h3>
+                <div class="flex space-x-3">
+                  <button (click)="setPreviewSize('mobile')" class="px-3 py-1 rounded text-sm" [ngClass]="{'bg-blue-100': previewSize === 'mobile', 'bg-gray-200': previewSize !== 'mobile'}">
+                    <i class="fas fa-mobile-alt mr-1"></i> Mobile
+                  </button>
+                  <button (click)="setPreviewSize('tablet')" class="px-3 py-1 rounded text-sm" [ngClass]="{'bg-blue-100': previewSize === 'tablet', 'bg-gray-200': previewSize !== 'tablet'}">
+                    <i class="fas fa-tablet-alt mr-1"></i> Tablet
+                  </button>
+                  <button (click)="setPreviewSize('desktop')" class="px-3 py-1 rounded text-sm" [ngClass]="{'bg-blue-100': previewSize === 'desktop', 'bg-gray-200': previewSize !== 'desktop'}">
+                    <i class="fas fa-desktop mr-1"></i> Desktop
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logo & Branding Editor -->
+          <div *ngIf="activeTab === 'logo'" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Form Column -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Logo & Branding</h2>
+              <form [formGroup]="logoForm" (ngSubmit)="updateLogoSettings()" class="space-y-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Current Logo</label>
+                  <div class="logo-preview-container">
+                    <img [src]="logoForm.get('currentLogo')?.value" alt="Current Logo" class="h-24 object-contain" (error)="onImageError()">
+                  </div>
+                </div>
+                <div>
+                  <label for="logoUpload" class="block text-sm font-medium text-gray-700 mb-2">Upload New Logo</label>
+                  <div class="file-upload">
+                    <button type="button" class="w-full bg-white py-8 px-6 border-2 border-dashed border-gray-300 rounded-md text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                      <div class="flex flex-col items-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <p class="mt-1 text-sm text-gray-600">Click to upload logo</p>
+                        <p class="mt-1 text-xs text-gray-500">PNG, JPG, SVG up to 2MB</p>
+                      </div>
+                    </button>
+                    <input type="file" id="logoUpload" (change)="onLogoUpload($event)" accept="image/*" class="hidden">
+                  </div>
+                  <div class="mt-4">
+                    <input type="text" [(ngModel)]="logoImageUrl" (ngModelChange)="updateLogoFromUrl()" placeholder="Or paste logo URL" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Logo Size</label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                      <input id="sizeSmall" formControlName="size" value="small" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="sizeSmall" class="ml-2 block text-sm text-gray-700">Small (80px)</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="sizeMedium" formControlName="size" value="medium" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="sizeMedium" class="ml-2 block text-sm text-gray-700">Medium (120px)</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="sizeLarge" formControlName="size" value="large" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="sizeLarge" class="ml-2 block text-sm text-gray-700">Large (160px)</label>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Logo Position</label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                      <input id="posLeft" formControlName="position" value="left" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="posLeft" class="ml-2 block text-sm text-gray-700">Left</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="posCenter" formControlName="position" value="center" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="posCenter" class="ml-2 block text-sm text-gray-700">Center</label>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Logo Animation</label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                      <input id="animNone" formControlName="animation" value="none" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="animNone" class="ml-2 block text-sm text-gray-700">None</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="animFade" formControlName="animation" value="fade" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="animFade" class="ml-2 block text-sm text-gray-700">Fade In</label>
+                    </div>
+                    <div class="flex items-center">
+                      <input id="animScale" formControlName="animation" value="scale" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                      <label for="animScale" class="ml-2 block text-sm text-gray-700">Scale Up</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-4">
+                  <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200 flex items-center justify-center">
+                    <i class="fas fa-save mr-2"></i> Update Logo Settings
+                  </button>
+                </div>
+              </form>
+              <div *ngIf="showLogoSuccess" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-md animate-fade-in">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <p class="text-green-800 font-medium">Logo settings updated successfully!</p>
+                </div>
+                <div class="mt-2 text-sm text-green-600">
+                  <p>The changes have been applied to your logo. <a routerLink="/careers" class="text-green-700 font-medium hover:underline">View live site</a></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preview Column -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Logo Preview</h2>
+              <div class="bg-primary p-8 rounded-lg" [ngClass]="{'flex items-center justify-center': logoForm.get('position')?.value === 'center', 'flex items-center': logoForm.get('position')?.value === 'left'}">
+                <img [src]="logoForm.get('currentLogo')?.value" alt="Logo Preview" [ngClass]="getLogoSizeClass() + ' ' + getAnimationClass()" (error)="onImageError()">
+                <span class="font-bold text-xl text-white ml-3">JOBS</span>
+              </div>
+              <div class="mt-6">
+                <h3 class="font-medium text-gray-700 mb-2">Header Preview</h3>
+                <div class="border rounded-lg overflow-hidden">
+                  <div class="bg-primary text-white p-4 flex items-center justify-between">
+                    <div class="flex items-center">
+                      <img [src]="logoForm.get('currentLogo')?.value" alt="Logo" [ngClass]="getHeaderLogoSizeClass() + ' mr-2 ' + getAnimationClass()" (error)="onImageError()">
+                      <span class="font-bold text-lg">JOBS</span>
+                    </div>
+                    <div class="hidden md:flex space-x-4">
+                      <a href="#" class="bg-white text-black rounded-full px-4 py-1">Home</a>
+                      <a href="#about" class="bg-gray-300 text-black rounded-full px-4 py-1">About</a>
+                      <a href="#jobs" class="bg-gray-300 text-black rounded-full px-4 py-1">Jobs</a>
+                      <a href="/login" class="bg-red-500 rounded-full px-6 py-1">Login</a>
+                    </div>
+                    <button class="md:hidden focus:outline-none">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job Listings Editor -->
+          <div *ngIf="activeTab === 'jobs'" class="bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Job Listings Management</h2>
+            <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
+              <table class="min-w-full divide-y divide-blue-100">
+                <thead class="bg-blue-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider" (click)="sortJobs('title')">Title<i class="fas fa-sort ml-1"></i></th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider" (click)="sortJobs('description')">Description<i class="fas fa-sort ml-1"></i></th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider" (click)="sortJobs('status')">Status<i class="fas fa-sort ml-1"></i></th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider" (click)="sortJobs('postedBy')">Posted By<i class="fas fa-sort ml-1"></i></th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider" (click)="sortJobs('postedDate')">Posted Date<i class="fas fa-sort ml-1"></i></th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-blue-100">
+                  <tr *ngFor="let job of paginatedJobs" class="hover:bg-blue-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-800">{{ job.title }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ job.description }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="{'bg-green-100 text-green-800': job.status === 'open', 'bg-red-100 text-red-800': job.status === 'closed', 'bg-gray-100 text-gray-800': job.status === 'draft'}">
+                        {{ job.status }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ job.postedBy }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ job.postedDate | date:'medium' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 flex justify-between items-center">
+                <span class="text-sm text-blue-600">Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ totalJobs }} jobs</span>
+                <div class="flex space-x-2">
+                  <button [disabled]="currentPage === 1" (click)="prevPage()" class="px-3 py-1 border border-blue-200 rounded-md text-blue-600 bg-white hover:bg-blue-50">Previous</button>
+                  <button [disabled]="endIndex >= totalJobs" (click)="nextPage()" class="px-3 py-1 border border-blue-200 rounded-md text-white bg-blue-600 hover:bg-blue-700">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <app-admin-footer></app-admin-footer>
+    </div>
+  </div>
+
+  <style>
+    .bg-hero-preview {
+      background-size: cover;
+      background-position: center;
+    }
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.02);
+    }
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .logo-preview-container {
+      background-color: #001249;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    .file-upload {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .file-upload input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #a0aec0;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #718096;
+    }
+    .animate-fade-in {
+      animation: fadeIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-scale-up {
+      animation: scaleUp 1s ease-in-out;
+    }
+    @keyframes scaleUp {
+      from { transform: scale(0.8); }
+      to { transform: scale(1); }
+    }
+  </style>
+</div>

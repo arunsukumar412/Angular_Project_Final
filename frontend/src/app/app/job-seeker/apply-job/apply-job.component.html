@@ -1,0 +1,479 @@
+<app-jobseeker-sidebar></app-jobseeker-sidebar>
+
+<div class="h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-6 overflow-y-auto custom-scrollbar">
+  <!-- Back Button -->
+  <div class="flex items-center mb-6">
+    <button (click)="goToDashboard()" class="text-blue-700 hover:text-blue-900 flex items-center text-sm font-medium transition-all duration-300 group" aria-label="Back to Dashboard">
+      <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Dashboard
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100]">
+    <div class="flex flex-col items-center">
+      <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-600 border-solid mb-4"></div>
+      <p class="text-white font-medium text-lg tracking-wide">Application Submitting...</p>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="container mx-auto w-full pt-8">
+
+    <!-- Tab Navigation for Jobs / My Applications -->
+    <div class="flex border-b border-gray-200 mb-8">
+      <button (click)="switchView('jobs')"
+              [ngClass]="{'border-blue-600 text-blue-800 font-semibold': currentView === 'jobs', 'border-transparent text-gray-600 hover:text-gray-800': currentView !== 'jobs'}"
+              class="py-3 px-6 -mb-px border-b-2 transition-colors duration-200 focus:outline-none">
+        Available Jobs
+      </button>
+      <button (click)="switchView('applications')"
+              [ngClass]="{'border-blue-600 text-blue-800 font-semibold': currentView === 'applications', 'border-transparent text-gray-600 hover:text-gray-800': currentView !== 'applications'}"
+              class="py-3 px-6 -mb-px border-b-2 transition-colors duration-200 focus:outline-none">
+        My Applications
+      </button>
+    </div>
+
+    <!-- Job List View -->
+    <div *ngIf="currentView === 'jobs' && !showApplicationForm && !showPolicyModal && !showSuccessMessage" class="animate-fade-in">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <div>
+          <h1 class="text-3xl font-extrabold text-blue-900">Available Jobs <span class="text-blue-600">({{filteredJobs.length}})</span></h1>
+          <p class="text-sm text-gray-500 mt-1">Browse and apply to the latest opportunities matching your profile</p>
+        </div>
+        <div class="relative w-full md:w-96">
+          <input type="text" placeholder="Search jobs by title, company or skills..."
+                 class="w-full pl-10 pr-10 py-2.5 rounded-full border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md"
+                 [(ngModel)]="jobSearchTerm"
+                 (input)="filterJobs($event)">
+          <svg class="absolute left-3 top-3 h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <button *ngIf="jobSearchTerm" (click)="removeJobFilter(jobSearchTerm); jobSearchTerm = ''" class="absolute right-3 top-3 text-gray-500 hover:text-gray-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Job Filter Chips (Dynamic, based on applied filters) -->
+      <div *ngIf="jobSearchTerm" class="flex flex-wrap gap-2 mb-6 animate-fade-in">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 shadow-sm">
+          {{jobSearchTerm}}
+          <button (click)="removeJobFilter(jobSearchTerm)" class="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-600 transition-colors">
+            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </span>
+      </div>
+
+      <!-- Job Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let job of filteredJobs"
+             class="bg-white p-6 rounded-xl shadow-md border border-blue-100 relative overflow-hidden
+                    transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
+                    group hover:border-blue-300 hover:from-blue-50 hover:to-indigo-50 hover:bg-gradient-to-br">
+
+          <!-- Featured Job Ribbon -->
+          <div *ngIf="job.featured" class="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-2 rotate-12 shadow-md z-10">
+            Featured
+          </div>
+
+          <!-- Decorative Top Border -->
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-600"></div>
+
+          <div class="flex justify-between items-start mb-2 relative z-0">
+            <div class="flex items-center">
+              <img *ngIf="job.companyLogo" [src]="job.companyLogo" [alt]="job.company + ' logo'" class="w-10 h-10 rounded-full mr-3 shadow-sm flex-shrink-0 object-cover">
+              <div *ngIf="!job.companyLogo" class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 text-blue-600 font-bold text-sm flex-shrink-0">
+                {{ job.company.charAt(0) }}
+              </div>
+              <div>
+                <h2 class="text-xl font-semibold text-blue-800 leading-tight">{{ job.title }}</h2>
+                <p class="text-sm text-blue-600 font-medium flex items-center mt-1">
+                  <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                  {{ job.company }}
+                </p>
+              </div>
+            </div>
+            <button class="text-gray-400 hover:text-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1" aria-label="Bookmark Job">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 my-3">
+            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full shadow-sm">{{ job.type }}</span>
+            <span class="px-2.5 py-1 bg-green-50 text-green-600 text-xs font-medium rounded-full shadow-sm">{{ job.experience }}</span>
+            <span *ngIf="job.remote" class="px-2.5 py-1 bg-purple-50 text-purple-600 text-xs font-medium rounded-full shadow-sm">Remote</span>
+            <span *ngIf="job.urgent" class="px-2.5 py-1 bg-red-50 text-red-600 text-xs font-medium rounded-full shadow-sm animate-pulse-slow">Urgent Hiring</span>
+          </div>
+
+          <p class="text-sm text-gray-600 mt-3 mb-4 line-clamp-3 min-h-[60px]">{{ job.description }}</p>
+
+          <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div class="flex items-center text-xs text-gray-500">
+              <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="font-medium">{{ job.postedDate | date:'mediumDate' }}</span>
+            </div>
+            <button (click)="selectJob(job)" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 text-sm font-medium transition-all duration-300 flex items-center group-hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Apply Now
+              <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State for Jobs -->
+      <div *ngIf="filteredJobs.length === 0" class="text-center py-12 bg-white rounded-xl shadow-sm border border-blue-100 animate-fade-in mt-6">
+        <svg class="mx-auto h-16 w-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+        </svg>
+        <h3 class="mt-4 text-2xl font-bold text-gray-900">No jobs found</h3>
+        <p class="mt-2 text-md text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
+        <div class="mt-6">
+          <button (click)="resetJobFilters()" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Applications Table -->
+    <div *ngIf="currentView === 'applications' && !showApplicationForm && !showPolicyModal && !showSuccessMessage" class="animate-fade-in">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <div>
+          <h1 class="text-3xl font-extrabold text-blue-900">My Applications <span class="text-blue-600">({{applications.length}})</span></h1>
+          <p class="text-sm text-gray-500 mt-1">Track the status of your submitted job applications</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+          <div class="relative w-full sm:w-64">
+            <input type="text" placeholder="Search applications..."
+                   class="w-full pl-10 pr-4 py-2.5 rounded-full border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md"
+                   [(ngModel)]="applicationSearchTerm"
+                   (input)="searchApplications($event)">
+            <svg class="absolute left-3 top-3 h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <select id="status-filter" name="status-filter"
+                  class="block w-full sm:w-48 pl-3 pr-10 py-2.5 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all duration-300"
+                  [(ngModel)]="filterStatus"
+                  (change)="filterApplications($event)">
+            <option *ngFor="let status of statusFilters" [value]="status.value">{{ status.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Applications Table -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th *ngFor="let col of applicationColumns" scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-">
+                  <div class="flex items-center">
+                    {{ col.label }}
+                    <svg *ngIf="sortColumn === col.key && sortDirection === 'asc'" class="ml-1 w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                    <svg *ngIf="sortColumn === col.key && sortDirection === 'desc'" class="ml-1 w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngIf="filteredApplications.length === 0">
+                <td [attr.colspan]="applicationColumns.length" class="px-6 py-4 text-center text-sm text-gray-500">
+                  No applications found matching your criteria.
+                </td>
+              </tr>
+              <tr *ngFor="let app of filteredApplications.slice(currentPage * pageSize, (currentPage + 1) * pageSize)" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ app.jobTitle }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ app.company }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ app.date | date:'mediumDate' }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        [ngClass]="statusClasses[app.status] || 'bg-gray-100 text-gray-800'">
+                    {{ app.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pagination Controls for Applications -->
+      <div *ngIf="applications.length > pageSize" class="flex flex-col sm:flex-row items-center justify-between mt-4 p-4 bg-white rounded-lg shadow-sm border border-blue-100 animate-fade-in">
+        <div class="text-sm text-gray-700 mb-4 sm:mb-0">
+          Showing <span class="font-semibold">{{ currentPage * pageSize + 1 }}</span> to of
+          <span class="font-semibold">{{ applications.length }}</span> results
+        </div>
+        <div class="flex space-x-2">
+          <button (click)="previousPage()" [disabled]="currentPage === 0"
+                  class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Previous
+          </button>
+          <ng-container *ngFor="let page of getApplicationPageNumbers()">
+            <button (click)="goToApplicationPage(page)"
+                    [ngClass]="{'bg-blue-600 text-white hover:bg-blue-700': currentPage === page,
+                                'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300': currentPage !== page}"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              {{ page + 1 }}
+            </button>
+          </ng-container>
+          <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= applications.length"
+                  class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Policy Modal -->
+  <div *ngIf="showPolicyModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in-modal">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl border border-blue-100 max-w-3xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 animate-scale-in">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-blue-900 flex items-center">
+          <svg class="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          Application Policy
+        </h2>
+        <button (click)="closePolicyModal()" class="text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1" aria-label="Close Policy">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bg-blue-50/50 p-6 rounded-lg mb-6 shadow-inner">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-md font-semibold text-blue-800">Important Information</h3>
+            <div class="mt-2 text-sm text-blue-700">
+              <p>This month, you have attended <span class="font-bold">{{ interviewCount }}</span> interviews.</p>
+              <p class="mt-1">Please be aware of any company-specific application limits or policies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-base text-gray-700 space-y-4">
+        <p>Before proceeding with your application for <span class="font-semibold text-blue-800">{{ selectedJob?.title }}</span> at <span class="font-semibold text-blue-800">{{ selectedJob?.company }}</span>, please review and agree to the following terms and conditions:</p>
+        <ul class="list-disc pl-6 space-y-2 marker:text-blue-500">
+          <li>Your personal data, including your resume and contact information, will be collected and stored securely for recruitment purposes only.</li>
+          <li>We may retain your application data for a period of **12 months**. If you wish for your data to be retained longer or removed, please contact us.</li>
+          <li>You may be contacted by our recruitment team via email or phone for further interviews, assessments, or future job opportunities that match your profile.</li>
+          <li>By applying, you confirm that all information provided in your application is true and accurate to the best of your knowledge.</li>
+          <li>Misrepresentation of facts may lead to the disqualification of your application.</li>
+        </ul>
+
+        <div class="mt-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-6">
+              <input id="policyAccepted" [(ngModel)]="policyAccepted" type="checkbox" class="focus:ring-blue-500 h-5 w-5 text-blue-600 border-blue-300 rounded cursor-pointer transition-colors duration-200">
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="policyAccepted" class="font-medium text-gray-800 cursor-pointer">I have read and agree to the <span class="text-blue-600 hover:underline">Privacy Policy and terms of application</span></label>
+              <p class="text-gray-500 mt-1">By checking this box, you acknowledge reading and accepting our data handling policy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
+        <button (click)="closePolicyModal()" class="px-5 py-2.5 border border-blue-200 rounded-lg text-blue-700 hover:bg-blue-50 text-sm font-medium transition-all duration-300 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Cancel
+        </button>
+        <button (click)="proceedToApplication()" [disabled]="!policyAccepted"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 text-sm font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" *ngIf="policyAccepted">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Proceed to Application
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Form -->
+  <div *ngIf="showApplicationForm && selectedJob" class="container mx-auto w-full max-w-4xl pt-8 animate-fade-in-form">
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-100 relative overflow-hidden">
+      <!-- Progress Indicator -->
+      <div class="mb-8">
+        <div class="flex justify-between mb-2 text-sm font-medium text-blue-600">
+          <span>Application Progress</span>
+          <span>Step 1 of 2</span> <!-- You can make this dynamic with application stages -->
+        </div>
+        <div class="w-full bg-blue-100 rounded-full h-2.5">
+          <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2.5 rounded-full transition-all duration-500 ease-out" style="width: 50%"></div>
+        </div>
+      </div>
+
+      <!-- Form Header -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <div>
+          <button (click)="selectJob(null)" class="text-blue-700 hover:text-blue-900 flex items-center text-sm font-medium group transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-1">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Jobs
+          </button>
+          <h2 class="text-3xl font-bold text-blue-900 mt-2">Apply for <span class="text-blue-700">{{ selectedJob.title }}</span></h2>
+          <p class="text-md text-blue-600 font-medium flex items-center mt-1">
+            <svg class="w-5 h-5 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            {{ selectedJob.company }}
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium">{{ selectedJob.type }}</span>
+          <span *ngIf="selectedJob.remote" class="text-sm px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-medium">Remote</span>
+        </div>
+      </div>
+
+      <!-- Application Form Body -->
+      <form [formGroup]="applicationForm" (ngSubmit)="submitApplication()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Job Title (Display Only) -->
+        <div class="md:col-span-2">
+          <label for="jobTitleDisplay" class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+          <input id="jobTitleDisplay" type="text" [value]="selectedJob?.title" readonly
+                 class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed">
+        </div>
+
+        <!-- Company (Display Only) -->
+        <div>
+          <label for="companyDisplay" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+          <input id="companyDisplay" type="text" [value]="selectedJob?.company" readonly
+                 class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed">
+        </div>
+
+        <!-- Location (Display Only) -->
+        <div>
+          <label for="locationDisplay" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <input id="locationDisplay" type="text" [value]="selectedJob?.location" readonly
+                 class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed">
+        </div>
+
+        <!-- Dynamic Form Fields -->
+        <div *ngFor="let field of formFields" [class.md:col-span-2]="field.fullWidth">
+          <label [for]="field.id" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+            {{ field.label }}
+            <span *ngIf="field.required" class="text-red-500 ml-1">*</span>
+          </label>
+
+          <div [ngSwitch]="field.type">
+            <!-- Text Input -->
+            <input *ngSwitchCase="'text'" [id]="field.id" [formControlName]="field.control" [type]="field.type"
+                   class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400"
+                   [class.border-red-400]="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched"
+                   [placeholder]="field.placeholder">
+
+            <!-- File Input -->
+            <div *ngSwitchCase="'file'" class="relative">
+              <label for="{{field.id}}" class="cursor-pointer flex items-center px-4 py-2.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors duration-200 shadow-sm">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                <span *ngIf="!applicationForm.get(field.control)?.value">Choose File</span>
+                <span *ngIf="applicationForm.get(field.control)?.value" class="truncate">{{ getFileName(applicationForm.get(field.control)?.value) }}</span>
+              </label>
+              <input [id]="field.id" type="file" (change)="handleFileInput($event)"
+                     class="hidden"
+                     [accept]="field.accept">
+              <p class="mt-2 text-xs text-gray-500">{{ field.hint }}</p>
+            </div>
+
+            <!-- Textarea -->
+            <textarea *ngSwitchCase="'textarea'" [id]="field.id" [formControlName]="field.control" [rows]="field.rows || 3"
+                      class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-y text-gray-800 placeholder-gray-400"
+                      [class.border-red-400]="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched"
+                      [placeholder]="field.placeholder"></textarea>
+          </div>
+
+          <!-- Validation Messages -->
+          <div *ngIf="applicationForm.get(field.control)?.invalid && applicationForm.get(field.control)?.touched"
+               class="mt-1 text-red-600 text-xs animate-fade-in-error">
+            <div *ngIf="applicationForm.get(field.control)?.hasError('required')">This field is required.</div>
+            <div *ngIf="applicationForm.get(field.control)?.hasError('email')">Please enter a valid email address.</div>
+            <div *ngIf="applicationForm.get(field.control)?.hasError('minlength')">Minimum {{ field.minLength }} characters required.</div>
+            <div *ngIf="applicationForm.get(field.control)?.hasError('pattern')">Invalid format. Please check the input.</div>
+            <div *ngIf="applicationForm.get(field.control)?.hasError('fileTooLarge')">File size exceeds 2MB limit.</div>
+            <!-- Add more custom validation messages here as needed -->
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="md:col-span-2 flex justify-between pt-6 border-t border-gray-200 mt-4">
+          <button type="button" (click)="resetForm()" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium transition-all duration-300 flex items-center shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Reset Form
+          </button>
+          <button type="submit" [disabled]="applicationForm.invalid"
+            class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 text-sm font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Submit Application
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div *ngIf="showSuccessMessage" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in-modal">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl border border-blue-100 max-w-md w-full transform scale-95 opacity-0 animate-scale-in">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4 animate-bounce-once">
+          <svg class="h-9 w-9 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mt-4">Application Submitted Successfully!</h2>
+        <p class="text-md text-gray-600 mt-2">
+          Your application for <span class="font-semibold text-blue-600">{{ submittedJobTitle }}</span> at
+          <span class="font-semibold text-blue-600">{{ submittedJobCompany }}</span> has been received.
+          We will review your profile and get back to you soon.
+        </p>
+        <div class="mt-6">
+          <button (click)="closeSuccessMessage()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-md font-medium transition-colors duration-300 w-full shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Go Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,429 @@
+<div class="w-full min-h-screen bg-gray-50">
+  <div class="flex h-screen">
+    <app-admin-header></app-admin-header>
+    <!-- Simplified Sidebar with Navigation -->
+    <div class="flex flex-col">
+      <app-sidebar class="bg-indigo-800 text-white"></app-sidebar>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Minimal Header -->
+      <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
+        <h1 class="text-lg font-semibold text-gray-800">Candidate Management</h1>
+        <div class="flex items-center space-x-4">
+          <button class="p-2 text-gray-500 hover:text-gray-700">
+            <fa-icon [icon]="faBell"></fa-icon>
+          </button>
+          <div class="flex items-center">
+            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
+              <span class="text-indigo-800 text-sm font-medium">AD</span>
+            </div>
+            <span class="text-sm font-medium text-gray-700">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Focused Content Area -->
+      <main class="flex-1 overflow-y-auto p-6">
+        <div class="max-w-7xl mx-auto">
+          <!-- Action Bar -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">Candidate Listings</h2>
+              <p class="text-sm text-gray-500">Explore and manage candidate opportunities</p>
+            </div>
+            <div class="flex space-x-2">
+              <button 
+                (click)="refreshData()"
+                class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+              >
+                <fa-icon [icon]="faSyncAlt" class="mr-2"></fa-icon> Refresh
+              </button>
+              <button 
+                (click)="openExportModal()"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 flex items-center"
+              >
+                <fa-icon [icon]="faDownload" class="mr-2"></fa-icon> Export
+              </button>
+              <button 
+                (click)="showFilters = !showFilters"
+                class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+              >
+                <fa-icon [icon]="faFilter" class="mr-2"></fa-icon> Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Simplified Filters (shown/hidden) -->
+          <div *ngIf="showFilters" class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select 
+                  [(ngModel)]="filterStatus"
+                  (change)="filterReports()"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Statuses</option>
+                  <option value="Hired">Hired</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                <div class="flex space-x-2">
+                  <input 
+                    type="date" 
+                    [(ngModel)]="filterDateStart"
+                    (change)="filterReports()"
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                  <input 
+                    type="date" 
+                    [(ngModel)]="filterDateEnd"
+                    (change)="filterReports()"
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    [(ngModel)]="searchQuery"
+                    (input)="filterReports()"
+                    placeholder="Search candidates..."
+                    class="w-full border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                  <fa-icon [icon]="faSearch" class="absolute right-3 top-2.5 text-gray-400"></fa-icon>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-right">
+              <button 
+                (click)="clearFilters()"
+                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300"
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Essential Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-500">Total Candidates</p>
+                  <h3 class="text-xl font-semibold text-gray-800">{{ hrMetrics.activeCandidates }}</h3>
+                </div>
+                <div class="p-2 rounded-full bg-blue-50 text-blue-600">
+                  <fa-icon [icon]="faUsers"></fa-icon>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-500">Hired</p>
+                  <h3 class="text-xl font-semibold text-gray-800">{{ hrMetrics.hrHiredPeople }}</h3>
+                </div>
+                <div class="p-2 rounded-full bg-green-50 text-green-600">
+                  <fa-icon [icon]="faUserCheck"></fa-icon>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-500">Pending</p>
+                  <h3 class="text-xl font-semibold text-gray-800">{{ hrMetrics.totalInterviews - hrMetrics.hrHiredPeople }}</h3>
+                </div>
+                <div class="p-2 rounded-full bg-yellow-50 text-yellow-600">
+                  <fa-icon [icon]="faClock"></fa-icon>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-500">Success Rate</p>
+                  <h3 class="text-xl font-semibold text-gray-800">{{ hrMetrics.hiringSuccessRate }}%</h3>
+                </div>
+                <div class="p-2 rounded-full bg-purple-50 text-purple-600">
+                  <fa-icon [icon]="faChartLine"></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table-Based Candidate Listings -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let report of paginatedCandidateReports" class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                          <span class="text-indigo-800 text-sm font-medium">{{ report.user.charAt(0) }}</span>
+                        </div>
+                        <div>
+                          <div class="text-sm font-medium text-gray-900">{{ report.user }}</div>
+                          <div class="text-sm text-gray-500">{{ report.email }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ report.position || 'No position specified' }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                        [ngClass]="{
+                          'bg-green-100 text-green-800': report.status === 'Hired',
+                          'bg-yellow-100 text-yellow-800': report.status === 'Pending',
+                          'bg-red-100 text-red-800': report.status === 'Rejected',
+                          'bg-gray-100 text-gray-800': !report.status
+                        }">
+                        {{ report.status || 'N/A' }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <span *ngIf="report.updatedAt && report.updatedAt !== ''">{{ report.updatedAt | date:'shortDate' }}</span>
+                      <span *ngIf="!report.updatedAt || report.updatedAt === ''">-</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button (click)="viewDetails(report)" class="text-indigo-600 hover:text-indigo-900 mr-3">View</button>
+                      <button (click)="editReport(report)" class="text-gray-600 hover:text-gray-900 mr-3">Edit</button>
+                      <button (click)="restrictCandidate(report)" class="text-red-600 hover:text-red-900">Restrict</button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="candidateReports.length === 0">
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                      No candidates found matching your criteria
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 rounded-b-lg">
+            <span class="text-sm text-gray-700">
+              Showing {{ (candidatePage - 1) * itemsPerPage + 1 }} to 
+              {{ candidatePage * itemsPerPage > candidateReports.length ? candidateReports.length : candidatePage * itemsPerPage }} of 
+              {{ candidateReports.length }} candidates
+            </span>
+            <div class="flex space-x-2">
+              <button 
+                (click)="previousCandidatePage()"
+                [disabled]="candidatePage === 1"
+                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                <fa-icon [icon]="faChevronLeft"></fa-icon>
+              </button>
+              <button 
+                *ngFor="let page of getCandidatePageNumbers()"
+                (click)="goToCandidatePage(page)"
+                [class.bg-indigo-100]="candidatePage === page"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              >
+                {{ page }}
+              </button>
+              <button 
+                (click)="nextCandidatePage()"
+                [disabled]="candidatePage * itemsPerPage >= candidateReports.length"
+                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                <fa-icon [icon]="faChevronRight"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table-Based User Listings -->
+          <div class="mt-10">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">All Users (from Backend)</h2>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined Date</th>
+                      <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let user of usersFromBackend" class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ user.username }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">{{ user.email }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ user.role || 'N/A' }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ user.created_at | date:'short' }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button (click)="viewDetails({ id: user.id, user: user.username, email: user.email, position: user.role || '', status: user.status || '', updatedAt: user.updated_at || '' })" class="text-indigo-600 hover:text-indigo-900">View</button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="usersFromBackend.length === 0">
+                      <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                        No users found
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Candidate Details Modal -->
+          <div *ngIf="selectedReport" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md relative">
+              <button (click)="selectedReport = null" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl">×</button>
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Candidate Details</h3>
+              </div>
+              <div class="px-6 py-4 space-y-3">
+                <div class="flex items-center space-x-3">
+                  <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-xl font-bold text-indigo-700">
+                    {{ selectedReport.user.charAt(0) }}
+                  </div>
+                  <div>
+                    <div class="text-lg font-semibold text-gray-800">{{ selectedReport.user }}</div>
+                    <div class="text-sm text-gray-500">{{ selectedReport.email }}</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <div class="text-xs text-gray-500">Position</div>
+                    <div class="text-sm text-gray-800">{{ selectedReport.position }}</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">Job ID</div>
+                    <div class="text-sm text-gray-800">{{ selectedReport.jobId || '-' }}</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">Status</div>
+                    <div class="text-sm font-semibold" [ngClass]="{
+                      'text-green-700': selectedReport.status === 'Hired',
+                      'text-yellow-700': selectedReport.status === 'Pending',
+                      'text-red-700': selectedReport.status === 'Rejected',
+                      'text-gray-700': selectedReport.status !== 'Hired' && selectedReport.status !== 'Pending' && selectedReport.status !== 'Rejected'
+                    }">{{ selectedReport.status }}</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">Last Updated</div>
+                    <div class="text-sm text-gray-800">
+                      <span *ngIf="selectedReport.updatedAt && selectedReport.updatedAt !== ''">{{ selectedReport.updatedAt | date:'medium' }}</span>
+                      <span *ngIf="!selectedReport.updatedAt || selectedReport.updatedAt === ''">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+                <button (click)="selectedReport = null" class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700">Close</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toast Container -->
+          <div *ngIf="toastMessage" class="fixed bottom-6 right-6 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg animate-fade-in-out" [style.opacity]="toastOpacity">
+            {{ toastMessage }}
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Simplified Export Modal -->
+  <div *ngIf="showExportModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Export Candidates</h3>
+      </div>
+      <div class="px-6 py-4 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Format</label>
+          <select 
+            [(ngModel)]="exportFormat"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="CSV">CSV</option>
+            <option value="PDF">PDF</option>
+            <option value="Excel">Excel</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Include</label>
+          <div class="space-y-2">
+            <div class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="includeAll"
+                [(ngModel)]="includeAll"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              >
+              <label for="includeAll" class="ml-2 block text-sm text-gray-700">All current candidates</label>
+            </div>
+            <div class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="includeSelected"
+                [(ngModel)]="includeSelected"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              >
+              <label for="includeSelected" class="ml-2 block text-sm text-gray-700">Only selected candidates</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+        <button 
+          (click)="cancelExport()"
+          class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+        <button 
+          (click)="confirmExport()"
+          class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700"
+        >
+          Export
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .animate-fade-in-out {
+    animation: fadeInOut 3s ease-in-out forwards;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+</style>

@@ -1,0 +1,138 @@
+Genworx Job Portal README
+========================
+
+Author: Arunsukumar
+
+
+Overview
+--------
+The Genworx Job Portal is a web-based application developed using Angular to facilitate job searches and recruitment. It supports three user roles—Admin, HR, and Jobseeker—each with dedicated dashboards for managing job-related activities. The portal provides a secure login system, form validation, local storage for admin report management, and a JSON-based database for data persistence.
+
+Features
+--------
+- Role-Based Access: Distinct dashboards for Admin, HR, and Jobseekers.
+- Secure Login: Predefined credentials for each user role.
+- Form Validation: Ensures valid email and password inputs with real-time feedback.
+- Password Visibility Toggle: Option to show or hide the password during login.
+- Responsive Design: Optimized for both desktop and mobile devices.
+- Session Management: Stores user credentials in sessionStorage for navigation.
+- Admin Report Management: Uses local storage to manage and persist admin reports.
+- JSON Database: Backend data managed via a JSON server for job listings and user data.
+
+Prerequisites
+-------------
+To run the Genworx Job Portal locally, ensure you have:
+- Node.js: Version 16 or higher.
+- Angular CLI: Version 17 or higher.
+- JSON Server: Install globally using `npm install -g json-server`.
+- Web Browser: Chrome, Firefox, Edge, or similar.
+
+Installation and Running
+-----------------------
+Follow these steps to set up and run the application:
+1. Navigate to Project Directory:
+   - If you have the project files locally, open a terminal and navigate to the project folder.
+   - If using a repository, clone it:
+     ```
+     cd genworx-job-portal
+     ```
+2. Install Dependencies:
+   - Install required Node.js packages:
+
+     npm install
+    
+3. Set Up JSON Database:
+   - Start the JSON server to manage the application's backend data:
+     json-server --watch src/assets/db/db.json --port 3000
+   - This runs the JSON server on http://localhost:3000, using the db.json file in src/assets/db/ for data storage (e.g., job listings, user data).
+4. Run the Application:
+   - Start the Angular development server and open the application in your default browser:
+    
+     ng serve --open
+
+   - The application will be accessible at http://localhost:4200. If the browser doesn’t open automatically, navigate to this URL manually.
+
+Login Credentials
+-----------------
+Use the following credentials to log in based on your role:
+
+Role      | Email                     | Password  | Dashboard Route
+----------|---------------------------|-----------|-------------------------
+Admin     | arunsukumar03@gmail.com   | admin     | /dashboard
+HR        | arunhr@gmail.com          | hr1234    | /hr-dashboard
+Jobseeker | arun@gmail.com            | arun1234  | /jobseeker-dashboard
+
+How to Log In
+-------------
+1. Access the Login Page:
+   - Open http://localhost:4200 in your browser.
+2. Enter Credentials:
+   - Input the email and password for your role (see table above).
+   - Use the “Show Password” toggle to verify your password if needed.
+3. Submit the Form:
+   - Click the “Login” button.
+   - Valid credentials redirect to the respective dashboard (Admin, HR, or Jobseeker).
+   - Invalid credentials display: “Invalid email or password.”
+4. Form Validation:
+   - Email must be in a valid format (e.g., user@domain.com).
+   - Both fields are required. Empty or incorrect fields show: “Please fill in all required fields correctly.”
+
+Features by Role
+---------------
+- Admin Dashboard (/dashboard):
+  - Manage user accounts and job listings.
+  - View and generate platform analytics and reports, stored in local storage for persistence.
+- HR Dashboard (/hr-dashboard):
+  - Create and edit job postings, stored in the JSON database.
+  - Review candidate applications and schedule interviews.
+- Jobseeker Dashboard (/jobseeker-dashboard):
+  - Browse and apply for job listings from the JSON database.
+  - Track application status and update profiles.
+
+Admin Report Management
+----------------------
+The Admin Dashboard uses local storage to manage and persist reports. Key features include:
+- Report Generation: Admins can generate reports (e.g., user activity, job listing statistics) which are saved in the browser’s localStorage.
+- Persistence: Reports remain available across sessions until explicitly cleared.
+- Access: Access stored reports via the Admin Dashboard interface, with options to view, edit, or delete.
+- Ensure the browser supports localStorage (modern browsers like Chrome, Firefox, and Edge are compatible).
+
+Database Setup
+-------------
+The application uses a JSON server for backend data management:
+- File Location: src/assets/db/db.json contains the database (e.g., job listings, user data).
+- Command: Run the JSON server with:
+  ```
+  json-server --watch src/assets/db/db.json --port 3000
+  ```
+- Access: The server runs at http://localhost:3000. Ensure this is running before starting the Angular application.
+
+Troubleshooting
+---------------
+- Dependency Errors: Run `npm install` again if modules are missing.
+- JSON Server Issues: Ensure `json-server` is installed globally (`npm install -g json-server`) and the db.json file exists in src/assets/db/.
+- Invalid Credentials: Verify email and password from the credentials table.
+- Form Validation Errors: Ensure email is valid and both fields are filled.
+- Server Issues: If `ng serve` fails, check Node.js and Angular CLI versions or reinstall Angular CLI:
+  
+  npm install -g @angular/cli
+
+- Port Conflicts: If port 4200 (Angular) or 3000 (JSON server) is in use, use a different port:
+
+  ng serve --port 4201 --open
+  json-server --watch src/assets/db/db.json --port 3001
+  
+- Local Storage Issues: Ensure the browser’s localStorage is not disabled or full. Clear storage via browser settings if needed.
+
+Development Notes
+----------------
+- The login system uses Angular’s ReactiveFormsModule for form handling and validation.
+- Credentials are hardcoded in login.component.ts for demonstration. In production, use a secure authentication service (e.g., Firebase or a backend API).
+- User credentials are stored in sessionStorage for session persistence, and admin reports are stored in localStorage for cross-session persistence. Consider JWT tokens for production.
+- The login page includes a LoginAnimationComponent for visual enhancements.
+- Routes are configured in app-routing.module.ts for role-specific dashboards.
+- The JSON server provides a mock backend. In production, replace with a robust backend (e.g., Node.js, Express, or Firebase).
+
+Contact
+-------
+For support or feedback, contact the development team at support@genworx.com.

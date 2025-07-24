@@ -1,0 +1,80 @@
+<app-recruiter-sidebar></app-recruiter-sidebar>
+<div class="w-full bg-white">
+  <div class="flex ml-64 overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <app-hr-header></app-hr-header>
+<br><br>
+      <!-- Main Content -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div class="container mx-auto px-4 py-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Candidate Applications</h1>
+              <p class="text-gray-600 text-sm">Review applications and shortlist candidates efficiently.</p>
+            </div>
+            <!-- Add Candidate button removed as requested -->
+          </div>
+
+          <!-- Shortlisted Candidates Table -->
+          <div class="bg-white rounded-md shadow overflow-hidden border border-gray-200">
+            <div class="p-4 border-b border-gray-200">
+              <h2 class="text-base font-medium text-gray-900">Shortlisted Candidates</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                <tbody>
+                  <tr *ngFor="let candidate of paginatedShortlisted; let i = index">
+                    <td>{{ (shortlistPage - 1) * itemsPerPage + i + 1 }}</td>
+                    <td>
+                      <div class="flex items-center">
+                        <img class="h-8 w-8 rounded-full" [src]="'https://ui-avatars.com/api/?name=' + encodeName((candidate.candidateDetails?.candidateName || candidate.candidateName || 'Candidate'))" alt="Candidate profile" />
+                        <div class="ml-3">
+                          <div class="text-sm font-medium text-gray-900">{{ candidate.candidateDetails?.candidateName || candidate.candidateName || 'N/A' }}</div>
+                          <div class="text-xs text-gray-600">{{ candidate.candidateDetails?.email || candidate.candidateEmail || 'N/A' }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ candidate.candidateDetails?.department || 'N/A' }}</td>
+                    <td>{{ candidate.status }}</td>
+                    <td><span class="remove-action" (click)="removeFromShortlist(candidate.id || '')">Remove</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+              <div class="text-xs text-gray-600">Showing <span class="font-medium">{{ paginatedShortlisted.length }}</span> of <span class="font-medium">{{ shortlistedCandidates.length }}</span> shortlisted candidates</div>
+              <div class="flex space-x-2">
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-600 bg-white hover:bg-gray-50" (click)="previousShortlistPage()" [disabled]="shortlistPage === 1">Previous</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-white bg-indigo-500 hover:bg-indigo-600" (click)="nextShortlistPage()" [disabled]="shortlistPage * itemsPerPage >= shortlistedCandidates.length">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+
+
+
+      <!-- Footer -->
+      <app-hr-footer></app-hr-footer>
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+</style>
